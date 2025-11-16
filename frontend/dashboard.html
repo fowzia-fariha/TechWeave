@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechWeave Dashboard</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- Lottie Player -->
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: #f0f4f8;
+    color: #1e3c72;
+    padding: 20px;
+  }
+
+  .header-section {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .user-welcome {
+    font-size: 18px;
+    color: #2a5298;
+    margin-bottom: 5px;
+  }
+
+  .user-role {
+    display: inline-block;
+    background: #4CAF50;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 5px;
+  }
+
+  .role-mentor {
+    background: #ff6b00;
+  }
+
+  .role-student {
+    background: #2196F3;
+  }
+
+  .mentor-features {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px auto;
+    max-width: 800px;
+    text-align: center;
+  }
+
+  .dashboard-list {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .dashboard-item {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+
+  .dashboard-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+
+  .dashboard-animation {
+    flex: 0 0 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+  }
+
+  .dashboard-animation lottie-player {
+    width: 60px;
+    height: 60px;
+  }
+
+  .dashboard-content h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+
+  .dashboard-content p {
+    font-size: 13px;
+    color: #555;
+  }
+
+  .mentor-only {
+    border-left: 4px solid #ff6b00;
+  }
+
+  .mentor-badge {
+    background: #ff6b00;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    margin-left: 8px;
+  }
+
+  @media(max-width: 600px) {
+    .dashboard-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .dashboard-animation {
+      margin-bottom: 8px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="header-section">
+  <h1>TechWeave Dashboard</h1>
+  <div class="user-welcome" id="userWelcome">Welcome!</div>
+  <div class="user-role" id="userRole">Loading...</div>
+</div>
+
+<!-- Mentor-specific features section -->
+<div class="mentor-features" id="mentorFeatures" style="display: none;">
+  <h3>🎯 Mentor Dashboard</h3>
+  <p>Welcome back, Mentor! You have special privileges to help students.</p>
+</div>
+
+<div class="dashboard-list">
+
+  <div class="dashboard-item">
+    <div class="dashboard-animation">
+      <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_w51pcehl.json" background="transparent" speed="1" loop autoplay></lottie-player>
+    </div>
+    <div class="dashboard-content">
+      <h2>Learning Path</h2>
+      <p>Structured courses and tutorials to enhance your skills.</p>
+    </div>
+  </div>
+
+  <div class="dashboard-item" onclick="goToChat()">
+    <div class="dashboard-animation">
+     <lottie-player src="https://assets6.lottiefiles.com/packages/lf20_xyadoh9h.json" background="transparent" speed="1" loop autoplay></lottie-player>
+    </div>
+    <div class="dashboard-content">
+      <h2>Chat with Community</h2>
+      <p>Connect with mentors and students in real-time chat.</p>
+    </div>
+  </div>
+
+  <!-- Mentor-only feature -->
+  <div class="dashboard-item mentor-only" id="mentorTools" style="display: none;" onclick="goToMentorTools()">
+    <div class="dashboard-animation">
+     <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_3rqwsqnj.json" background="transparent" speed="1" loop autoplay></lottie-player>
+    </div>
+    <div class="dashboard-content">
+      <h2>Mentor Tools <span class="mentor-badge">MENTOR</span></h2>
+      <p>Access student management and mentoring resources.</p>
+    </div>
+  </div>
+
+  <div class="dashboard-item">
+    <div class="dashboard-animation">
+     <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_qpsnmykx.json" background="transparent" speed="1" loop autoplay></lottie-player>    </div>
+    <div class="dashboard-content">
+      <h2>Community Forum</h2>
+      <p>Engage with peers, share knowledge, and ask questions.</p>
+    </div>
+  </div>
+
+  <div class="dashboard-item">
+    <div class="dashboard-animation">
+      <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_p8bfn5to.json" background="transparent" speed="1" loop autoplay></lottie-player>
+    </div>
+    <div class="dashboard-content">
+      <h2>FAQ & Help Center</h2>
+      <p>Quick answers to the most frequently asked questions.</p>
+    </div>
+  </div>
+
+  <div class="dashboard-item">
+    <div class="dashboard-animation">
+      <lottie-player src="https://assets1.lottiefiles.com/packages/lf20_x62chJ.json" background="transparent" speed="1" loop autoplay></lottie-player>
+    </div>
+    <div class="dashboard-content">
+      <h2>Docker & DevOps</h2>
+      <p>Explore containerization and DevOps practices with Docker.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Get user info from localStorage or API
+async function loadUserInfo() {
+  const token = localStorage.getItem('token');
+  
+  if (!token) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  try {
+    // Decode JWT to get user ID
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const userId = payload.id;
+
+    // Fetch user details including role
+    const response = await fetch(`http://localhost:5000/api/user/${userId}`);
+    if (!response.ok) throw new Error('Failed to fetch user data');
+    
+    const user = await response.json();
+    
+    // Display user info
+    document.getElementById('userWelcome').textContent = `Welcome, ${user.username}!`;
+    
+    const userRoleElement = document.getElementById('userRole');
+    userRoleElement.textContent = user.role === 'mentor' ? 'MENTOR' : 'STUDENT';
+    userRoleElement.className = user.role === 'mentor' ? 'user-role role-mentor' : 'user-role role-student';
+
+    // Show mentor-specific features
+    if (user.role === 'mentor') {
+      document.getElementById('mentorFeatures').style.display = 'block';
+      document.getElementById('mentorTools').style.display = 'flex';
+      
+      console.log('🎯 Welcome Mentor! Special features unlocked.');
+    } else {
+      console.log('👨‍🎓 Welcome Student! Enjoy learning.');
+    }
+
+  } catch (error) {
+    console.error('Error loading user info:', error);
+    document.getElementById('userWelcome').textContent = 'Welcome!';
+    document.getElementById('userRole').textContent = 'USER';
+  }
+}
+
+function goToChat() {
+  window.location.href = 'chat.html';
+}
+
+function goToMentorTools() {
+  window.location.href = 'mentor-tools.html';
+}
+
+// Load user info when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  loadUserInfo();
+});
+</script>
+
+</body>
+</html>
