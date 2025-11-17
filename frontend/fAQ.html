@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ & Help Center - TechWeave</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    color: white;
+    margin-bottom: 40px;
+  }
+
+  .back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s;
+  }
+
+  .back-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+  }
+
+  .header h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  }
+
+  .header p {
+    font-size: 18px;
+    opacity: 0.9;
+  }
+
+  /* Search Bar */
+  .search-container {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+
+  .search-wrapper {
+    position: relative;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #667eea;
+    font-size: 20px;
+  }
+
+  #searchInput {
+    width: 100%;
+    padding: 18px 20px 18px 55px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s;
+  }
+
+  #searchInput:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  /* Category Tabs */
+  .category-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .category-tab {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.3);
+    padding: 12px 24px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    backdrop-filter: blur(10px);
+  }
+
+  .category-tab:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+  }
+
+  .category-tab.active {
+    background: white;
+    color: #667eea;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  /* FAQ Container */
+  .faq-container {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+
+  .category-section {
+    margin-bottom: 40px;
+  }
+
+  .category-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .category-title {
+    font-size: 28px;
+    color: #667eea;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .category-icon {
+    font-size: 32px;
+  }
+
+  /* FAQ Items */
+  .faq-item {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .faq-item:hover {
+    border-color: #667eea;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+  }
+
+  .faq-item.hidden {
+    display: none;
+  }
+
+  .faq-question {
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa;
+    transition: all 0.3s;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .faq-question:hover {
+    background: #e9ecef;
+  }
+
+  .faq-item.active .faq-question {
+    background: #667eea;
+    color: white;
+  }
+
+  .faq-arrow {
+    font-size: 20px;
+    transition: transform 0.3s;
+  }
+
+  .faq-item.active .faq-arrow {
+    transform: rotate(180deg);
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0 20px;
+    background: white;
+  }
+
+  .faq-item.active .faq-answer {
+    max-height: 500px;
+    padding: 20px;
+  }
+
+  .faq-answer p {
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 10px;
+  }
+
+  .faq-answer ul {
+    margin-left: 20px;
+    color: #555;
+  }
+
+  .faq-answer li {
+    margin-bottom: 8px;
+  }
+
+  /* No Results */
+  .no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+    display: none;
+  }
+
+  .no-results.show {
+    display: block;
+  }
+
+  .no-results h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  /* Contact Support */
+  .contact-support {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 15px;
+    padding: 40px;
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .contact-support h3 {
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+
+  .contact-support p {
+    font-size: 16px;
+    margin-bottom: 20px;
+    opacity: 0.9;
+  }
+
+  .contact-btn {
+    background: white;
+    color: #667eea;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+    margin: 0 10px;
+  }
+
+  .contact-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  /* Highlight Search Results */
+  .highlight {
+    background-color: yellow;
+    font-weight: bold;
+  }
+
+  @media (max-width: 768px) {
+    .header h1 {
+      font-size: 32px;
+    }
+
+    .category-tabs {
+      flex-direction: column;
+    }
+
+    .category-tab {
+      width: 100%;
+    }
+
+    .faq-container {
+      padding: 20px;
+    }
+
+    .back-btn {
+      position: relative;
+      top: 0;
+      left: 0;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<button class="back-btn" onclick="goToDashboard()">← Back to Dashboard</button>
+
+<div class="container">
+  <div class="header">
+    <h1>❓ FAQ & Help Center</h1>
+    <p>Find answers to your questions quickly and easily</p>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search for answers..." />
+    </div>
+  </div>
+
+  <!-- Category Tabs -->
+  <div class="category-tabs">
+    <button class="category-tab active" onclick="filterCategory('all')">All</button>
+    <button class="category-tab" onclick="filterCategory('getting-started')">Getting Started</button>
+    <button class="category-tab" onclick="filterCategory('chat')">Chat & Messaging</button>
+    <button class="category-tab" onclick="filterCategory('mentor')">Mentor Program</button>
+    <button class="category-tab" onclick="filterCategory('account')">Account & Settings</button>
+    <button class="category-tab" onclick="filterCategory('technical')">Technical Issues</button>
+  </div>
+
+  <!-- FAQ Container -->
+  <div class="faq-container">
+    
+    <!-- Getting Started -->
+    <div class="category-section" data-category="getting-started">
+      <h2 class="category-title">
+        <span class="category-icon">🚀</span>
+        Getting Started
+      </h2>
+
+      <div class="faq-item" data-category="getting-started">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>How do I create an account on TechWeave?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Creating an account is simple:</p>
+          <ul>
+            <li>Click on the "Sign Up" button on the homepage</li>
+            <li>Fill in your username, email, and password</li>
+            <li>Click "Create Account"</li>
+            <li>You'll automatically be added to the General Chat group</li>
+            <li>Start exploring the platform!</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="getting-started">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>What can I do on TechWeave?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>TechWeave offers several features:</p>
+          <ul>
+            <li><strong>Learning Paths:</strong> Access structured courses and tutorials</li>
+            <li><strong>Chat System:</strong> Connect with mentors and peers in real-time</li>
+            <li><strong>Group Discussions:</strong> Join the General Chat to discuss with everyone</li>
+            <li><strong>Mentor Support:</strong> Get personalized guidance from experienced mentors</li>
+            <li><strong>Community Forum:</strong> Share knowledge and ask questions</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="getting-started">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>Is TechWeave free to use?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Yes! TechWeave is completely free for all students. You get full access to all features including chat, mentorship, learning resources, and community forums without any cost.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat & Messaging -->
+    <div class="category-section" data-category="chat">
+      <h2 class="category-title">
+        <span class="category-icon">💬</span>
+        Chat & Messaging
+      </h2>
+
+      <div class="faq-item" data-category="chat">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>How do I join the General Chat?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>When you create an account, you're automatically added to the General Chat! Simply:</p>
+          <ul>
+            <li>Go to Dashboard</li>
+            <li>Click "Chat with Community"</li>
+            <li>Select "Groups" tab</li>
+            <li>Click on "General Chat"</li>
+            <li>Start messaging!</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="chat">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>How do I send a private message to a mentor?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>To chat privately with a mentor:</p>
+          <ul>
+            <li>Go to the Chat page</li>
+            <li>Click on the "Mentors" tab</li>
+            <li>You'll see all available mentors with a green "Mentor" badge</li>
+            <li>Click on any mentor's name</li>
+            <li>Type your message and press Send</li>
+            <li>Only you and the mentor can see these messages</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="chat">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>Can other students see my private messages with mentors?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>No! Private messages are completely confidential. Only you and the mentor you're chatting with can see the conversation. Other students cannot access your private messages.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="chat">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>What's the difference between Group Chat and Private Chat?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p><strong>Group Chat (General Chat):</strong></p>
+          <ul>
+            <li>Everyone in the group can see all messages</li>
+            <li>Great for general discussions and community engagement</li>
+            <li>All students and mentors can participate</li>
+          </ul>
+          <p><strong>Private Chat:</strong></p>
+          <ul>
+            <li>Only you and the mentor can see messages</li>
+            <li>Perfect for personal questions and guidance</li>
+            <li>One-on-one conversation</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="chat">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>Are my chat messages saved?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Yes! All messages (both group and private) are saved in the database. When you return to a chat, you'll see your entire conversation history. Messages persist even after you log out or refresh the page.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mentor Program -->
+    <div class="category-section" data-category="mentor">
+      <h2 class="category-title">
+        <span class="category-icon">👨‍🏫</span>
+        Mentor Program
+      </h2>
+
+      <div class="faq-item" data-category="mentor">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>How do I find a mentor?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Finding a mentor is easy:</p>
+          <ul>
+            <li>Go to the Chat page from your dashboard</li>
+            <li>Click on the "Mentors" tab</li>
+            <li>Browse through available mentors (they have a green "Mentor" badge)</li>
+            <li>Click on any mentor to start a conversation</li>
+            <li>Introduce yourself and ask for guidance!</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="mentor">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>Can I become a mentor?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Yes! If you have experience and want to help others, you can apply to become a mentor. Contact the admin team through the support email, and they'll review your application. Mentors are selected based on their expertise and willingness to help students.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="mentor">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>What kind of help can mentors provide?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Mentors can help with:</p>
+          <ul>
+            <li>Programming questions and code reviews</li>
+            <li>Career guidance and advice</li>
+            <li>Project suggestions and feedback</li>
+            <li>Learning path recommendations</li>
+            <li>Technical problem-solving</li>
+            <li>Best practices and industry insights</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="mentor">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>How quickly do mentors respond?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Response times vary by mentor availability. Most mentors try to respond within a few hours. Remember that mentors are volunteers helping in their free time. Be patient and respectful of their time!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account & Settings -->
+    <div class="category-section" data-category="account">
+      <h2 class="category-title">
+        <span class="category-icon">⚙️</span>
+        Account & Settings
+      </h2>
+
+      <div class="faq-item" data-category="account">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>I forgot my password. What should I do?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>To reset your password:</p>
+          <ul>
+            <li>Go to the Login page</li>
+            <li>Click "Forgot Password?"</li>
+            <li>Enter your registered email address</li>
+            <li>Check your console/email for the reset link</li>
+            <li>Click the link and create a new password</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="account">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>Can I change my username?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Currently, username changes are not available through the interface. If you need to change your username, please contact support with your current username and desired new username.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="account">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>How do I delete my account?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>If you wish to delete your account, please contact our support team at support@techweave.com. Note that this action is permanent and will delete all your messages, progress, and data.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="account">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>Is my data secure on TechWeave?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Yes! We take security seriously:</p>
+          <ul>
+            <li>Passwords are encrypted using bcrypt</li>
+            <li>JWT tokens for secure authentication</li>
+            <li>Private messages are only accessible by participants</li>
+            <li>Regular security updates and monitoring</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technical Issues -->
+    <div class="category-section" data-category="technical">
+      <h2 class="category-title">
+        <span class="category-icon">🔧</span>
+        Technical Issues
+      </h2>
+
+      <div class="faq-item" data-category="technical">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>My messages aren't sending. What's wrong?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>If messages aren't sending, try these steps:</p>
+          <ul>
+            <li>Check your internet connection</li>
+            <li>Look for the connection status (should show "Connected" in green)</li>
+            <li>Refresh the page (F5)</li>
+            <li>Log out and log back in</li>
+            <li>Clear your browser cache</li>
+            <li>If problem persists, contact support</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="technical">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>The chat shows "Disconnected". How do I fix this?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>If you see a "Disconnected" status:</p>
+          <ul>
+            <li>Check if the backend server is running</li>
+            <li>Verify your internet connection</li>
+            <li>Refresh the page</li>
+            <li>Try logging out and back in</li>
+            <li>Check if port 5000 is accessible</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="technical">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>Which browsers are supported?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>TechWeave works best on:</p>
+          <ul>
+            <li>Google Chrome (recommended)</li>
+            <li>Mozilla Firefox</li>
+            <li>Microsoft Edge</li>
+            <li>Safari (latest version)</li>
+          </ul>
+          <p>For best experience, keep your browser updated to the latest version.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="technical">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>Can I use TechWeave on mobile?</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>Yes! TechWeave is mobile-responsive. You can access it through your mobile browser. For the best mobile experience, use Chrome or Safari on your phone.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="technical">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>I'm getting a "Please login first" error</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+          <p>This happens when your session expires or you're not logged in. To fix:</p>
+          <ul>
+            <li>Go to the Login page</li>
+            <li>Enter your credentials</li>
+            <li>If you can't login, try resetting your password</li>
+            <li>Make sure cookies are enabled in your browser</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results Message -->
+    <div class="no-results" id="noResults">
+      <h3>😕 No results found</h3>
+      <p>Try different keywords or browse through categories</p>
+    </div>
+  </div>
+
+  <!-- Contact Support -->
+  <div class="contact-support">
+    <h3>Still need help?</h3>
+    <p>Can't find the answer you're looking for? Our support team is here to help!</p>
+    <button class="contact-btn" onclick="goToChat()">💬 Chat with Mentor</button>
+    <button class="contact-btn" onclick="contactSupport()">📧 Email Support</button>
+  </div>
+</div>
+
+<script>
+  let currentCategory = 'all';
+
+  // Toggle FAQ Answer
+  function toggleFAQ(element) {
+    const faqItem = element.parentElement;
+    const isActive = faqItem.classList.contains('active');
+    
+    // Close all open FAQs
+    document.querySelectorAll('.faq-item').forEach(item => {
+      item.classList.remove('active');
+    });
+    
+    // Open clicked FAQ if it wasn't active
+    if (!isActive) {
+      faqItem.classList.add('active');
+    }
+  }
+
+  // Filter by Category
+  function filterCategory(category) {
+    currentCategory = category;
+    
+    // Update active tab
+    document.querySelectorAll('.category-tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Clear search
+    document.getElementById('searchInput').value = '';
+    
+    // Show/hide sections and items
+    const sections = document.querySelectorAll('.category-section');
+    const items = document.querySelectorAll('.faq-item');
+    
+    if (category === 'all') {
+      sections.forEach(section => section.style.display = 'block');
+      items.forEach(item => item.classList.remove('hidden'));
+    } else {
+      sections.forEach(section => {
+        section.style.display = section.dataset.category === category ? 'block' : 'none';
+      });
+      items.forEach(item => {
+        if (item.dataset.category === category) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    }
+    
+    checkNoResults();
+  }
+
+  // Search FAQs
+  document.getElementById('searchInput').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const faqItems = document.querySelectorAll('.faq-item');
+    let visibleCount = 0;
+    
+    faqItems.forEach(item => {
+      const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+      const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+      
+      // Check if search term matches category filter
+      const matchesCategory = currentCategory === 'all' || item.dataset.category === currentCategory;
+      const matchesSearch = question.includes(searchTerm) || answer.includes(searchTerm);
+      
+      if (matchesCategory && matchesSearch) {
+        item.classList.remove('hidden');
+        visibleCount++;
+        
+        // Highlight search term
+        if (searchTerm) {
+          highlightText(item.querySelector('.faq-question span'), searchTerm);
+        }
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+    
+    checkNoResults();
+  });
+
+  // Highlight search terms
+  function highlightText(element, searchTerm) {
+    const originalText = element.textContent;
+    const regex = new RegExp(`(${searchTerm})`, 'gi');
+    
+    if (searchTerm) {
+      element.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
+    } else {
+      element.textContent = originalText;
+    }
+  }
+
+  // Check if no results
+  function checkNoResults() {
+    const visibleItems = document.querySelectorAll('.faq-item:not(.hidden)');
+    const noResults = document.getElementById('noResults');
+    const sections = document.querySelectorAll('.category-section');
+    
+    if (visibleItems.length === 0) {
+      noResults.classList.add('show');
+      sections.forEach(section => section.style.display = 'none');
+    } else {
+      noResults.classList.remove('show');
+      if (currentCategory === 'all') {
+        sections.forEach(section => section.style.display = 'block');
+      }
+    }
+  }
+
+  // Navigation functions
+  function goToDashboard() {
+    window.location.href = 'dashboard.html';
+  }
+
+function goToChat() {
+    window.location.href = 'chat.html';
+  }
+
+  function contactSupport() {
+    const email = 'support@techweave.com';
+    const subject = 'Help Request - TechWeave';
+    const body = 'Hi TechWeave Support Team,%0D%0A%0D%0AI need help with:%0D%0A%0D%0A[Please describe your issue here]%0D%0A%0D%0AThank you!';
+    
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+  }
+
+  // Check authentication on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      alert('Please login first to access the Help Center');
+      window.location.href = 'login.html';
+      return;
+    }
+    
+    console.log('✅ FAQ & Help Center loaded successfully');
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', function(e) {
+    // Press ESC to close active FAQ
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.faq-item').forEach(item => {
+        item.classList.remove('active');
+      });
+    }
+    
+    // Press Ctrl/Cmd + K to focus search
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      document.getElementById('searchInput').focus();
+    }
+  });
+
+  // Auto-expand FAQ from URL hash
+  window.addEventListener('load', function() {
+    const hash = window.location.hash;
+    if (hash) {
+      const faqId = hash.substring(1);
+      const faqElement = document.getElementById(faqId);
+      if (faqElement) {
+        faqElement.classList.add('active');
+        faqElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
