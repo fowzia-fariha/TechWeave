@@ -25,11 +25,50 @@
     padding: 20px;
   }
 
-  h1 {
+  .header-section {
     text-align: center;
+    margin-bottom: 30px;
+  }
+
+  h1 {
     font-size: 32px;
     font-weight: 700;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
+  }
+
+  .user-welcome {
+    font-size: 18px;
+    color: #2a5298;
+    margin-bottom: 5px;
+  }
+
+  .user-role {
+    display: inline-block;
+    background: #4CAF50;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 5px;
+  }
+
+  .role-mentor {
+    background: #ff6b00;
+  }
+
+  .role-student {
+    background: #2196F3;
+  }
+
+  .mentor-features {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px auto;
+    max-width: 800px;
+    text-align: center;
   }
 
   .dashboard-list {
@@ -46,6 +85,7 @@
     margin-bottom: 15px;
     padding: 10px 15px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
   }
 
   .dashboard-item:hover {
@@ -77,6 +117,19 @@
     color: #555;
   }
 
+  .mentor-only {
+    border-left: 4px solid #ff6b00;
+  }
+
+  .mentor-badge {
+    background: #ff6b00;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    margin-left: 8px;
+  }
+
   @media(max-width: 600px) {
     .dashboard-item {
       flex-direction: column;
@@ -90,11 +143,22 @@
 </head>
 <body>
 
-<h1>TechWeave Dashboard</h1>
+<div class="header-section">
+  <h1>TechWeave Dashboard</h1>
+  <div class="user-welcome" id="userWelcome">Welcome!</div>
+  <div class="user-role" id="userRole">Loading...</div>
+</div>
+
+<!-- Mentor-specific features section -->
+<div class="mentor-features" id="mentorFeatures" style="display: none;">
+  <h3>🎯 Mentor Dashboard</h3>
+  <p>Welcome back, Mentor! You have special privileges to help students.</p>
+</div>
 
 <div class="dashboard-list">
 
-  <div class="dashboard-item">
+  <!-- Learning Path Card -->
+  <div class="dashboard-item" onclick="goToLearningPath()">
     <div class="dashboard-animation">
       <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_w51pcehl.json" background="transparent" speed="1" loop autoplay></lottie-player>
     </div>
@@ -104,19 +168,32 @@
     </div>
   </div>
 
-  <div class="dashboard-item">
+  <!-- Chat Card -->
+  <div class="dashboard-item" onclick="goToChat()">
     <div class="dashboard-animation">
-      <lottie-player src="https://assets5.lottiefiles.com/packages/lf20_jcikwtux.json" background="transparent" speed="1" loop autoplay></lottie-player>
+     <lottie-player src="https://assets6.lottiefiles.com/packages/lf20_xyadoh9h.json" background="transparent" speed="1" loop autoplay></lottie-player>
     </div>
     <div class="dashboard-content">
-      <h2>Chat with Mentors</h2>
-      <p>Get guidance and advice from experienced mentors anytime.</p>
+      <h2>Chat with Community</h2>
+      <p>Connect with mentors and students in real-time chat.</p>
     </div>
   </div>
 
+  <!-- Mentor-only feature -->
+  <div class="dashboard-item mentor-only" id="mentorTools" style="display: none;" onclick="goToMentorTools()">
+    <div class="dashboard-animation">
+     <lottie-player src="https://assets3.lottiefiles.com/packages/lf20_3rqwsqnj.json" background="transparent" speed="1" loop autoplay></lottie-player>
+    </div>
+    <div class="dashboard-content">
+      <h2>Mentor Tools <span class="mentor-badge">MENTOR</span></h2>
+      <p>Access student management and mentoring resources.</p>
+    </div>
+  </div>
+
+  <!-- Community Forum -->
   <div class="dashboard-item">
     <div class="dashboard-animation">
-      <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_gzj5r3qs.json" background="transparent" speed="1" loop autoplay></lottie-player>
+     <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_qpsnmykx.json" background="transparent" speed="1" loop autoplay></lottie-player>
     </div>
     <div class="dashboard-content">
       <h2>Community Forum</h2>
@@ -124,27 +201,87 @@
     </div>
   </div>
 
-  <div class="dashboard-item">
+  <!-- FAQ -->
+  <div class="dashboard-item" onclick="goToFAQ()">
     <div class="dashboard-animation">
       <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_p8bfn5to.json" background="transparent" speed="1" loop autoplay></lottie-player>
     </div>
     <div class="dashboard-content">
-      <h2>FAQ</h2>
+      <h2>FAQ & Help Center</h2>
       <p>Quick answers to the most frequently asked questions.</p>
     </div>
   </div>
 
+  <!-- Docker & DevOps -->
   <div class="dashboard-item">
     <div class="dashboard-animation">
       <lottie-player src="https://assets1.lottiefiles.com/packages/lf20_x62chJ.json" background="transparent" speed="1" loop autoplay></lottie-player>
     </div>
     <div class="dashboard-content">
-      <h2>Docker</h2>
+      <h2>Docker & DevOps</h2>
       <p>Explore containerization and DevOps practices with Docker.</p>
     </div>
   </div>
 
 </div>
+
+<script>
+// Load user info from token
+async function loadUserInfo() {
+  const token = localStorage.getItem('token');
+  
+  if (!token) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const userId = payload.id;
+
+    const response = await fetch(`http://localhost:5000/api/user/${userId}`);
+    if (!response.ok) throw new Error('Failed to fetch user data');
+    
+    const user = await response.json();
+    
+    document.getElementById('userWelcome').textContent = `Welcome, ${user.username}!`;
+    
+    const userRoleElement = document.getElementById('userRole');
+    userRoleElement.textContent = user.role === 'mentor' ? 'MENTOR' : 'STUDENT';
+    userRoleElement.className = user.role === 'mentor' ? 'user-role role-mentor' : 'user-role role-student';
+
+    if (user.role === 'mentor') {
+      document.getElementById('mentorFeatures').style.display = 'block';
+      document.getElementById('mentorTools').style.display = 'flex';
+    }
+
+  } catch (error) {
+    console.error('Error loading user info:', error);
+    document.getElementById('userWelcome').textContent = 'Welcome!';
+    document.getElementById('userRole').textContent = 'USER';
+  }
+}
+
+// Navigation functions
+function goToLearningPath() {
+  window.location.href = 'learning-path.html';
+}
+
+function goToChat() {
+  window.location.href = 'chat.html';
+}
+
+function goToMentorTools() {
+  window.location.href = 'mentor-tools.html';
+}
+
+function goToFAQ() {
+  window.location.href = 'faq.html';
+}
+
+// Load user info on page load
+document.addEventListener('DOMContentLoaded', loadUserInfo);
+</script>
 
 </body>
 </html>

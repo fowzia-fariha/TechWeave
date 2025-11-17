@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI & Machine Learning | TechWeave</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
+
+    :root {
+        --primary: #0f172a;
+        --secondary: #1e293b;
+        --accent: #6366f1;
+        --accent-light: #818cf8;
+        --text: #f8fafc;
+        --text-light: #cbd5e1;
+        --card-bg: rgba(30, 41, 59, 0.7);
+        --glass: rgba(255, 255, 255, 0.05);
+        --border: rgba(255, 255, 255, 0.1);
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--primary), #1a1f36);
+        color: var(--text);
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 50px 25px;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #e2e8f0, #f1f5f9);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+        color: var(--text-light);
+        margin-top: 10px;
+    }
+
+    .topic-list {
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .topic-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 25px 30px;
+        background: var(--card-bg);
+        border-radius: 20px;
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        box-shadow: 0 10px 35px rgba(0,0,0,0.3);
+        transition: 0.3s ease;
+    }
+
+    .topic-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(99,102,241,0.4);
+    }
+
+    .topic-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .topic-animation {
+        width: 70px;
+        height: 70px;
+    }
+
+    .topic-content h2 {
+        font-size: 1.4rem;
+        font-weight: 600;
+    }
+
+    .topic-content p {
+        margin-top: 5px;
+        color: var(--text-light);
+    }
+
+    .btn-box {
+        display: flex;
+        gap: 12px;
+    }
+
+    .lp-btn {
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: 1px solid rgba(99,102,241,0.3);
+        color: var(--accent-light);
+        background: rgba(99,102,241,0.1);
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: 0.3s ease;
+    }
+
+    .lp-btn:hover {
+        background: rgba(99,102,241,0.25);
+        border-color: rgba(99,102,241,0.6);
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>AI & Machine Learning</h1>
+        <p class="subtitle">Learn the core foundations of Artificial Intelligence and ML step-by-step.</p>
+    </div>
+
+    <div class="topic-list" id="topic-container">
+        <!-- Cards will be inserted here -->
+    </div>
+
+</div>
+
+<script>
+const topics = [
+    {
+        name: 'Python',
+        description: 'The essential programming language for Machine Learning.',
+        animation: 'https://lottie.host/22b228e0-6f2a-4ab7-aa93-191f83bc05f5/MlPBmGsADW.json',
+        resource: 'https://www.youtube.com/watch?v=kqtD5dpn9C8',
+        pdf: 'python_tutorial.pdf'
+    },
+    {
+        name: 'TensorFlow',
+        description: 'Google’s deep learning library for neural networks and ML.',
+        animation: 'https://lottie.host/3faa8f5d-31d4-46cf-8ffd-5a016c04e3d9/XFQ9YQYq4T.json',
+        resource: 'https://www.youtube.com/watch?v=tPYj3fFJGjk',
+        pdf: 'tensorflow_tutorial.pdf'
+    },
+    {
+        name: 'PyTorch',
+        description: 'Powerful deep learning library used in research and industry.',
+        animation: 'https://lottie.host/85a225e2-28be-415b-a6d3-b0f3c781eca8/RpAj9yhJt0.json',
+        resource: 'https://www.youtube.com/watch?v=V_xro1bcAuA',
+        pdf: 'pytorch_tutorial.pdf'
+    },
+    {
+        name: 'Scikit-Learn',
+        description: 'Beginner-friendly ML library for regression, clustering, and more.',
+        animation: 'https://lottie.host/d7b5b45b-b999-45d8-bcb1-755baf97e6d5/8kswFp9rK7.json',
+        resource: 'https://www.youtube.com/watch?v=0Lt9w-BxKFQ',
+        pdf: 'scikit_tutorial.pdf'
+    }
+];
+
+const container = document.getElementById("topic-container");
+
+topics.forEach(topic => {
+    const card = document.createElement("div");
+    card.classList.add("topic-card");
+
+    card.innerHTML = `
+        <div class="topic-left">
+            <div class="topic-animation">
+                <lottie-player src="${topic.animation}" background="transparent" speed="1" loop autoplay></lottie-player>
+            </div>
+            <div class="topic-content">
+                <h2>${topic.name}</h2>
+                <p>${topic.description}</p>
+            </div>
+        </div>
+        
+        <div class="btn-box">
+            <a href="${topic.resource}" target="_blank" class="lp-btn">
+                <i class="fa-solid fa-link"></i> Resource
+            </a>
+            <a href="${topic.pdf}" download class="lp-btn">
+                <i class="fa-solid fa-file-pdf"></i> PDF
+            </a>
+        </div>
+    `;
+
+    container.appendChild(card);
+});
+</script>
+
+</body>
+</html>
