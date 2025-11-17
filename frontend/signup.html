@@ -302,85 +302,57 @@
   });
 
   // Form Submission
-  const form = document.getElementById("signupForm");
+const form = document.getElementById("signupForm");
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  
+  const username = form.username.value;
+  const email = form.email.value;
+  const password = form.password.value;
+
+  // Prepare request body
+  const requestBody = {
+    username,
+    email,
+    password,
+    role: selectedRole
+  };
+
+  // Add mentor-specific fields if mentor role is selected
+  if (selectedRole === 'mentor') {
+    requestBody.expertise = form.expertise.value;
+    requestBody.experience = form.experience.value;
+  }
+
+  try {
+    // Use appropriate endpoint based on role
+    const endpoint = selectedRole === 'mentor' 
+      ? 'http://localhost:5000/mentor-signup'
+      : 'http://localhost:5000/signup';
+
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody)
+    });
+
+    const data = await res.json();
     
-    const username = form.username.value;
-    const email = form.email.value;
-    const password = form.password.value;
-
-    // Prepare request body
-    const requestBody = {
-      username,
-      email,
-      password,
-      role: selectedRole
-    };
-
-    // Add mentor-specific fields if mentor role is selected
-    if (selectedRole === 'mentor') {
-      requestBody.expertise = form.expertise.value;
-      requestBody.experience = form.experience.value;
+    if (res.ok) {
+      // Show success message and redirect to login
+      alert(" " + data.message);
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1000);
+    } else {
+      alert("  " + data.message);
     }
-
-    try {
-      // Use appropriate endpoint based on role
-      const endpoint = selectedRole === 'mentor' 
-        ? 'http://localhost:5000/mentor-signup'
-        : 'http://localhost:5000/signup';
-
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestBody)
-      });
-
-      const data = await res.json();
-      
-      if (res.ok && (data.message.includes("successful") || data.message.includes("success"))) {
-        alert("✅ " + data.message + " Logging you in...");
-        
-        // Now automatically login with the same credentials
-        try {
-          const loginRes = await fetch('http://localhost:5000/login', {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-          });
-
-          const loginData = await loginRes.json();
-          
-          if (loginRes.ok && loginData.token) {
-            // Save authentication data
-            localStorage.setItem('token', loginData.token);
-            localStorage.setItem('username', loginData.user.username);
-            localStorage.setItem('email', loginData.user.email);
-            localStorage.setItem('role', loginData.user.role);
-            localStorage.setItem('userId', loginData.user.id);
-            
-            // Redirect to dashboard
-            setTimeout(() => {
-              window.location.href = "dashboard.html";
-            }, 500);
-          } else {
-            alert("Signup successful! Please login manually.");
-            window.location.href = "login.html";
-          }
-        } catch (loginErr) {
-          console.error('Auto-login error:', loginErr);
-          alert("Signup successful! Please login manually.");
-          window.location.href = "login.html";
-        }
-      } else {
-        alert("❌ " + data.message);
-      }
-    } catch(err) {
-      console.error(err);
-      alert(" Something went wrong. Please try again.");
-    }
-  });
+  } catch(err) {
+    console.error(err);
+    alert(" Something went wrong. Please try again.");
+  }
+});
 </script>
 
 </body>

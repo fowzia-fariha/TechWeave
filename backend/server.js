@@ -5,6 +5,10 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql2/promise');
+const nodemailer = require('nodemailer');
+const { google } = require('googleapis');
+const path = require('path');
+require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
@@ -19,25 +23,131 @@ const io = socketIo(server, {
 app.use(cors());
 app.use(express.json());
 
+// Serve static files from frontend
+app.use(express.static(path.join(__dirname, '../frontend')));
+
 // Database configuration
 const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: '2021831026',
-  database: 'techweave'
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '2021831026',
+  database: process.env.DB_NAME || 'techweave'
 };
 
 // Create connection pool
 const pool = mysql.createPool(dbConfig);
 
 // JWT Secret
-const JWT_SECRET = 'your_super_secret_jwt_key_change_this';
+const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key_change_this';
+
+// ============================================
+// GOOGLE OAUTH2 FOR EMAIL
+// ============================================
+const OAuth2 = google.auth.OAuth2;
+const oauth2Client = new OAuth2(
+  process.env.CLIENT_ID,
+  process.env.CLIENT_SECRET,
+  "https://developers.google.com/oauthplayground"
+);
+
+oauth2Client.setCredentials({
+  refresh_token: process.env.REFRESH_TOKEN,
+});
+
+// ============================================
+// EMAIL SENDER FUNCTION
+// ============================================
+async function sendVerificationEmail(email, token) {
+  try {
+    const accessToken = await oauth2Client.getAccessToken();
+
+    const transport = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        type: "OAuth2",
+        user: process.env.EMAIL_USER,
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: process.env.REFRESH_TOKEN,
+        accessToken: accessToken,
+      },
+    });
+
+    const verifyURL = `http://localhost:5000/verify?token=${token}`;
+
+    const mailOptions = {
+      from: `TechWeave <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Verify Your Email - TechWeave",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #1e3c72;">Email Verification</h2>
+          <p>Welcome to TechWeave! Please verify your email address to activate your account.</p>
+          <p>Click the button below to verify your email:</p>
+          <a href="${verifyURL}" style="display: inline-block; background: #1e3c72; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 20px 0;">Verify Email</a>
+          <p>Or copy this link to your browser:</p>
+          <p style="color: #666; font-size: 14px;">${verifyURL}</p>
+          <p style="color: #999; font-size: 12px; margin-top: 30px;">This link will expire in 24 hours.</p>
+        </div>
+      `,
+    };
+
+    await transport.sendMail(mailOptions);
+    console.log(` Verification email sent to ${email}`);
+  } catch (error) {
+    console.error(' Error sending verification email:', error);
+    throw error;
+  }
+}
+
+async function sendPasswordResetEmail(email, token) {
+  try {
+    const accessToken = await oauth2Client.getAccessToken();
+
+    const transport = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        type: "OAuth2",
+        user: process.env.EMAIL_USER,
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: process.env.REFRESH_TOKEN,
+        accessToken: accessToken,
+      },
+    });
+
+    const resetURL = `http://localhost:5000/reset-password.html?token=${token}`;
+
+    await transport.sendMail({
+      from: `TechWeave <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Password Reset - TechWeave",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #1e3c72;">Password Reset Request</h2>
+          <p>We received a request to reset your password.</p>
+          <p>Click the button below to reset your password:</p>
+          <a href="${resetURL}" style="display: inline-block; background: #1e3c72; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 20px 0;">Reset Password</a>
+          <p>Or copy this link to your browser:</p>
+          <p style="color: #666; font-size: 14px;">${resetURL}</p>
+          <p style="color: #999; font-size: 12px; margin-top: 30px;">This link will expire in 1 hour.</p>
+          <p style="color: #999; font-size: 12px;">If you didn't request this, please ignore this email.</p>
+        </div>
+      `,
+    });
+    
+    console.log(` Password reset email sent to ${email}`);
+  } catch (error) {
+    console.error(' Error sending password reset email:', error);
+    throw error;
+  }
+}
 
 // ============================================
 // AUTHENTICATION ROUTES
 // ============================================
 
-// Student Signup
+// Student Signup (with email verification)
 app.post("/signup", async (req, res) => {
   const { username, email, password, role = 'student' } = req.body;
 
@@ -55,27 +165,27 @@ app.post("/signup", async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert new user with role (verified = 1 for immediate login)
+    // Insert new user with role (verified = 0, needs email verification)
     const [result] = await pool.execute(
-      'INSERT INTO users (username, email, password, verified, role) VALUES (?, ?, ?, 1, ?)',
+      'INSERT INTO users (username, email, password, verified, role) VALUES (?, ?, ?, 0, ?)',
       [username, email, hashedPassword, role]
     );
 
     const userId = result.insertId;
 
-    // Auto-join "General Chat" group (ID = 1)
+    // Generate verification token
+    const verificationToken = jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "1d" });
+
+    // Send verification email
     try {
-      await pool.execute(
-        'INSERT INTO group_chat_users (group_id, user_id) VALUES (1, ?)',
-        [userId]
-      );
-      console.log(` User ${userId} (${role}) auto-joined General Chat`);
-    } catch (err) {
-      console.error(' Error auto-joining group:', err);
+      await sendVerificationEmail(email, verificationToken);
+    } catch (emailError) {
+      console.error('Email sending failed, but user created:', emailError);
+      // Still return success even if email fails
     }
 
     res.json({ 
-      message: "Signup successful! You can now login.",
+      message: "Signup successful! Please check your email to verify your account.",
       userId: userId
     });
 
@@ -88,7 +198,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// Mentor Signup
+// Mentor Signup (with email verification)
 app.post("/mentor-signup", async (req, res) => {
   const { username, email, password, expertise, experience } = req.body;
 
@@ -106,9 +216,9 @@ app.post("/mentor-signup", async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert new mentor user (verified = 1 for immediate login)
+    // Insert new mentor user (verified = 0, needs email verification)
     const [result] = await pool.execute(
-      'INSERT INTO users (username, email, password, verified, role) VALUES (?, ?, ?, 1, "mentor")',
+      'INSERT INTO users (username, email, password, verified, role) VALUES (?, ?, ?, 0, "mentor")',
       [username, email, hashedPassword]
     );
 
@@ -127,19 +237,18 @@ app.post("/mentor-signup", async (req, res) => {
       }
     }
 
-    // Auto-join "General Chat" group (ID = 1)
+    // Generate verification token
+    const verificationToken = jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "1d" });
+
+    // Send verification email
     try {
-      await pool.execute(
-        'INSERT INTO group_chat_users (group_id, user_id) VALUES (1, ?)',
-        [userId]
-      );
-      console.log(` Mentor ${userId} auto-joined General Chat`);
-    } catch (err) {
-      console.error(' Error auto-joining group:', err);
+      await sendVerificationEmail(email, verificationToken);
+    } catch (emailError) {
+      console.error('Email sending failed, but mentor created:', emailError);
     }
 
     res.json({ 
-      message: "Mentor registration successful! You can now login.",
+      message: "Mentor registration successful! Please check your email to verify your account.",
       userId: userId
     });
 
@@ -152,7 +261,61 @@ app.post("/mentor-signup", async (req, res) => {
   }
 });
 
-// Login
+// Email Verification Route
+app.get("/verify", async (req, res) => {
+  const { token } = req.query;
+
+  if (!token) {
+    return res.send(`
+      <html>
+        <body style="font-family: Arial; text-align: center; padding: 50px;">
+          <h2>Invalid Verification Link</h2>
+          <p>Please check your email for the correct link.</p>
+        </body>
+      </html>
+    `);
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.id;
+
+    // Update user as verified
+    await pool.execute('UPDATE users SET verified = 1 WHERE id = ?', [userId]);
+
+    // Get user details
+    const [users] = await pool.execute('SELECT * FROM users WHERE id = ?', [userId]);
+    const user = users[0];
+
+    // Auto-join General Chat after verification
+    try {
+      await pool.execute(
+        'INSERT INTO group_chat_users (group_id, user_id) VALUES (1, ?)',
+        [userId]
+      );
+      console.log(` User ${userId} (${user.role}) auto-joined General Chat after verification`);
+    } catch (err) {
+      console.error(' Error auto-joining group:', err);
+    }
+
+    // Serve verification success page or redirect
+    res.sendFile(path.join(__dirname, '../frontend/verify.html'));
+
+  } catch (error) {
+    console.error('Verification error:', error);
+    res.send(`
+      <html>
+        <body style="font-family: Arial; text-align: center; padding: 50px;">
+          <h2>Verification Failed</h2>
+          <p>Token is invalid or expired. Please request a new verification email.</p>
+          <a href="/login.html" style="color: #1e3c72;">Go to Login</a>
+        </body>
+      </html>
+    `);
+  }
+});
+
+// Login (checks email verification)
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   
@@ -173,6 +336,11 @@ app.post('/login', async (req, res) => {
     
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // Check if email is verified
+    if (!user.verified) {
+      return res.status(400).json({ message: 'Please verify your email before logging in. Check your inbox.' });
     }
     
     // Generate JWT token
@@ -211,15 +379,19 @@ app.post('/request-reset', async (req, res) => {
     );
     
     if (users.length === 0) {
-      return res.status(400).json({ message: 'User not found' });
+      return res.status(400).json({ message: 'No account with that email' });
     }
     
     const resetToken = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
     
-    // In production, send email here
-    console.log(`Reset link: http://localhost:3000/reset-password.html?token=${resetToken}`);
-    
-    res.json({ message: 'Password reset instructions sent (check console for link)' });
+    // Send password reset email
+    try {
+      await sendPasswordResetEmail(email, resetToken);
+      res.json({ message: 'Password reset email sent! Check your inbox.' });
+    } catch (emailError) {
+      console.error('Password reset email failed:', emailError);
+      res.status(500).json({ message: 'Error sending reset email. Please try again later.' });
+    }
   } catch (error) {
     console.error('Reset request error:', error);
     res.status(500).json({ message: 'Error requesting password reset' });
@@ -432,62 +604,49 @@ const activeUsers = new Map();
 io.on('connection', (socket) => {
   console.log(' User connected:', socket.id);
   
-  // User connects with their ID
   socket.on('user_connected', (userId) => {
     activeUsers.set(userId, socket.id);
     console.log(` User ${userId} connected with socket ${socket.id}`);
-    
-    // Broadcast to others that user is online
     socket.broadcast.emit('user_online', userId);
   });
   
-  // Join private chat room
   socket.on('join_room', ({ roomId, userId }) => {
     socket.join(roomId);
-    console.log(`🚪 User ${userId} joined room ${roomId}`);
+    console.log(` User ${userId} joined room ${roomId}`);
   });
   
-  // Join group chat
   socket.on('join_group', ({ groupId, userId }) => {
     const groupRoom = `group_${groupId}`;
     socket.join(groupRoom);
-    console.log(`👥 User ${userId} joined group ${groupId}`);
+    console.log(` User ${userId} joined group ${groupId}`);
   });
   
-  // Send private message
   socket.on('send_message', async (data) => {
     const { senderId, receiverId, message, roomId, senderName } = data;
     
     try {
       const savedMessage = await savePrivateMessage(senderId, receiverId, message);
-      
-      // Emit to the room (both sender and receiver)
       io.to(roomId).emit('receive_message', {
         ...savedMessage,
         sender_name: senderName
       });
-      
       console.log(`💬 Private message: ${senderId} → ${receiverId}`);
     } catch (error) {
-      console.error('❌ Error sending private message:', error);
+      console.error(' Error sending private message:', error);
       socket.emit('message_error', { error: 'Failed to send message' });
     }
   });
   
-  // Send group message
   socket.on('send_group_message', async (data) => {
     const { groupId, senderId, message, senderName } = data;
     
     try {
       const savedMessage = await saveGroupMessage(groupId, senderId, message);
       const groupRoom = `group_${groupId}`;
-      
-      // Emit to all users in the group
       io.to(groupRoom).emit('receive_group_message', {
         ...savedMessage,
         sender_name: senderName
       });
-      
       console.log(`💬 Group message: User ${senderId} → Group ${groupId}`);
     } catch (error) {
       console.error(' Error sending group message:', error);
@@ -495,7 +654,6 @@ io.on('connection', (socket) => {
     }
   });
   
-  // User typing indicator for private chat
   socket.on('typing', ({ userId, userName, roomId }) => {
     socket.to(roomId).emit('user_typing', { userId, userName });
   });
@@ -504,7 +662,6 @@ io.on('connection', (socket) => {
     socket.to(roomId).emit('user_stop_typing');
   });
   
-  // User typing indicator for group chat
   socket.on('group_typing', ({ userId, userName, groupId }) => {
     const groupRoom = `group_${groupId}`;
     socket.to(groupRoom).emit('group_user_typing', { userId, userName });
@@ -515,13 +672,11 @@ io.on('connection', (socket) => {
     socket.to(groupRoom).emit('group_user_stop_typing');
   });
   
-  // Handle disconnect
   socket.on('disconnect', () => {
     for (const [userId, socketId] of activeUsers.entries()) {
       if (socketId === socket.id) {
         activeUsers.delete(userId);
         console.log(` User ${userId} disconnected`);
-        // Broadcast to others that user is offline
         socket.broadcast.emit('user_offline', userId);
         break;
       }
@@ -530,10 +685,9 @@ io.on('connection', (socket) => {
 });
 
 // ============================================
-// ADMIN ROUTES (For testing)
+// ADMIN ROUTES
 // ============================================
 
-// Promote user to mentor
 app.post('/api/admin/promote-to-mentor/:userId', async (req, res) => {
   try {
     await pool.execute(
@@ -548,21 +702,12 @@ app.post('/api/admin/promote-to-mentor/:userId', async (req, res) => {
   }
 });
 
-// Get system stats
 app.get('/api/admin/stats', async (req, res) => {
   try {
-    const [userCount] = await pool.execute(
-      'SELECT COUNT(*) as count FROM users'
-    );
-    const [mentorCount] = await pool.execute(
-      'SELECT COUNT(*) as count FROM users WHERE role = "mentor"'
-    );
-    const [messageCount] = await pool.execute(
-      'SELECT COUNT(*) as count FROM messages'
-    );
-    const [groupMessageCount] = await pool.execute(
-      'SELECT COUNT(*) as count FROM group_messages'
-    );
+    const [userCount] = await pool.execute('SELECT COUNT(*) as count FROM users');
+    const [mentorCount] = await pool.execute('SELECT COUNT(*) as count FROM users WHERE role = "mentor"');
+    const [messageCount] = await pool.execute('SELECT COUNT(*) as count FROM messages');
+    const [groupMessageCount] = await pool.execute('SELECT COUNT(*) as count FROM group_messages');
     
     res.json({
       totalUsers: userCount[0].count,
@@ -577,16 +722,77 @@ app.get('/api/admin/stats', async (req, res) => {
 });
 
 // ============================================
-// TEST DATABASE CONNECTION
+// DATABASE CONNECTION TEST
 // ============================================
 async function testDatabaseConnection() {
   try {
     const connection = await pool.getConnection();
-    console.log('Database connected successfully!');
+    console.log(' Database connected successfully!');
     connection.release();
   } catch (error) {
     console.error(' Database connection failed:', error.message);
     process.exit(1);
+  }
+}
+
+async function ensureGeneralChatExists() {
+  try {
+    const [groups] = await pool.execute('SELECT * FROM group_chats WHERE id = 1');
+
+    if (groups.length === 0) {
+      console.log('⚠️  General Chat not found, creating...');
+      
+      const [users] = await pool.execute('SELECT id FROM users LIMIT 1');
+      const creatorId = users.length > 0 ? users[0].id : 1;
+
+      try {
+        await pool.execute(
+          'INSERT INTO group_chats (id, name, created_by, created_at) VALUES (1, ?, ?, NOW())',
+          ['General Chat', creatorId]
+        );
+      } catch (err) {
+        await pool.execute('SET FOREIGN_KEY_CHECKS = 0');
+        await pool.execute(
+          'INSERT INTO group_chats (id, name, created_by, created_at) VALUES (1, ?, 1, NOW())',
+          ['General Chat']
+        );
+        await pool.execute('SET FOREIGN_KEY_CHECKS = 1');
+      }
+
+      console.log(' General Chat created successfully!');
+    } else {
+      console.log('  General Chat already exists');
+    }
+  } catch (error) {
+    console.error(' Error ensuring General Chat exists:', error.message);
+  }
+}
+
+// ============================================
+// EMAIL SERVICE INITIALIZATION
+// ============================================
+async function initializeEmailService() {
+  try {
+    // Check if email credentials are configured
+    if (!process.env.EMAIL_USER || !process.env.CLIENT_ID || !process.env.CLIENT_SECRET || !process.env.REFRESH_TOKEN) {
+      console.log('⚠️  Email service not configured. Email verification will be skipped.');
+      console.log('   Add EMAIL_USER, CLIENT_ID, CLIENT_SECRET, and REFRESH_TOKEN to .env file');
+      return false;
+    }
+    
+    // Test OAuth2 connection
+    try {
+      await oauth2Client.getAccessToken();
+      console.log(' Email service initialized successfully!');
+      return true;
+    } catch (error) {
+      console.log('⚠️  Email service connection failed. Check your OAuth2 credentials.');
+      console.log('   Email verification will not work until this is fixed.');
+      return false;
+    }
+  } catch (error) {
+    console.error(' Error initializing email service:', error.message);
+    return false;
   }
 }
 
@@ -596,15 +802,15 @@ async function testDatabaseConnection() {
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, async () => {
- // console.log('='.repeat(50));
-  console.log('TechWeave Server Started');
-  //console.log('='.repeat(50));
-  console.log(`Server running on: http://localhost:${PORT}`);
-  // console.log('='.repeat(50));
-  
-  // Test database connection on startup
-  await testDatabaseConnection();
-  
+  console.log(' TechWeave Server Started');
+  console.log(` Server running on: http://localhost:${PORT}`);
+  console.log(` Socket.io ready for real-time connections`);
 
-  // console.log('='.repeat(50));
+  
+  await testDatabaseConnection();
+  await ensureGeneralChatExists();
+  await initializeEmailService();
+  
+  console.log(' All systems ready!');
+
 });
