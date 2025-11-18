@@ -4,13 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TechWeave Community Forum</title>
-
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<!-- Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 <style>
     :root {
         --primary: #1e3c72;
@@ -39,7 +34,6 @@
         line-height: 1.6;
     }
 
-    /* TOP NAVIGATION BAR */
     .top-nav {
         background: var(--white);
         padding: 12px 20px;
@@ -79,16 +73,11 @@
         padding: 8px;
         border-radius: 50%;
         transition: all 0.3s ease;
-        position: relative;
     }
 
     .nav-icon:hover {
         background: var(--light-gray);
         transform: translateY(-2px);
-    }
-
-    .nav-icon.active {
-        color: var(--primary);
     }
 
     .nav-icon.logout {
@@ -97,10 +86,8 @@
 
     .nav-icon.logout:hover {
         background: #ffeaea;
-        color: #c0392b;
     }
 
-    /* MAIN CONTAINER */
     .main-container {
         max-width: 1200px;
         margin: 20px auto;
@@ -110,7 +97,6 @@
         padding: 0 15px;
     }
 
-    /* LEFT SIDEBAR - USER PROFILE */
     .sidebar {
         background: var(--white);
         border-radius: var(--radius);
@@ -192,14 +178,12 @@
         text-align: center;
     }
 
-    /* FEED CONTAINER */
     .feed-container {
         display: flex;
         flex-direction: column;
         gap: 20px;
     }
 
-    /* STATUS BOX */
     .status-box {
         background: var(--white);
         border-radius: var(--radius);
@@ -229,11 +213,6 @@
         font-size: 15px;
         resize: none;
         outline: none;
-        transition: border 0.3s ease;
-    }
-
-    .status-input:focus {
-        border-color: var(--primary);
     }
 
     .status-options {
@@ -257,10 +236,8 @@
 
     .status-option:hover {
         background: var(--light-gray);
-        color: var(--dark);
     }
 
-    /* POST CARD */
     .post-card {
         background: var(--white);
         border-radius: var(--radius);
@@ -301,12 +278,19 @@
         line-height: 1.6;
     }
 
-    .post-image, .post-video {
+    .post-image {
         width: 100%;
         border-radius: 8px;
         margin: 15px 0;
         max-height: 500px;
         object-fit: cover;
+    }
+
+    .post-video {
+        width: 100%;
+        border-radius: 8px;
+        margin: 15px 0;
+        max-height: 500px;
     }
 
     .post-stats {
@@ -343,15 +327,10 @@
         background: var(--light-gray);
     }
 
-    .reaction-btn.active {
-        color: var(--primary);
-    }
-
     .reaction-btn.liked {
         color: #e74c3c;
     }
 
-    /* COMMENT SECTION */
     .comment-section {
         margin-top: 15px;
     }
@@ -376,11 +355,6 @@
         padding: 10px 15px;
         font-size: 14px;
         outline: none;
-        transition: border 0.3s ease;
-    }
-
-    .comment-input:focus {
-        border-color: var(--primary);
     }
 
     .comment {
@@ -413,29 +387,6 @@
         line-height: 1.5;
     }
 
-    .comment-actions {
-        display: flex;
-        gap: 15px;
-        margin-top: 8px;
-        font-size: 12px;
-        color: var(--gray);
-    }
-
-    .comment-action {
-        cursor: pointer;
-        transition: color 0.3s ease;
-    }
-
-    .comment-action:hover {
-        color: var(--primary);
-    }
-
-    .replies {
-        margin-left: 42px;
-        margin-top: 10px;
-    }
-
-    /* RIGHT SIDEBAR */
     .right-sidebar {
         background: var(--white);
         border-radius: var(--radius);
@@ -492,7 +443,6 @@
         border: 2px solid var(--white);
     }
 
-    /* MODAL */
     .modal {
         display: none;
         position: fixed;
@@ -517,7 +467,7 @@
 
     .modal-header {
         display: flex;
-        justify-content: between;
+        justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
     }
@@ -556,11 +506,6 @@
         border-radius: 8px;
         font-size: 14px;
         outline: none;
-        transition: border 0.3s ease;
-    }
-
-    .form-control:focus {
-        border-color: var(--primary);
     }
 
     .modal-footer {
@@ -575,7 +520,6 @@
         border: none;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s ease;
     }
 
     .btn-primary {
@@ -583,30 +527,16 @@
         color: var(--white);
     }
 
-    .btn-primary:hover {
-        background: var(--primary-light);
-    }
-
     .btn-secondary {
         background: var(--light-gray);
         color: var(--dark);
     }
 
-    .btn-secondary:hover {
-        background: #d1d5db;
-    }
-
     .btn-logout {
         background: #e74c3c;
         color: white;
-        margin-right: auto;
     }
 
-    .btn-logout:hover {
-        background: #c0392b;
-    }
-
-    /* RESPONSIVE */
     @media (max-width: 992px) {
         .main-container {
             grid-template-columns: 1fr;
@@ -621,33 +551,21 @@
 
 <body>
 
-<!-- TOP NAVIGATION BAR -->
 <div class="top-nav">
     <div class="logo">
         <i class="fas fa-users logo-icon"></i>
         <h2>TechWeave Forum</h2>
     </div>
-
     <div class="nav-icons">
-        <div class="nav-icon active" title="Home">
-            <i class="fas fa-home"></i>
-        </div>
-        <div class="nav-icon" title="Solved Problems" onclick="openSolvedProblems()">
-            <i class="fas fa-check-circle"></i>
-        </div>
         <div class="nav-icon" title="Create Post" onclick="openCreatePostModal()">
             <i class="fas fa-plus-square"></i>
         </div>
         <div class="nav-icon" title="Video Post" onclick="openVideoPostModal()">
             <i class="fas fa-video"></i>
         </div>
-        <div class="nav-icon" title="Chat" onclick="goBackToChat()">
-            <i class="fas fa-comments"></i>
+        <div class="nav-icon" title="Image Post" onclick="openImagePostModal()">
+            <i class="fas fa-image"></i>
         </div>
-        <div class="nav-icon" title="Profile" onclick="openProfileModal()">
-            <i class="fas fa-user-circle"></i>
-        </div>
-        <!-- LOGOUT BUTTON ADDED -->
         <div class="nav-icon logout" title="Logout" onclick="logout()">
             <i class="fas fa-sign-out-alt"></i>
         </div>
@@ -655,485 +573,258 @@
 </div>
 
 <div class="main-container">
-    <!-- LEFT SIDEBAR - USER PROFILE -->
     <div class="sidebar">
         <div class="user-profile">
-            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-pic">
+            <img src="https://ui-avatars.com/api/?name=Alex+Johnson&background=1e3c72&color=fff" alt="Profile" class="profile-pic">
             <div class="user-name" id="profileName">Alex Johnson</div>
-            <div class="user-email" id="profileEmail">alex.johnson@example.com</div>
+            <div class="user-email" id="profileEmail">alex@example.com</div>
             <div class="user-role mentor" id="profileRole">MENTOR</div>
         </div>
-
         <ul class="sidebar-menu">
             <li><a href="#" class="active"><i class="fas fa-newspaper"></i> News Feed</a></li>
-            <li><a href="#"><i class="fas fa-user-friends"></i> Friends</a></li>
-            <li><a href="#"><i class="fas fa-users"></i> Groups</a></li>
-            <li><a href="#" onclick="openSolvedProblems()"><i class="fas fa-check-circle"></i> Solved Problems</a></li>
+            <li><a href="#"><i class="fas fa-check-circle"></i> Solved Problems</a></li>
             <li><a href="#"><i class="fas fa-bookmark"></i> Saved Posts</a></li>
-            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-            <!-- LOGOUT ADDED TO SIDEBAR -->
             <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </div>
 
-    <!-- FEED CONTAINER -->
     <div class="feed-container">
-        <!-- STATUS BOX -->
         <div class="status-box">
             <div class="status-header">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="status-avatar">
-                <input type="text" class="status-input" placeholder="What's on your mind, Alex?" id="postText" onkeypress="if(event.key === 'Enter') createPost()">
+                <img src="https://ui-avatars.com/api/?name=Alex+Johnson&background=1e3c72&color=fff" alt="User" class="status-avatar">
+                <input type="text" class="status-input" placeholder="What's on your mind, Alex?" id="postText" onkeypress="if(event.key === 'Enter') createTextPost()">
             </div>
             <div class="status-options">
                 <div class="status-option" onclick="openVideoPostModal()">
                     <i class="fas fa-video" style="color: #e74c3c;"></i>
-                    <span>Live Video</span>
+                    <span>Video Post</span>
                 </div>
-                <div class="status-option" onclick="openPhotoPostModal()">
-                    <i class="fas fa-images" style="color: #2ecc71;"></i>
-                    <span>Photo/Video</span>
+                <div class="status-option" onclick="openImagePostModal()">
+                    <i class="fas fa-image" style="color: #2ecc71;"></i>
+                    <span>Image Post</span>
                 </div>
-                <div class="status-option" onclick="openSolvedProblemModal()">
-                    <i class="fas fa-check-circle" style="color: #3498db;"></i>
-                    <span>Solved Problem</span>
+                <div class="status-option" onclick="openCreatePostModal()">
+                    <i class="fas fa-edit" style="color: #3498db;"></i>
+                    <span>Text Post</span>
                 </div>
             </div>
         </div>
 
-        <!-- POSTS WILL BE RENDERED HERE -->
         <div id="feed"></div>
     </div>
 
-    <!-- RIGHT SIDEBAR -->
     <div class="right-sidebar">
         <h3 class="sidebar-title">Online Now</h3>
         <div class="online-users" id="onlineUsers">
             <div class="online-user">
                 <div class="online-avatar-container">
-                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="online-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Sarah+Miller&background=1e3c72&color=fff" alt="User" class="online-avatar">
                     <div class="online-indicator"></div>
                 </div>
                 <span>Sarah Miller</span>
             </div>
             <div class="online-user">
                 <div class="online-avatar-container">
-                    <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User" class="online-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Michael+Chen&background=1e3c72&color=fff" alt="User" class="online-avatar">
                     <div class="online-indicator"></div>
                 </div>
                 <span>Michael Chen</span>
-            </div>
-            <div class="online-user">
-                <div class="online-avatar-container">
-                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User" class="online-avatar">
-                    <div class="online-indicator"></div>
-                </div>
-                <span>Emma Wilson</span>
-            </div>
-            <div class="online-user">
-                <div class="online-avatar-container">
-                    <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="User" class="online-avatar">
-                    <div class="online-indicator"></div>
-                </div>
-                <span>David Brown</span>
-            </div>
-        </div>
-
-        <h3 class="sidebar-title" style="margin-top: 25px;">Recent Activities</h3>
-        <div class="recent-activities" id="recentActivities">
-            <div class="activity">
-                <div class="activity-text">Sarah solved a Docker networking issue</div>
-                <div class="activity-time">2 hours ago</div>
-            </div>
-            <div class="activity">
-                <div class="activity-text">Michael shared a Kubernetes tutorial</div>
-                <div class="activity-time">5 hours ago</div>
-            </div>
-            <div class="activity">
-                <div class="activity-text">Emma posted a DevOps career question</div>
-                <div class="activity-time">Yesterday</div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- CREATE POST MODAL -->
+<!-- TEXT POST MODAL -->
 <div class="modal" id="createPostModal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 class="modal-title">Create Post</h3>
+            <h3 class="modal-title">Create Text Post</h3>
             <button class="close-modal" onclick="closeModal('createPostModal')">&times;</button>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <textarea class="form-control" id="modalPostText" rows="4" placeholder="What's on your mind?"></textarea>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Add Image/Video (optional)</label>
-                <input type="file" class="form-control" id="postMedia" accept="image/*,video/*">
+                <textarea class="form-control" id="textPostContent" rows="4" placeholder="What's on your mind?"></textarea>
             </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" onclick="closeModal('createPostModal')">Cancel</button>
-            <button class="btn btn-primary" onclick="createPostFromModal()">Post</button>
+            <button class="btn btn-primary" onclick="createTextPost()">Post</button>
         </div>
     </div>
 </div>
 
 <!-- VIDEO POST MODAL -->
+<!-- VIDEO POST MODAL (also used for images) -->
 <div class="modal" id="videoPostModal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 class="modal-title">Share a Video</h3>
+            <h3 class="modal-title" id="modal-title">Share a Video</h3>
             <button class="close-modal" onclick="closeModal('videoPostModal')">&times;</button>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <textarea class="form-control" id="videoPostText" rows="3" placeholder="Describe your video..."></textarea>
+                <textarea class="form-control" id="videoPostText" rows="3" placeholder="Describe your content..."></textarea>
             </div>
             <div class="form-group">
-                <label class="form-label">Video URL</label>
+                <label class="form-label" id="url-label">Video URL</label>
                 <input type="text" class="form-control" id="videoUrl" placeholder="Paste YouTube, Vimeo, or direct link">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Or upload a video</label>
-                <input type="file" class="form-control" id="videoUpload" accept="video/*">
             </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" onclick="closeModal('videoPostModal')">Cancel</button>
-            <button class="btn btn-primary" onclick="createVideoPost()">Share Video</button>
+            <button class="btn btn-primary" id="share-button" onclick="createVideoPost()">Share Video</button>
         </div>
     </div>
 </div>
 
-<!-- SOLVED PROBLEM MODAL -->
-<div class="modal" id="solvedProblemModal">
+<!-- IMAGE POST MODAL -->
+<div class="modal" id="imagePostModal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 class="modal-title">Share Solved Problem</h3>
-            <button class="close-modal" onclick="closeModal('solvedProblemModal')">&times;</button>
+            <h3 class="modal-title">Share an Image</h3>
+            <button class="close-modal" onclick="closeModal('imagePostModal')">&times;</button>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label class="form-label">Problem Title</label>
-                <input type="text" class="form-control" id="problemTitle" placeholder="e.g., Docker Container Networking Issue">
+                <textarea class="form-control" id="imagePostText" rows="3" placeholder="Describe your image..."></textarea>
             </div>
             <div class="form-group">
-                <label class="form-label">Problem Description</label>
-                <textarea class="form-control" id="problemDescription" rows="3" placeholder="Describe the problem you faced..."></textarea>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Solution</label>
-                <textarea class="form-control" id="problemSolution" rows="4" placeholder="Explain how you solved it..."></textarea>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Category</label>
-                <select class="form-control" id="problemCategory">
-                    <option value="docker">Docker</option>
-                    <option value="kubernetes">Kubernetes</option>
-                    <option value="devops">DevOps</option>
-                    <option value="cloud">Cloud</option>
-                    <option value="other">Other</option>
-                </select>
+                <label class="form-label">Image URL</label>
+                <input type="text" class="form-control" id="imageUrl" placeholder="Paste image URL">
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" onclick="closeModal('solvedProblemModal')">Cancel</button>
-            <button class="btn btn-primary" onclick="createSolvedProblemPost()">Share Solution</button>
-        </div>
-    </div>
-</div>
-
-<!-- PROFILE MODAL -->
-<div class="modal" id="profileModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title">Your Profile</h3>
-            <button class="close-modal" onclick="closeModal('profileModal')">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div style="text-align: center; margin-bottom: 20px;">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-pic" style="width: 120px; height: 120px;">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Full Name</label>
-                <input type="text" class="form-control" id="profileNameInput" value="Alex Johnson">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-control" id="profileEmailInput" value="alex.johnson@example.com">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Role</label>
-                <input type="text" class="form-control" id="profileRoleInput" value="Mentor" readonly>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Bio</label>
-                <textarea class="form-control" id="profileBio" rows="3">Senior DevOps Engineer with 8+ years of experience. Passionate about containerization and cloud technologies.</textarea>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Skills</label>
-                <input type="text" class="form-control" id="profileSkills" value="Docker, Kubernetes, AWS, CI/CD, Terraform">
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-logout" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-            <button class="btn btn-secondary" onclick="closeModal('profileModal')">Cancel</button>
-            <button class="btn btn-primary" onclick="updateProfile()">Save Changes</button>
+            <button class="btn btn-secondary" onclick="closeModal('imagePostModal')">Cancel</button>
+            <button class="btn btn-primary" onclick="createImagePost()">Share Image</button>
         </div>
     </div>
 </div>
 
 <script>
-// API Configuration
 const API_BASE = 'http://localhost:5000/api';
-let currentUser = null;
+let currentUser = { id: 1, username: 'Alex Johnson', role: 'mentor' };
 let posts = [];
 
-// Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
     checkAuthentication();
 });
 
-// Check if user is authenticated and load REAL data
 async function checkAuthentication() {
     const token = localStorage.getItem('token');
     if (!token) {
         window.location.href = 'login.html';
         return;
     }
-
-    try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        await loadRealUserData(payload.id);
-        await loadRealPosts();
-        await loadRealOnlineUsers();
-        await loadRealRecentActivities();
-    } catch (error) {
-        console.error('Authentication error:', error);
-        localStorage.removeItem('token');
-        window.location.href = 'login.html';
-    }
+    await loadRealUserData();
+    await loadRealPosts();
 }
 
-// Load REAL user data from your backend
-async function loadRealUserData(userId) {
+async function loadRealUserData() {
     try {
-        const response = await fetch(`${API_BASE}/user/${userId}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
+        const response = await fetch(`${API_BASE}/user/1`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
-
-        if (!response.ok) throw new Error('Failed to fetch user data');
-        
-        const user = await response.json();
-        currentUser = user;
-        
-        // Update UI with REAL user data
-        document.getElementById('profileName').textContent = user.username;
-        document.getElementById('profileEmail').textContent = user.email;
-        document.getElementById('profileRole').textContent = user.role.toUpperCase();
-        document.getElementById('profileRole').className = user.role === 'mentor' ? 'user-role mentor' : 'user-role';
-        
-        // Update modal fields with REAL data
-        document.getElementById('profileNameInput').value = user.username;
-        document.getElementById('profileEmailInput').value = user.email;
-        document.getElementById('profileRoleInput').value = user.role;
-        
-        // Generate avatar based on REAL username
-        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=1e3c72&color=fff`;
-        document.querySelectorAll('.profile-pic').forEach(img => img.src = avatarUrl);
-        document.querySelectorAll('.status-avatar').forEach(img => img.src = avatarUrl);
-
+        if (response.ok) {
+            const user = await response.json();
+            currentUser = user;
+            document.getElementById('profileName').textContent = user.username;
+            document.getElementById('profileEmail').textContent = user.email;
+            document.getElementById('profileRole').textContent = user.role.toUpperCase();
+        }
     } catch (error) {
-        console.error('Error loading real user profile:', error);
-        alert('Failed to load user data');
+        console.error('Error loading user:', error);
     }
 }
 
-// Load REAL posts from your backend API
 async function loadRealPosts() {
     try {
         const response = await fetch(`${API_BASE}/forum/posts?userId=${currentUser.id}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
-        
-        if (!response.ok) throw new Error('Failed to fetch posts');
-        
-        const apiPosts = await response.json();
-        posts = apiPosts;
-        
-        // Load REAL comments for each post
-        for (let post of posts) {
-            post.comments = await loadRealComments(post.id);
+        if (response.ok) {
+            posts = await response.json();
+            for (let post of posts) {
+                post.comments = await loadRealComments(post.id);
+            }
+            renderRealFeed();
         }
-        
-        renderRealFeed();
-        
     } catch (error) {
-        console.error('Error loading real posts:', error);
-        // Show error but don't use fake data
-        document.getElementById('feed').innerHTML = `
-            <div class="post-card" style="text-align: center; padding: 40px;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #e74c3c; margin-bottom: 15px;"></i>
-                <h3>Failed to load posts</h3>
-                <p>Please check your backend connection and make sure forum routes are added to server.js</p>
-                <button onclick="loadRealPosts()" class="btn btn-primary" style="margin-top: 15px;">Retry</button>
-            </div>
-        `;
+        console.error('Error loading posts:', error);
+        renderRealFeed();
     }
 }
 
-// Load REAL comments for a post
 async function loadRealComments(postId) {
     try {
         const response = await fetch(`${API_BASE}/forum/posts/${postId}/comments`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
-        
-        if (!response.ok) return [];
-        return await response.json();
+        return response.ok ? await response.json() : [];
     } catch (error) {
-        console.error('Error loading real comments:', error);
         return [];
     }
 }
 
-// Create a REAL post - send to your backend
-async function createPost() {
-    const text = document.getElementById('postText').value.trim();
-    if (!text) {
+function openCreatePostModal() {
+    document.getElementById('createPostModal').style.display = "flex";
+}
+
+function openVideoPostModal() {
+    document.getElementById('videoPostModal').style.display = "flex";
+}
+
+function openImagePostModal() {
+    document.getElementById('videoPostModal').style.display = "flex";
+    document.getElementById('modal-title').textContent = "Share an Image";
+    document.getElementById('videoUrl').placeholder = "Paste image URL";
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+    // Reset modal title and placeholder
+    document.getElementById('modal-title').textContent = "Share a Video";
+    document.getElementById('videoUrl').placeholder = "Paste YouTube, Vimeo, or direct link";
+}
+
+async function createTextPost() {
+    const content = document.getElementById('textPostContent')?.value || document.getElementById('postText')?.value;
+    if (!content?.trim()) {
         alert('Please write something first!');
         return;
     }
-
-    try {
-        const response = await fetch(`${API_BASE}/forum/posts`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({
-                userId: currentUser.id,
-                content: text,
-                postType: 'text'
-            })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to create post');
-        }
-        
-        document.getElementById('postText').value = "";
-        await loadRealPosts(); // Reload REAL posts
-        
-    } catch (error) {
-        console.error('Error creating real post:', error);
-        alert('Failed to create post: ' + error.message);
-    }
+    await createPostAPI(content, 'text');
+    closeModal('createPostModal');
+    if (document.getElementById('textPostContent')) document.getElementById('textPostContent').value = '';
+    if (document.getElementById('postText')) document.getElementById('postText').value = '';
 }
 
-// Create post from modal - REAL
-async function createPostFromModal() {
-    const text = document.getElementById('modalPostText').value.trim();
-    if (!text) {
-        alert('Please write something first!');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE}/forum/posts`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({
-                userId: currentUser.id,
-                content: text,
-                postType: 'text'
-            })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to create post');
-        }
-        
-        closeModal('createPostModal');
-        document.getElementById('modalPostText').value = "";
-        await loadRealPosts();
-        
-    } catch (error) {
-        console.error('Error creating real post:', error);
-        alert('Failed to create post: ' + error.message);
-    }
-}
-
-// Create REAL video post
 async function createVideoPost() {
-    const text = document.getElementById('videoPostText').value.trim();
-    const videoUrl = document.getElementById('videoUrl').value.trim();
-    
-    if (!text || !videoUrl) {
-        alert('Please provide both description and video URL');
+    const content = document.getElementById('videoPostText').value;
+    const videoUrl = document.getElementById('videoUrl').value;
+    if (!content?.trim() || !videoUrl?.trim()) {
+        alert('Please provide both description and URL');
         return;
     }
-
-    try {
-        const response = await fetch(`${API_BASE}/forum/posts`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({
-                userId: currentUser.id,
-                content: text,
-                postType: 'video',
-                videoUrl: videoUrl
-            })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to create video post');
-        }
-        
-        closeModal('videoPostModal');
-        document.getElementById('videoPostText').value = "";
-        document.getElementById('videoUrl').value = "";
-        await loadRealPosts();
-        
-    } catch (error) {
-        console.error('Error creating real video post:', error);
-        alert('Failed to create video post: ' + error.message);
-    }
+    await createPostAPI(content, 'video', videoUrl);
+    closeModal('videoPostModal');
+    document.getElementById('videoPostText').value = '';
+    document.getElementById('videoUrl').value = '';
 }
 
-// Create REAL solved problem post
-async function createSolvedProblemPost() {
-    const title = document.getElementById('problemTitle').value.trim();
-    const description = document.getElementById('problemDescription').value.trim();
-    const solution = document.getElementById('problemSolution').value.trim();
-    const category = document.getElementById('problemCategory').value;
-    
-    if (!title || !description || !solution) {
-        alert('Please fill in all fields');
+async function createImagePost() {
+    const content = document.getElementById('videoPostText').value;
+    const imageUrl = document.getElementById('videoUrl').value;
+    if (!content?.trim() || !imageUrl?.trim()) {
+        alert('Please provide both description and image URL');
         return;
     }
+    await createPostAPI(content, 'image', imageUrl);
+    closeModal('videoPostModal');
+    document.getElementById('videoPostText').value = '';
+    document.getElementById('videoUrl').value = '';
+}
 
-    const content = `🚀 SOLVED: ${title}\n\n📋 Problem: ${description}\n\n💡 Solution: ${solution}\n\n🏷️ Category: ${category}`;
-
+async function createPostAPI(content, postType = 'text', mediaUrl = null) {
     try {
         const response = await fetch(`${API_BASE}/forum/posts`, {
             method: 'POST',
@@ -1144,101 +835,27 @@ async function createSolvedProblemPost() {
             body: JSON.stringify({
                 userId: currentUser.id,
                 content: content,
-                postType: 'text'
+                postType: postType,
+                videoUrl: mediaUrl
             })
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to create post');
-        }
-        
-        closeModal('solvedProblemModal');
-        document.getElementById('problemTitle').value = "";
-        document.getElementById('problemDescription').value = "";
-        document.getElementById('problemSolution').value = "";
+        if (!response.ok) throw new Error('Failed to create post');
         await loadRealPosts();
-        
     } catch (error) {
-        console.error('Error creating real solved problem post:', error);
-        alert('Failed to share solution: ' + error.message);
+        console.error('Error creating post:', error);
+        alert('Failed to create post: ' + error.message);
     }
 }
 
-// Toggle REAL like on a post
-async function toggleLike(postId) {
-    try {
-        const response = await fetch(`${API_BASE}/forum/posts/${postId}/like`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({
-                userId: currentUser.id
-            })
-        });
-
-        if (!response.ok) throw new Error('Failed to toggle like');
-        
-        await loadRealPosts(); // Reload to update REAL like count
-        
-    } catch (error) {
-        console.error('Error toggling real like:', error);
-        alert('Failed to like post');
-    }
-}
-
-// Add REAL comment to a post
-async function addComment(postId) {
-    const input = document.getElementById(`comment-input-${postId}`);
-    const text = input.value.trim();
-    
-    if (!text) {
-        alert('Please write a comment first!');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE}/forum/posts/${postId}/comments`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({
-                userId: currentUser.id,
-                content: text
-            })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to add comment');
-        }
-        
-        input.value = "";
-        await loadRealPosts(); // Reload to show REAL comment
-        
-    } catch (error) {
-        console.error('Error adding real comment:', error);
-        alert('Failed to add comment: ' + error.message);
-    }
-}
-
-// Render REAL posts to the feed
 function renderRealFeed() {
     let feedHtml = "";
-
     if (posts.length === 0) {
-        feedHtml = `
-            <div class="post-card" style="text-align: center; padding: 40px;">
-                <i class="fas fa-inbox" style="font-size: 48px; color: var(--gray); margin-bottom: 15px;"></i>
-                <h3>No posts yet</h3>
-                <p>Be the first to share something with the community!</p>
-                <button onclick="openCreatePostModal()" class="btn btn-primary" style="margin-top: 15px;">Create First Post</button>
-            </div>
-        `;
+        feedHtml = `<div class="post-card" style="text-align: center; padding: 40px;">
+            <i class="fas fa-inbox" style="font-size: 48px; color: var(--gray); margin-bottom: 15px;"></i>
+            <h3>No posts yet</h3>
+            <p>Be the first to share something with the community!</p>
+        </div>`;
     } else {
         posts.forEach(post => {
             feedHtml += `
@@ -1250,40 +867,22 @@ function renderRealFeed() {
                         <div class="post-time">${post.timestamp}</div>
                     </div>
                 </div>
-
-                <div class="post-content" style="white-space: pre-line;">
-                    ${post.content}
-                </div>
-
-                ${post.video ? `
-                <div class="post-video-container">
-                    <iframe width="100%" height="315" src="${post.video}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                ` : ''}
-
+                <div class="post-content" style="white-space: pre-line;">${post.content}</div>
+                ${post.video ? `<div class="post-video-container"><iframe width="100%" height="315" src="${post.video}" frameborder="0" allowfullscreen></iframe></div>` : ''}
+                ${post.image_url ? `<img src="${post.image_url}" alt="Post image" class="post-image">` : ''}
                 <div class="post-stats">
-                    <div class="likes-count">${post.likes} ${post.likes === 1 ? 'like' : 'likes'}</div>
-                    <div class="comments-count">${post.comments.length} ${post.comments.length === 1 ? 'comment' : 'comments'}</div>
+                    <div class="likes-count">${post.likes} likes</div>
+                    <div class="comments-count">${post.comments.length} comments</div>
                 </div>
-
                 <div class="reaction-bar">
-                    <button class="reaction-btn ${post.userLiked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
-                        <i class="fas fa-thumbs-up"></i> Like
-                    </button>
-                    <button class="reaction-btn" onclick="focusComment(${post.id})">
-                        <i class="fas fa-comment"></i> Comment
-                    </button>
+                    <button class="reaction-btn" onclick="toggleLike(${post.id})"><i class="fas fa-thumbs-up"></i> Like</button>
+                    <button class="reaction-btn" onclick="focusComment(${post.id})"><i class="fas fa-comment"></i> Comment</button>
                 </div>
-
                 <div class="comment-section">
                     <div class="comment-input-container">
-                        <img src="${currentUser ? `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.username)}&background=1e3c72&color=fff` : ''}" 
-                             alt="You" class="comment-avatar">
-                        <input type="text" class="comment-input" id="comment-input-${post.id}" 
-                               placeholder="Write a comment..." 
-                               onkeypress="if(event.key === 'Enter') addComment(${post.id})">
+                        <img src="https://ui-avatars.com/api/?name=You&background=1e3c72&color=fff" class="comment-avatar">
+                        <input type="text" class="comment-input" id="comment-input-${post.id}" placeholder="Write a comment..." onkeypress="if(event.key === 'Enter') addComment(${post.id})">
                     </div>
-
                     ${post.comments.map(comment => `
                     <div class="comment">
                         <img src="${comment.user.avatar}" alt="${comment.user.name}" class="comment-avatar">
@@ -1294,137 +893,76 @@ function renderRealFeed() {
                             </div>
                             <div class="comment-text">${comment.text}</div>
                         </div>
-                    </div>
-                    `).join('')}
+                    </div>`).join('')}
                 </div>
-            </div>
-            `;
+            </div>`;
         });
     }
-
     document.getElementById("feed").innerHTML = feedHtml;
 }
 
-// Load REAL online users from your backend
-async function loadRealOnlineUsers() {
+async function toggleLike(postId) {
     try {
-        const response = await fetch(`${API_BASE}/all-users`, {
+        const response = await fetch(`${API_BASE}/forum/posts/${postId}/like`, {
+            method: 'POST',
             headers: {
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
+            },
+            body: JSON.stringify({ userId: currentUser.id })
         });
-        
-        if (!response.ok) return;
-        
-        const users = await response.json();
-        
-        const onlineUsersHtml = users.slice(0, 5).map(user => `
-            <div class="online-user">
-                <div class="online-avatar-container">
-                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=1e3c72&color=fff" 
-                         alt="${user.username}" class="online-avatar">
-                    <div class="online-indicator"></div>
-                </div>
-                <span>${user.username} ${user.role === 'mentor' ? '<span style="color: #ff6b00;">(Mentor)</span>' : ''}</span>
-            </div>
-        `).join('');
-        
-        document.getElementById('onlineUsers').innerHTML = onlineUsersHtml;
+        if (response.ok) await loadRealPosts();
     } catch (error) {
-        console.error('Error loading real online users:', error);
+        console.error('Error toggling like:', error);
     }
 }
 
-// Load REAL recent activities
-async function loadRealRecentActivities() {
+async function addComment(postId) {
+    const input = document.getElementById(`comment-input-${postId}`);
+    const text = input.value.trim();
+    if (!text) return;
+    
     try {
-        // This would come from your backend in a real implementation
-        // For now, we'll show a message
-        document.getElementById('recentActivities').innerHTML = `
-            <div style="text-align: center; padding: 20px; color: var(--gray);">
-                <i class="fas fa-sync-alt" style="margin-right: 8px;"></i>
-                Loading recent activities...
-            </div>
-        `;
+        const response = await fetch(`${API_BASE}/forum/posts/${postId}/comments`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ userId: currentUser.id, content: text })
+        });
+        if (response.ok) {
+            input.value = "";
+            await loadRealPosts();
+        }
     } catch (error) {
-        console.error('Error loading real activities:', error);
+        console.error('Error adding comment:', error);
     }
 }
 
-// LOGOUT FUNCTION - NOW VISIBLE AND WORKING
-function logout() {
-    if (confirm('Are you sure you want to logout?')) {
-        // Clear all stored data
-        localStorage.removeItem('token');
-        localStorage.removeItem('userData');
-        sessionStorage.clear();
-        
-        // Redirect to login page
-        window.location.href = 'login.html';
-    }
-}
-
-// Utility functions
 function focusComment(postId) {
     const input = document.getElementById(`comment-input-${postId}`);
     if (input) input.focus();
 }
 
-// Modal functions
-function openCreatePostModal() {
-    document.getElementById('createPostModal').style.display = "flex";
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+    }
 }
 
-function openVideoPostModal() {
-    document.getElementById('videoPostModal').style.display = "flex";
-}
-
-function openSolvedProblemModal() {
-    document.getElementById('solvedProblemModal').style.display = "flex";
-}
-
-function openProfileModal() {
-    document.getElementById('profileModal').style.display = "flex";
-}
-
-function closeModal(modalId) {
-    document.getElementById(modalId).style.display = "none";
-}
-
-// Update REAL user profile
-async function updateProfile() {
-    const name = document.getElementById('profileNameInput').value;
-    const email = document.getElementById('profileEmailInput').value;
-    const bio = document.getElementById('profileBio').value;
-    const skills = document.getElementById('profileSkills').value;
-    
-    // Update the sidebar profile
-    document.getElementById('profileName').textContent = name;
-    document.getElementById('profileEmail').textContent = email;
-    
-    closeModal('profileModal');
-    alert('Profile updated successfully!');
-}
-
-// Navigation functions
-function openSolvedProblems() {
-    alert("Solved problems feature coming soon!");
-}
-
-function goBackToChat() {
-    window.location.href = "chat.html";
-}
-
-// Close modal when clicking outside
 window.onclick = function(event) {
     const modals = document.getElementsByClassName('modal');
-    for (let i = 0; i < modals.length; i++) {
-        if (event.target == modals[i]) {
-            modals[i].style.display = "none";
+    for (let modal of modals) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+            // Reset modal title and placeholder
+            document.getElementById('modal-title').textContent = "Share a Video";
+            document.getElementById('videoUrl').placeholder = "Paste YouTube, Vimeo, or direct link";
         }
     }
 }
 </script>
-
 </body>
 </html>

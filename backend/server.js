@@ -857,48 +857,50 @@ app.get('/api/forum/posts', async (req, res) => {
 });
 
 // Create post
+// Create post
 app.post('/api/forum/posts', async (req, res) => {
-  const { userId, content, postType = 'text', videoUrl } = req.body;
-  
-  if (!userId || !content) {
-    return res.status(400).json({ message: 'User ID and content are required' });
-  }
-  
-  try {
-    const [result] = await pool.execute(
-      'INSERT INTO forum_posts (user_id, content, post_type, video_url) VALUES (?, ?, ?, ?)',
-      [userId, content, postType, videoUrl]
-    );
+    const { userId, content, postType = 'text', videoUrl, imageUrl } = req.body;
     
-    const [posts] = await pool.execute(`
-      SELECT fp.*, u.username, u.role, u.email
-      FROM forum_posts fp 
-      JOIN users u ON fp.user_id = u.id 
-      WHERE fp.id = ?
-    `, [result.insertId]);
+    if (!userId || !content) {
+        return res.status(400).json({ message: 'User ID and content are required' });
+    }
     
-    const post = posts[0];
-    const response = {
-      id: post.id,
-      user: {
-        name: post.username,
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(post.username)}&background=1e3c72&color=fff`,
-        role: post.role
-      },
-      content: post.content,
-      video: post.video_url,
-      timestamp: 'Just now',
-      likes: 0,
-      comments: [],
-      userLiked: false,
-      type: post.video_url ? 'video' : 'text'
-    };
-    
-    res.status(201).json(response);
-  } catch (error) {
-    console.error('Error creating post:', error);
-    res.status(500).json({ message: 'Error creating post' });
-  }
+    try {
+        const [result] = await pool.execute(
+            'INSERT INTO forum_posts (user_id, content, post_type, video_url, image_url) VALUES (?, ?, ?, ?, ?)',
+            [userId, content, postType, videoUrl, imageUrl]
+        );
+        
+        const [posts] = await pool.execute(`
+            SELECT fp.*, u.username, u.role, u.email
+            FROM forum_posts fp 
+            JOIN users u ON fp.user_id = u.id 
+            WHERE fp.id = ?
+        `, [result.insertId]);
+        
+        const post = posts[0];
+        const response = {
+            id: post.id,
+            user: {
+                name: post.username,
+                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(post.username)}&background=1e3c72&color=fff`,
+                role: post.role
+            },
+            content: post.content,
+            video: post.video_url,
+            image_url: post.image_url,
+            timestamp: 'Just now',
+            likes: 0,
+            comments: [],
+            userLiked: false,
+            type: post.video_url ? 'video' : post.image_url ? 'image' : 'text'
+        };
+        
+        res.status(201).json(response);
+    } catch (error) {
+        console.error('Error creating post:', error);
+        res.status(500).json({ message: 'Error creating post' });
+    }
 });
 
 // Like/unlike post
