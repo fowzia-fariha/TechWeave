@@ -305,3 +305,6 @@ document.addEventListener('click', (e) => {
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', initCommunity);
+
+
+//Maybe it will be updated later or be switched 
