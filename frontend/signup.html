@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signup - TechWeave</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- Lottie Player -->
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+  }
+
+  .signup-container {
+    display: flex;
+    width: 900px;
+    max-width: 95%;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+  }
+
+  .signup-left {
+    flex: 1;
+    background: #f4f7ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+  }
+
+  .signup-left lottie-player {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .signup-right {
+    flex: 1;
+    padding: 50px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+    color: #1e3c72;
+    font-weight: 700;
+    font-size: 36px;
+  }
+
+  .subtitle {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 14px;
+  }
+
+  /* Role Selection */
+  .role-selection {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+
+  .role-card {
+    flex: 1;
+    padding: 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+  }
+
+  .role-card:hover {
+    border-color: #1e3c72;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(30, 60, 114, 0.2);
+  }
+
+  .role-card.active {
+    border-color: #1e3c72;
+    background: #f4f7ff;
+    box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+  }
+
+  .role-card .role-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+
+  .role-card .role-title {
+    font-weight: 600;
+    color: #1e3c72;
+    margin-bottom: 5px;
+  }
+
+  .role-card .role-desc {
+    font-size: 12px;
+    color: #666;
+  }
+
+  .mentor-badge {
+    display: inline-block;
+    background: #4CAF50;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  /* Form Styles */
+  form input, form select {
+    width: 100%;
+    padding: 16px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+
+  form input:focus, form select:focus {
+    border-color: #1e3c72;
+    outline: none;
+    box-shadow: 0 0 8px rgba(30, 60, 114, 0.5);
+  }
+
+  /* Mentor-specific fields (hidden by default) */
+  .mentor-fields {
+    display: none;
+  }
+
+  .mentor-fields.show {
+    display: block;
+  }
+
+  button {
+    width: 100%;
+    padding: 16px;
+    background: #1e3c72;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  button:hover {
+    background: #2a5298;
+    transform: translateY(-2px);
+  }
+
+  .links {
+    margin-top: 15px;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .links a {
+    text-decoration: none;
+    color: #1e3c72;
+    transition: color 0.3s ease;
+  }
+
+  .links a:hover {
+    color: #2a5298;
+  }
+
+  @media(max-width: 768px) {
+    .signup-container {
+      flex-direction: column;
+    }
+    .signup-left, .signup-right {
+      padding: 30px;
+    }
+    h2 {
+      font-size: 28px;
+    }
+    .signup-left lottie-player {
+      max-width: 300px;
+    }
+    .role-selection {
+      flex-direction: column;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="signup-container">
+  <div class="signup-left">
+    <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_w51pcehl.json" background="transparent" speed="1" loop autoplay></lottie-player>
+  </div>
+
+  <div class="signup-right">
+    <h2>Create Your Account</h2>
+    <p class="subtitle">Choose your role and join TechWeave community</p>
+
+    <!-- Role Selection Cards -->
+    <div class="role-selection">
+      <div class="role-card active" data-role="student">
+        <div class="role-icon">🎓</div>
+        <div class="role-title">Student</div>
+        <div class="role-desc">Learn and get mentored</div>
+      </div>
+      
+      <div class="role-card" data-role="mentor">
+        <div class="role-icon">👨‍🏫</div>
+        <div class="role-title">Mentor</div>
+        <div class="role-desc">Share your expertise</div>
+        <div class="mentor-badge">EXPERT</div>
+      </div>
+    </div>
+
+    <form id="signupForm">
+      <!-- Common Fields -->
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password" required>
+
+      <!-- Mentor-Specific Fields (Hidden by default) -->
+      <div class="mentor-fields" id="mentorFields">
+        <select name="expertise" id="expertiseField">
+          <option value="">Select Your Expertise</option>
+          <option value="web">Web Development</option>
+          <option value="mobile">Mobile Development</option>
+          <option value="ai">AI/ML</option>
+          <option value="security">Cyber Security</option>
+          <option value="devops">DevOps</option>
+          <option value="database">Database</option>
+          <option value="cloud">Cloud Computing</option>
+          <option value="blockchain">Blockchain</option>
+        </select>
+        <input type="text" name="experience" placeholder="Years of Experience" id="experienceField">
+      </div>
+
+      <button type="submit" id="submitBtn">Sign Up as Student</button>
+    </form>
+
+    <div class="links">
+      <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Role Selection Logic
+  const roleCards = document.querySelectorAll('.role-card');
+  const mentorFields = document.getElementById('mentorFields');
+  const submitBtn = document.getElementById('submitBtn');
+  const expertiseField = document.getElementById('expertiseField');
+  const experienceField = document.getElementById('experienceField');
+  let selectedRole = 'student';
+
+  roleCards.forEach(card => {
+    card.addEventListener('click', () => {
+      // Remove active class from all cards
+      roleCards.forEach(c => c.classList.remove('active'));
+      
+      // Add active class to clicked card
+      card.classList.add('active');
+      
+      // Get selected role
+      selectedRole = card.dataset.role;
+      
+      // Show/hide mentor fields
+      if (selectedRole === 'mentor') {
+        mentorFields.classList.add('show');
+        submitBtn.textContent = 'Sign Up as Mentor';
+        expertiseField.required = true;
+        experienceField.required = true;
+      } else {
+        mentorFields.classList.remove('show');
+        submitBtn.textContent = 'Sign Up as Student';
+        expertiseField.required = false;
+        experienceField.required = false;
+      }
+    });
+  });
+
+  // Form Submission
+const form = document.getElementById("signupForm");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  
+  const username = form.username.value;
+  const email = form.email.value;
+  const password = form.password.value;
+
+  // Prepare request body
+  const requestBody = {
+    username,
+    email,
+    password,
+    role: selectedRole
+  };
+
+  // Add mentor-specific fields if mentor role is selected
+  if (selectedRole === 'mentor') {
+    requestBody.expertise = form.expertise.value;
+    requestBody.experience = form.experience.value;
+  }
+
+  try {
+    // Use appropriate endpoint based on role
+    const endpoint = selectedRole === 'mentor' 
+      ? 'http://localhost:5000/mentor-signup'
+      : 'http://localhost:5000/signup';
+
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody)
+    });
+
+    const data = await res.json();
+    
+    if (res.ok) {
+      // Show success message and redirect to login
+      alert(" " + data.message);
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1000);
+    } else {
+      alert("  " + data.message);
+    }
+  } catch(err) {
+    console.error(err);
+    alert(" Something went wrong. Please try again.");
+  }
+});
+</script>
+
+</body>
+</html>
