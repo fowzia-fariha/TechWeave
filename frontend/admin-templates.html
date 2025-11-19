@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Add Template</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea { min-height: 100px; }
+        .tech-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .tech-input input { flex: 1; }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-add {
+            background: #48bb78;
+            color: white;
+        }
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .tech-badge {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tech-badge button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Add New Template</h1>
+        <form id="addTemplateForm">
+            <div class="form-group">
+                <label>Template Name *</label>
+                <input type="text" id="name" required placeholder="e.g., Full Stack MERN App">
+            </div>
+            
+            <div class="form-group">
+                <label>Category *</label>
+                <select id="category" required>
+                    <option value="">Select Category</option>
+                    <option value="Web">Web Development</option>
+                    <option value="ML">Machine Learning</option>
+                    <option value="Security">Security</option>
+                    <option value="Mobile">Mobile</option>
+                    <option value="Backend">Backend</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Difficulty *</label>
+                <select id="difficulty" required>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Description *</label>
+                <textarea id="description" required placeholder="Describe what this template provides"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Tech Stack *</label>
+                <div class="tech-input">
+                    <input type="text" id="techInput" placeholder="e.g., React">
+                    <button type="button" class="btn btn-add" onclick="addTech()">+ Add</button>
+                </div>
+                <div class="tech-list" id="techList"></div>
+            </div>
+            
+            <div class="form-group">
+                <label>Features (one per line)</label>
+                <textarea id="features" placeholder="User Authentication&#10;Real-time Updates&#10;Data Visualization"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Learning Outcomes (one per line)</label>
+                <textarea id="outcomes" placeholder="Full-stack development&#10;API design&#10;Authentication systems"></textarea>
+            </div>
+            
+            <button type="submit" class="submit-btn">🚀 Create Template</button>
+        </form>
+    </div>
+
+    <script>
+        let techStack = [];
+
+        function addTech() {
+            const input = document.getElementById('techInput');
+            const tech = input.value.trim();
+            
+            if (tech && !techStack.includes(tech)) {
+                techStack.push(tech);
+                renderTechStack();
+                input.value = '';
+            }
+        }
+
+        function removeTech(tech) {
+            techStack = techStack.filter(t => t !== tech);
+            renderTechStack();
+        }
+
+        function renderTechStack() {
+            const container = document.getElementById('techList');
+            container.innerHTML = techStack.map(tech => `
+                <div class="tech-badge">
+                    ${tech}
+                    <button onclick="removeTech('${tech}')">×</button>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('techInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addTech();
+            }
+        });
+
+        document.getElementById('addTemplateForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (techStack.length === 0) {
+                alert('Please add at least one technology');
+                return;
+            }
+            
+            const features = document.getElementById('features').value
+                .split('\n')
+                .filter(f => f.trim())
+                .map(f => f.trim());
+            
+            const outcomes = document.getElementById('outcomes').value
+                .split('\n')
+                .filter(o => o.trim())
+                .map(o => o.trim());
+            
+            const templateData = {
+                name: document.getElementById('name').value,
+                category: document.getElementById('category').value,
+                difficulty: document.getElementById('difficulty').value,
+                description: document.getElementById('description').value,
+                tech_stack: JSON.stringify(techStack),
+                features: JSON.stringify(features),
+                learning_outcomes: JSON.stringify(outcomes)
+            };
+            
+            try {
+                const response = await fetch('/api/templates/admin/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(templateData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ Template added successfully!');
+                    window.location.href = 'templates.html';
+                } else {
+                    alert('❌ Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Network error');
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>

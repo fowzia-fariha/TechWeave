@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
@@ -8,7 +9,6 @@ const mysql = require('mysql2/promise');
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const path = require('path');
-require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
@@ -727,10 +727,10 @@ app.get('/api/admin/stats', async (req, res) => {
 async function testDatabaseConnection() {
   try {
     const connection = await pool.getConnection();
-    console.log(' Database connected successfully!');
+    console.log('✅ Database connected successfully!');
     connection.release();
   } catch (error) {
-    console.error(' Database connection failed:', error.message);
+    console.error('❌ Database connection failed:', error.message);
     process.exit(1);
   }
 }
@@ -759,12 +759,12 @@ async function ensureGeneralChatExists() {
         await pool.execute('SET FOREIGN_KEY_CHECKS = 1');
       }
 
-      console.log(' General Chat created successfully!');
+      console.log('✅ General Chat created successfully!');
     } else {
-      console.log('  General Chat already exists');
+      console.log('✓  General Chat already exists');
     }
   } catch (error) {
-    console.error(' Error ensuring General Chat exists:', error.message);
+    console.error('❌ Error ensuring General Chat exists:', error.message);
   }
 }
 
@@ -783,7 +783,7 @@ async function initializeEmailService() {
     // Test OAuth2 connection
     try {
       await oauth2Client.getAccessToken();
-      console.log(' Email service initialized successfully!');
+      console.log('✅ Email service initialized successfully!');
       return true;
     } catch (error) {
       console.log('⚠️  Email service connection failed. Check your OAuth2 credentials.');
@@ -791,9 +791,28 @@ async function initializeEmailService() {
       return false;
     }
   } catch (error) {
-    console.error(' Error initializing email service:', error.message);
+    console.error('❌ Error initializing email service:', error.message);
     return false;
   }
+}
+
+// ============================================
+// TEMPLATES ROUTES INITIALIZATION
+// ============================================
+const templatesRoutes = require('./templates');
+
+async function initializeTemplatesRouter() {
+    try {
+        const connection = await pool.getConnection();
+        connection.release();
+        console.log('✅ Database pool verified for templates router');
+        
+        templatesRoutes.initializeRouter(pool);
+        app.use('/api/templates', templatesRoutes);
+        console.log('✅ Templates routes mounted successfully');
+    } catch (error) {
+        console.error('❌ Failed to initialize templates router:', error.message);
+    }
 }
 
 // ============================================
@@ -804,13 +823,13 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, async () => {
   console.log(' TechWeave Server Started');
   console.log(` Server running on: http://localhost:${PORT}`);
-  console.log(` Socket.io ready for real-time connections`);
-
   
   await testDatabaseConnection();
   await ensureGeneralChatExists();
   await initializeEmailService();
   
+  // Initialize templates AFTER database is ready
+  await initializeTemplatesRouter();
+  
   console.log(' All systems ready!');
-
 });
