@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechWeave - Demo Projects</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #1a1d29;
+            --secondary: #2d3345;
+            --accent: #6366f1;
+            --accent-light: #8b5cf6;
+            --text: #e2e8f0;
+            --text-light: #94a3b8;
+            --card-bg: rgba(30, 33, 48, 0.8);
+            --border: rgba(255, 255, 255, 0.1);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gradient: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: var(--text);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(30, 33, 48, 0.3) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0.05;
+            z-index: -1;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.1), transparent 30%);
+            animation: rotate 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 52px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 50px;
+            border: 1px solid var(--border);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filters-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 18px 60px 18px 28px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: rgba(30, 33, 48, 0.6);
+            color: var(--text);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-light);
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 22px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 15px;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            font-size: 15px;
+            background: rgba(30, 33, 48, 0.6);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 18px;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 35px;
+            margin-bottom: 70px;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 22px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid var(--border);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 220px;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 52px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.15));
+        }
+
+        .project-content {
+            padding: 32px;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .project-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .project-badge {
+            padding: 8px 14px;
+            border-radius: 14px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-difficulty.beginner {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .badge-difficulty.intermediate {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .badge-difficulty.advanced {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .badge-category {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--accent);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+        }
+
+        .project-stats {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            color: var(--text-light);
+        }
+
+        .stat i {
+            color: var(--accent);
+            font-size: 18px;
+        }
+
+        .project-description {
+            color: var(--text-light);
+            line-height: 1.7;
+            margin-bottom: 25px;
+            font-size: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 22px;
+            border: none;
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(30, 33, 48, 0.6);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--gradient);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+            z-index: 2;
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 80px;
+            color: var(--text-light);
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            background: var(--card-bg);
+            color: var(--text);
+            padding: 16px 26px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s;
+            z-index: 1000;
+            font-size: 15px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+        }
+
+        .back-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .filter-row {
+                flex-direction: column;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-actions {
+                flex-direction: column;
+            }
+            
+            .back-button {
+                bottom: 25px;
+                left: 25px;
+                right: 25px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Demo Projects</h1>
+            <p class="subtitle">Explore real-world projects with complete source code and documentation</p>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="filters-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search projects...">
+                <i class="fas fa-search"></i>
+            </div>
+            
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Category</label>
+                    <select id="categoryFilter">
+                        <option value="all">All Categories</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Difficulty</label>
+                    <select id="difficultyFilter">
+                        <option value="all">All Levels</option>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Sort By</label>
+                    <select id="sortFilter">
+                        <option value="featured">Featured</option>
+                        <option value="stars">Most Stars</option>
+                        <option value="views">Most Viewed</option>
+                        <option value="newest">Newest</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="projects-grid" id="projectsGrid">
+            <div class="loading">
+                <lottie-player 
+                    src="https://assets2.lottiefiles.com/packages/lf20_usmfx6bp.json" 
+                    background="transparent" 
+                    speed="1" 
+                    style="width: 100px; height: 100px;" 
+                    loop 
+                    autoplay>
+                </lottie-player>
+                <p>Loading projects...</p>
+            </div>
+        </div>
+    </div>
+
+    <a href="dashboard.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+
+    <script>
+        let projects = [];
+
+        // Load projects on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProjects();
+            loadCategories();
+            
+            // Add event listeners for filters
+            document.getElementById('searchInput').addEventListener('input', filterProjects);
+            document.getElementById('categoryFilter').addEventListener('change', filterProjects);
+            document.getElementById('difficultyFilter').addEventListener('change', filterProjects);
+            document.getElementById('sortFilter').addEventListener('change', filterProjects);
+        });
+
+        async function loadProjects() {
+            try {
+                const response = await fetch('http://localhost:5000/api/projects');
+                projects = await response.json();
+                displayProjects(projects);
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                document.getElementById('projectsGrid').innerHTML = 
+                    '<div class="loading"><p>Error loading projects. Please try again.</p></div>';
+            }
+        }
+
+        async function loadCategories() {
+            try {
+                const response = await fetch('http://localhost:5000/api/categories');
+                const categories = await response.json();
+                
+                const categoryFilter = document.getElementById('categoryFilter');
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                    categoryFilter.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        function filterProjects() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const difficulty = document.getElementById('difficultyFilter').value;
+            const sort = document.getElementById('sortFilter').value;
+
+            let filtered = projects.filter(project => {
+                const matchesSearch = !searchTerm || 
+                    project.title.toLowerCase().includes(searchTerm) ||
+                    project.description.toLowerCase().includes(searchTerm);
+                
+                const matchesCategory = category === 'all' || project.category === category;
+                const matchesDifficulty = difficulty === 'all' || project.difficulty === difficulty;
+
+                return matchesSearch && matchesCategory && matchesDifficulty;
+            });
+
+            // Sort projects
+            switch (sort) {
+                case 'stars':
+                    filtered.sort((a, b) => b.stars - a.stars);
+                    break;
+                case 'views':
+                    filtered.sort((a, b) => b.views - a.views);
+                    break;
+                case 'newest':
+                    filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                    break;
+                default:
+                    filtered.sort((a, b) => b.featured - a.featured || b.stars - a.stars);
+            }
+
+            displayProjects(filtered);
+        }
+
+        function displayProjects(projectsToDisplay) {
+            const grid = document.getElementById('projectsGrid');
+            
+            if (projectsToDisplay.length === 0) {
+                grid.innerHTML = `
+                    <div class="loading">
+                        <lottie-player 
+                            src="https://assets7.lottiefiles.com/packages/lf20_kcsr6fcp.json" 
+                            background="transparent" 
+                            speed="1" 
+                            style="width: 150px; height: 150px;" 
+                            loop 
+                            autoplay>
+                        </lottie-player>
+                        <p>No projects found matching your criteria</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = projectsToDisplay.map(project => `
+                <div class="project-card" onclick="viewProject(${project.id})">
+                    ${project.featured ? '<div class="featured-badge">⭐ Featured</div>' : ''}
+                    
+                    <div class="project-image">
+                        <i class="fas fa-${getProjectIcon(project.category)}"></i>
+                    </div>
+                    
+                    <div class="project-content">
+                        <div class="project-header">
+                            <h3 class="project-title">${project.title}</h3>
+                        </div>
+                        
+                        <div class="project-meta">
+                            <span class="project-badge badge-difficulty ${project.difficulty}">
+                                ${project.difficulty}
+                            </span>
+                            <span class="project-badge badge-category">
+                                ${project.category}
+                            </span>
+                        </div>
+                        
+                        <div class="project-stats">
+                            <div class="stat">
+                                <i class="fas fa-star"></i>
+                                <span>${project.stars} stars</span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-eye"></i>
+                                <span>${project.views} views</span>
+                            </div>
+                        </div>
+                        
+                        <p class="project-description">${project.description}</p>
+                        
+                        <div class="project-actions">
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); viewProject(${project.id})">
+                                <i class="fas fa-info-circle"></i> View Details
+                            </button>
+                            ${project.github_url ? `
+                                <a href="${project.github_url}" target="_blank" class="btn btn-secondary" onclick="event.stopPropagation()">
+                                    <i class="fab fa-github"></i> Code
+                                </a>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getProjectIcon(category) {
+            const icons = {
+                web: 'globe',
+                ai: 'brain',
+                app: 'mobile',
+                security: 'shield-alt',
+                game: 'gamepad',
+                iot: 'microchip'
+            };
+            return icons[category] || 'folder';
+        }
+
+        function viewProject(projectId) {
+            window.location.href = `project-details.html?id=${projectId}`;
+        }
+
+        async function starProject(projectId, event) {
+            event.stopPropagation();
+            
+            try {
+                const response = await fetch(`http://localhost:5000/api/projects/${projectId}/star`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                // Update the star count in the UI
+                const project = projects.find(p => p.id === projectId);
+                if (project) {
+                    project.stars = data.stars;
+                    filterProjects(); // Refresh the display
+                }
+            } catch (error) {
+                console.error('Error starring project:', error);
+            }
+        }
+    </script>
+</body>
+</html>

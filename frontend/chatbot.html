@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Assistant</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background: #f8fafc;
+    color: #1e293b;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+#chatbot-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.bot-avatar {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    animation: avatarPulse 2s ease-in-out infinite;
+}
+
+@keyframes avatarPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.header-text h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.header-text p {
+    font-size: 12px;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+#close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    line-height: 1;
+}
+
+#close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+/* Quick Actions */
+.quick-actions {
+    padding: 15px 20px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    flex-shrink: 0;
+}
+
+.quick-actions::-webkit-scrollbar {
+    height: 4px;
+}
+
+.quick-actions::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.quick-action-btn {
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    color: #475569;
+    flex-shrink: 0;
+}
+
+.quick-action-btn:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+}
+
+/* MAIN FIX: Chatbot Body with guaranteed scrolling */
+#chatbot-body {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 0; /* Force flex child to respect container bounds */
+}
+
+#chatbot-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chatbot-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#chatbot-body::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+#chatbot-body::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Messages Container */
+#chatbot-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 1;
+    min-height: min-content;
+}
+
+.message {
+    max-width: 85%;
+    padding: 14px 18px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.6;
+    word-wrap: break-word;
+    animation: messageSlideIn 0.3s ease;
+    position: relative;
+    flex-shrink: 0;
+}
+
+@keyframes messageSlideIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(10px);
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0);
+    }
+}
+
+.message.user {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.message.bot {
+    background: white;
+    color: #1e293b;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+#chatbot-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Use full viewport height */
+}
+
+#chatbot-body {
+    flex: 1; /* This will make it take all available space */
+    min-height: 0; /* Important for flex children */
+}
+.message img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.message img:hover {
+    transform: scale(1.02);
+}
+
+.message .file-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+}
+
+.file-icon {
+    font-size: 24px;
+}
+
+.file-details {
+    flex: 1;
+}
+
+.file-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.file-size {
+    font-size: 11px;
+    color: #64748b;
+}
+
+/* Typing Indicator */
+.typing-indicator {
+    display: flex;
+    gap: 5px;
+    padding: 14px 18px;
+    background: white;
+    border-radius: 18px;
+    width: fit-content;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    align-self: flex-start;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background: #94a3b8;
+    border-radius: 50%;
+    animation: typing 1.4s infinite;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.7; }
+    30% { transform: translateY(-10px); opacity: 1; }
+}
+
+/* Welcome Screen */
+.welcome-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    flex: 1;
+}
+
+.welcome-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    animation: welcomeBounce 2s ease-in-out infinite;
+}
+
+@keyframes welcomeBounce {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.welcome-screen h2 {
+    color: #1e293b;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.welcome-screen p {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.suggestion-chips {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 350px;
+}
+
+.suggestion-chip {
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 14px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    color: #475569;
+    font-size: 14px;
+}
+
+.suggestion-chip:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: transparent;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* File Preview */
+#file-preview-container {
+    margin-bottom: 10px;
+}
+
+.file-preview {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.file-preview img {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.file-preview .doc-preview {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.doc-preview .file-icon {
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+.doc-preview .file-name {
+    font-size: 10px;
+    color: #64748b;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.remove-file {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+    transition: all 0.3s ease;
+}
+
+.remove-file:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+/* Input Wrapper */
+.input-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    background: #f1f5f9;
+    border-radius: 25px;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+}
+
+.input-wrapper:focus-within {
+    background: #e2e8f0;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+#chatbot-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: #1e293b;
+    font-size: 14px;
+    outline: none;
+    padding: 8px 0;
+    max-height: 100px;
+    overflow-y: auto;
+    resize: none;
+    font-family: inherit;
+}
+
+#chatbot-input::placeholder {
+    color: #94a3b8;
+}
+
+#chatbot-input::-webkit-scrollbar {
+    width: 4px;
+}
+
+#chatbot-input::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.input-actions {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+}
+
+.icon-btn:hover {
+    background: #e2e8f0;
+    color: #667eea;
+}
+
+#send-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+#send-btn:hover:not(:disabled) {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+#send-btn:active {
+    transform: scale(0.95);
+}
+
+#send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#file-input {
+    display: none;
+}
+
+/* Image Lightbox */
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+}
+
+.lightbox.active {
+    display: flex;
+}
+
+.lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: white;
+    border: none;
+    color: #1e293b;
+    font-size: 24px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive */
+@media(max-width: 600px) {
+    #chatbot-header {
+      padding: 20px 15px;
+    }
+
+    .header-content {
+      gap: 12px;
+    }
+
+    .bot-avatar {
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+    }
+
+    .header-text h3 {
+      font-size: 18px;
+    }
+
+    .quick-actions {
+      padding: 12px 15px;
+    }
+
+    .quick-action-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    #chatbot-body {
+      padding: 15px;
+    }
+
+    .message {
+      max-width: 90%;
+      padding: 12px 15px;
+      font-size: 13px;
+    }
+
+    .welcome-screen {
+      padding: 30px 15px;
+    }
+
+    .welcome-icon {
+      font-size: 48px;
+    }
+
+    .welcome-screen h2 {
+      font-size: 20px;
+    }
+
+    .suggestion-chips {
+      max-width: 100%;
+    }
+
+    #chatbot-input-container {
+      padding: 15px;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- Chatbot Container -->
+<div id="chatbot-container">
+    <!-- Header -->
+    <div id="chatbot-header">
+        <div class="header-content">
+            <div class="bot-avatar">🤖</div>
+            <div class="header-text">
+                <h3>TechWeave AI☠️</h3>
+                <p>
+                    <span class="status-dot"></span>
+                    Online & Ready to Help
+                </p>
+            </div>
+        </div>
+        <button id="close-btn" onclick="closeChatbot()">&times;</button>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <button class="quick-action-btn" onclick="sendQuickMessage('Help me with coding')">💻 Coding Help</button>
+        <button class="quick-action-btn" onclick="sendQuickMessage('Explain a concept')">📚 Explain</button>
+        <button class="quick-action-btn" onclick="sendQuickMessage('Generate ideas')">💡 Ideas</button>
+        <button class="quick-action-btn" onclick="sendQuickMessage('Review my document')">📄 Review</button>
+    </div>
+
+    <!-- Chat Body -->
+    <div id="chatbot-body">
+        <div id="chatbot-messages">
+            <div class="welcome-screen">
+                <div class="welcome-icon">🤖✨</div>
+                <h2>Hello! I'm your AI Assistant</h2>
+                <p>Ask me anything or upload images/documents for analysis!</p>
+                <div class="suggestion-chips">
+                    <div class="suggestion-chip" onclick="sendQuickMessage('What can you help me with?')">
+                        ❓ What can you help me with?
+                    </div>
+                    <div class="suggestion-chip" onclick="sendQuickMessage('Explain quantum computing')">
+                        🔬 Explain quantum computing
+                    </div>
+                    <div class="suggestion-chip" onclick="sendQuickMessage('Help me learn JavaScript')">
+                        💻 Help me learn JavaScript
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input Container -->
+    <div id="chatbot-input-container">
+        <div id="file-preview-container"></div>
+        <div class="input-wrapper">
+            <textarea 
+                id="chatbot-input" 
+                placeholder="Type your message..." 
+                rows="1"
+            ></textarea>
+            <div class="input-actions">
+                <button class="icon-btn" id="file-btn" title="Upload File">📎</button>
+                <button id="send-btn" title="Send">➤</button>
+            </div>
+        </div>
+        <input type="file" id="file-input" accept="image/*,.pdf,.doc,.docx,.txt" multiple />
+    </div>
+</div>
+
+<!-- Image Lightbox -->
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()">×</button>
+    <img id="lightbox-img" src="" alt="Full size image">
+</div>
+
+<script>
+// Chatbot functionality
+let selectedFiles = [];
+let conversationHistory = [];
+
+// Enhanced scrolling functionality
+function initializeScrolling() {
+    const chatBody = document.getElementById("chatbot-body");
+    const chatMessages = document.getElementById("chatbot-messages");
+    
+    if (chatBody && chatMessages) {
+        // Force initial scroll to bottom
+        setTimeout(scrollToBottom, 100);
+        
+        // Auto-scroll to bottom when new messages are added
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList') {
+                    setTimeout(scrollToBottom, 50);
+                }
+            });
+        });
+        
+        observer.observe(chatMessages, { childList: true });
+    }
+}
+
+function scrollToBottom() {
+    const chatBody = document.getElementById("chatbot-body");
+    if (chatBody) {
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+}
+
+function appendMessage(sender, message) {
+    const messageContainer = document.getElementById("chatbot-messages");
+    if (!messageContainer) return;
+    
+    const messageElement = document.createElement("div");
+    messageElement.classList.add("message", sender);
+    messageElement.textContent = message;
+    messageContainer.appendChild(messageElement);
+    
+    // Remove welcome screen if it's the first user message
+    const welcomeScreen = document.querySelector(".welcome-screen");
+    if (welcomeScreen && sender === "user") {
+        welcomeScreen.remove();
+    }
+    
+    // Scroll to bottom after adding message
+    setTimeout(scrollToBottom, 50);
+}
+
+function closeChatbot() {
+    // Notify parent window to close the modal
+    if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ action: 'closeChatbot' }, '*');
+    }
+}
+
+function initializeChatbot() {
+    const sendBtn = document.getElementById("send-btn");
+    const chatBotInput = document.getElementById("chatbot-input");
+    const fileBtn = document.getElementById("file-btn");
+    const fileInput = document.getElementById("file-input");
+    const closeBtn = document.getElementById("close-btn");
+
+    if (!sendBtn || !chatBotInput) {
+        console.log("Chatbot elements not found, retrying...");
+        setTimeout(initializeChatbot, 100);
+        return;
+    }
+
+    // Auto-resize textarea
+    chatBotInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+    });
+
+    sendBtn.addEventListener("click", sendMessage);
+
+    chatBotInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    fileBtn.addEventListener("click", () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener("change", handleFileSelect);
+
+    closeBtn.addEventListener("click", closeChatbot);
+}
+
+function handleFileSelect(e) {
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
+        if (file.size > 10 * 1024 * 1024) {
+            alert(`File ${file.name} is too large. Max size is 10MB.`);
+            return;
+        }
+        selectedFiles.push(file);
+        displayFilePreview(file);
+    });
+    e.target.value = '';
+}
+
+function displayFilePreview(file) {
+    const container = document.getElementById("file-preview-container");
+    const preview = document.createElement("div");
+    preview.className = "file-preview";
+    preview.dataset.fileName = file.name;
+
+    if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            preview.innerHTML = `
+                <img src="${event.target.result}" alt="${file.name}" />
+                <button class="remove-file" onclick="removeFile('${file.name}')">×</button>
+            `;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        const icon = getFileIcon(file.type);
+        preview.innerHTML = `
+            <div class="doc-preview">
+                <div class="file-icon">${icon}</div>
+                <div class="file-name">${file.name}</div>
+            </div>
+            <button class="remove-file" onclick="removeFile('${file.name}')">×</button>
+        `;
+    }
+
+    container.appendChild(preview);
+}
+
+function getFileIcon(fileType) {
+    if (fileType.includes('pdf')) return '📄';
+    if (fileType.includes('word') || fileType.includes('doc')) return '📝';
+    if (fileType.includes('text')) return '📃';
+    return '📎';
+}
+
+function removeFile(fileName) {
+    selectedFiles = selectedFiles.filter(f => f.name !== fileName);
+    const preview = document.querySelector(`.file-preview[data-file-name="${fileName}"]`);
+    if (preview) preview.remove();
+}
+
+function sendQuickMessage(message) {
+    const chatBotInput = document.getElementById("chatbot-input");
+    if (chatBotInput) {
+        chatBotInput.value = message;
+        sendMessage();
+    }
+}
+
+async function sendMessage() {
+    const chatBotInput = document.getElementById("chatbot-input");
+    if (!chatBotInput) return;
+    
+    const userMessage = chatBotInput.value.trim();
+    
+    if (!userMessage && selectedFiles.length === 0) return;
+
+    // Remove welcome screen if exists
+    const welcomeScreen = document.querySelector(".welcome-screen");
+    if (welcomeScreen) welcomeScreen.remove();
+
+    // Display user message
+    if (userMessage) {
+        appendMessage("user", userMessage);
+        conversationHistory.push({ role: "user", content: userMessage });
+    }
+
+    // Display files
+    if (selectedFiles.length > 0) {
+        displayUserFiles();
+    }
+
+    const messagesToSend = selectedFiles.slice();
+    const textToSend = userMessage;
+
+    // Clear input
+    chatBotInput.value = "";
+    chatBotInput.style.height = "auto";
+    const filePreviewContainer = document.getElementById("file-preview-container");
+    if (filePreviewContainer) filePreviewContainer.innerHTML = "";
+    selectedFiles = [];
+
+    // Show typing indicator
+    showTypingIndicator();
+
+    // Send to API
+    await getBotResponse(textToSend, messagesToSend);
+}
+
+function displayUserFiles() {
+    const container = document.getElementById("chatbot-messages");
+    if (!container) return;
+    
+    selectedFiles.forEach(file => {
+        const fileMsg = document.createElement("div");
+        fileMsg.className = "message user";
+        
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                fileMsg.innerHTML = `
+                    <img src="${event.target.result}" alt="${file.name}" onclick="openLightbox('${event.target.result}')" />
+                `;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            fileMsg.innerHTML = `
+                <div class="file-info">
+                    <div class="file-icon">${getFileIcon(file.type)}</div>
+                    <div class="file-details">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-size">${formatFileSize(file.size)}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        container.appendChild(fileMsg);
+    });
+    scrollToBottom();
+}
+
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function showTypingIndicator() {
+    const messageContainer = document.getElementById("chatbot-messages");
+    if (!messageContainer) return;
+    
+    const typingDiv = document.createElement("div");
+    typingDiv.id = "typing-indicator";
+    typingDiv.className = "typing-indicator";
+    typingDiv.innerHTML = "<span></span><span></span><span></span>";
+    messageContainer.appendChild(typingDiv);
+    scrollToBottom();
+}
+
+function removeTypingIndicator() {
+    const typingIndicator = document.getElementById("typing-indicator");
+    if (typingIndicator) typingIndicator.remove();
+}
+
+async function getBotResponse(userMessage, files) {
+    const API_KEY = "AIzaSyCqYcZX1aj0R8p6nDzuW9GYE4CBo5Y902Y";
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+
+    try {
+        const parts = [];
+
+        // Add text message
+        if (userMessage) {
+            parts.push({ text: userMessage });
+        }
+
+        // Add files
+        if (files && files.length > 0) {
+            for (const file of files) {
+                if (file.type.startsWith('image/')) {
+                    const base64Data = await fileToBase64(file);
+                    const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+                    if (matches) {
+                        parts.push({
+                            inline_data: {
+                                mime_type: matches[1],
+                                data: matches[2]
+                            }
+                        });
+                    }
+                } else {
+                    // For non-image files, just mention them
+                    parts.push({ text: `[File attached: ${file.name}]` });
+                }
+            }
+        }
+
+        const contents = [];
+
+        // Add conversation history (last 10 messages)
+        if (conversationHistory.length > 0) {
+            const recentHistory = conversationHistory.slice(-10);
+            recentHistory.forEach(msg => {
+                contents.push({
+                    role: msg.role === 'user' ? 'user' : 'model',
+                    parts: [{ text: msg.content }]
+                });
+            });
+        }
+
+        // Add current message
+        contents.push({
+            role: 'user',
+            parts: parts
+        });
+
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                contents: contents,
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: 1024,
+                }
+            }),
+        });
+
+        const data = await response.json();
+
+        removeTypingIndicator();
+
+        if (!data.candidates || !data.candidates.length) {
+            throw new Error("No response from Gemini API");
+        }
+
+        const botMessage = data.candidates[0].content.parts[0].text;
+        appendMessage("bot", botMessage);
+        conversationHistory.push({ role: "assistant", content: botMessage });
+
+    } catch (error) {
+        console.error("Error:", error);
+        removeTypingIndicator();
+        appendMessage("bot", "❌ Sorry, I'm having trouble responding. Please try again later.");
+    }
+}
+
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+function openLightbox(src) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    if (lightbox && lightboxImg) {
+        lightboxImg.src = src;
+        lightbox.classList.add('active');
+    }
+}
+
+function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    if (lightbox) {
+        lightbox.classList.remove('active');
+    }
+}
+
+// Initialize chatbot when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(initializeChatbot, 500);
+    setTimeout(initializeScrolling, 600);
+});
+</script>
+</body>
+</html>
