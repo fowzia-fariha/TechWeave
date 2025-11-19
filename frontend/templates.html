@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Templates - TechWeave</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+:root {
+    --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --primary-solid: #667eea;
+    --secondary: #764ba2;
+    --accent: #f093fb;
+    --success: #10b981;
+    --dark: #0f172a;
+    --gray: #64748b;
+    --light: #f8fafc;
+    --white: #ffffff;
+    
+    /* Light mode colors */
+    --bg-primary: var(--light);
+    --bg-secondary: var(--white);
+    --bg-card: var(--white);
+    --text-primary: var(--text-primary)
+    --text-secondary: var(--gray);
+    --border-color: rgba(0, 0, 0, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.08);
+    --shadow-hover: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] {
+    /* Dark mode colors */
+    --bg-primary: #0F172A;
+    --bg-secondary: #1E293B;
+    --bg-card: #1E293B;
+    --text-primary: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --shadow-hover: rgba(0, 0, 0, 0.5);
+}
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-primary);
+    min-height: 100vh;
+    color: var(--text-primary);
+    position: relative;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.3) 0%, transparent 50%);
+            animation: backgroundMove 20s ease-in-out infinite;
+            z-index: 0;
+        }
+/* Theme Toggle */
+.theme-toggle {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    z-index: 1000;
+    background: var(--bg-secondary);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 5px 15px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px var(--shadow-hover);
+}
+
+.theme-toggle i {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+}
+        @keyframes backgroundMove {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header - Ultra Elegant */
+        .header {
+           background: var(--bg-secondary);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 50px;
+            margin-bottom: 40px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-30px); }
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6); }
+        }
+
+        .back-btn, .add-template-btn {
+            padding: 15px 35px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-template-btn {
+            display: none;
+        }
+
+        .add-template-btn.visible {
+            display: inline-flex;
+        }
+
+        .back-btn::before, .add-template-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .back-btn:hover::before, .add-template-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .back-btn:hover, .add-template-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .header-content h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -2px;
+            line-height: 1.2;
+        }
+
+        .header-content p {
+           color: var(--text-secondary);
+            font-size: 1.3rem;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        /* Stats - Glass Morphism */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            background: rgba(9, 132, 204, 0.481);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 35px;
+            border-radius: 25px;
+            text-align: center;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Tabs - Modern Design */
+        .tabs {
+            background: var(--bg-secondary);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 15px;
+            padding: 10px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 20px;
+            margin-bottom: 40px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 18px 30px;
+            background: transparent;
+            border: none;
+          color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 15px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Search & Filter - Premium */
+        .search-filter {
+            margin-bottom: 40px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 20px 25px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            font-size: 16px;
+            margin-bottom: 25px;
+            outline: none;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-box:focus {
+            background: white;
+            border-color: var(--primary-solid);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            color: var(--text-primary);
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn:hover:not(.active) {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Roadmap Cards - Premium */
+        .roadmap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .roadmap-card {
+             background: var(--bg-card);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .roadmap-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.5s;
+        }
+
+        .roadmap-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .roadmap-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .roadmap-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+        }
+
+        .roadmap-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .roadmap-desc {
+           color: var(--text-secondary);
+            margin-bottom: 25px;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .roadmap-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-solid);
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 15px;
+        }
+
+        .roadmap-link i {
+            transition: transform 0.3s;
+        }
+
+        .roadmap-link:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Template Cards - Ultra Premium */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 30px;
+        }
+
+        .template-card {
+            background: var(--bg-card);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .template-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--primary);
+        }
+
+        .template-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            padding: 35px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.03), rgba(118, 75, 162, 0.03));
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .template-category {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .template-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+           color: var(--text-primary);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .template-description {
+           color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .card-body {
+            padding: 35px;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .tech-badge {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            color: var(--primary-solid);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.3s;
+        }
+
+        .tech-badge:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .template-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .action-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .download-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .view-btn {
+            background: white;
+            color: var(--primary-solid);
+            border: 2px solid var(--primary-solid);
+        }
+
+        .view-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        /* Modal - Ultra Modern */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .modal-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .close-modal {
+            background: rgba(239, 68, 68, 0.1);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            color: #ef4444;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: #ef4444;
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(102, 126, 234, 0.03);
+            border: 2px solid rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            background: white;
+            border-color: var(--primary-solid);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .tech-input-wrapper {
+            display: flex;
+            gap: 12px;
+        }
+
+        .add-tech-btn {
+            padding: 15px 25px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .add-tech-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tech-tag {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .tech-tag button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .tech-tag button:hover {
+            background: white;
+            color: var(--primary-solid);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .submit-btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        /* Messages - Toast Style */
+        .message {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 20px 30px;
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            z-index: 10001;
+            animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .loading, .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+           color: var(--text-secondary);
+            grid-column: 1 / -1;
+        }
+
+        .loading i, .empty-state i {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            opacity: 0.3;
+        }
+
+        .loading i {
+            color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .header-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .templates-grid, .roadmap-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header {
+                padding: 30px;
+            }
+
+            .header-content h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tab-buttons {
+                flex-direction: column;
+            }
+
+            .templates-grid, .roadmap-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 30px;
+            }
+
+            .template-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle -->
+<div class="theme-toggle" id="themeToggle">
+    <i class="fas fa-moon"></i>
+</div>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <a href="dashboard.html" class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Dashboard</span>
+                    </a>
+                    <button class="add-template-btn" id="addTemplateBtn">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Add Template</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="header-content">
+                <h1>🚀 Project Templates</h1>
+                <p>Premium templates and roadmaps to accelerate your learning journey</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalTemplates">0</div>
+                        <div class="stat-label">Templates</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalDownloads">0</div>
+                        <div class="stat-label">Downloads</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Categories</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Free</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="roadmaps">
+                    <i class="fas fa-route"></i>
+                    <span>Learning Roadmaps</span>
+                </button>
+                <button class="tab-btn" data-tab="templates">
+                    <i class="fas fa-code"></i>
+                    <span>Project Templates</span>
+                </button>
+            </div>
+
+            <!-- Roadmaps Tab -->
+            <div class="tab-content active" id="roadmaps">
+                <div class="roadmap-grid">
+                    <div class="roadmap-card">
+                        <div class="roadmap-icon">🌐</div>
+                        <h3 class="roadmap-title">Frontend Development</h3>
+                        <p class="roadmap-desc">Master HTML, CSS, JavaScript, React, and modern frontend frameworks with comprehensive learning paths</p>
+                        <a href="https://roadmap.sh/frontend" target="_blank" class="roadmap-link">
+                            Explore Roadmap <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="roadmap-card">
+                        <div class="roadmap-icon">⚙️</div>
+                        <h3 class="roadmap-title">Backend Development</h3>
+                        <p class="roadmap-desc">Learn Node.js, databases, APIs, authentication, and server-side programming essentials</p>
+                        <a href="https://roadmap.sh/backend" target="_blank" class="roadmap-link">
+                            Explore Roadmap <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="roadmap-card">
+                        <div class="roadmap-icon">📱</div>
+                        <h3 class="roadmap-title">Mobile Development</h3>
+                        <p class="roadmap-desc">Build native and cross-platform mobile apps with React Native, Flutter, and modern tools</p>
+                        <a href="https://roadmap.sh/react-native" target="_blank" class="roadmap-link">
+                            Explore Roadmap <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="roadmap-card">
+                        <div class="roadmap-icon">🤖</div>
+                        <h3 class="roadmap-title">Machine Learning</h3>
+                        <p class="roadmap-desc">Dive into AI, ML algorithms, Python, TensorFlow, and cutting-edge data science techniques</p>
+                        <a href="https://roadmap.sh/ai-data-scientist" target="_blank" class="roadmap-link">
+                            Explore Roadmap <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="roadmap-card">
+                        <div class="roadmap-icon">🔒</div>
+                        <h3 class="roadmap-title">Cybersecurity</h3>
+                        <p class="roadmap-desc">Learn ethical hacking, network security, penetration testing, and vulnerability assessment</p>
+                        <a href="https://roadmap.sh/cyber-security" target="_blank" class="roadmap-link">
+                            Explore Roadmap <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="roadmap-card">
+                        <div class="roadmap-icon">☁️</div>
+                        <h3 class="roadmap-title">DevOps & Cloud</h3>
+                        <p class="roadmap-desc">Master CI/CD, Docker, Kubernetes, AWS, and modern cloud infrastructure management</p>
+                        <a href="https://roadmap.sh/devops" target="_blank" class="roadmap-link">
+                            Explore Roadmap <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Templates Tab -->
+            <div class="tab-content" id="templates">
+                <div class="search-filter">
+                    <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search templates by name, technology, or category...">
+                    
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-category="All">
+                            <i class="fas fa-th"></i> All Templates
+                        </button>
+                        <button class="filter-btn" data-category="Web">
+                            <i class="fas fa-globe"></i> Web
+                        </button>
+                        <button class="filter-btn" data-category="ML">
+                            <i class="fas fa-brain"></i> Machine Learning
+                        </button>
+                        <button class="filter-btn" data-category="Security">
+                            <i class="fas fa-shield-alt"></i> Security
+                        </button>
+                        <button class="filter-btn" data-category="Mobile">
+                            <i class="fas fa-mobile-alt"></i> Mobile
+                        </button>
+                        <button class="filter-btn" data-category="Backend">
+                            <i class="fas fa-server"></i> Backend
+                        </button>
+                    </div>
+                </div>
+
+                <div class="templates-grid" id="templatesGrid">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <h3>Loading premium templates...</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Template Modal -->
+    <div class="modal" id="addTemplateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> Create New Template</h2>
+                <button class="close-modal" onclick="closeAddModal()">&times;</button>
+            </div>
+            
+            <form id="addTemplateForm">
+                <div class="form-group">
+                    <label>Template Name <span style="color:#ef4444">*</span></label>
+                    <input type="text" id="templateName" required placeholder="e.g., Full Stack MERN App">
+                </div>
+
+                <div class="form-group">
+                    <label>Category <span style="color:#ef4444">*</span></label>
+                    <select id="templateCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="Web">Web Development</option>
+                        <option value="ML">Machine Learning</option>
+                        <option value="Security">Security</option>
+                        <option value="Mobile">Mobile</option>
+                        <option value="Backend">Backend</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Difficulty <span style="color:#ef4444">*</span></label>
+                    <select id="templateDifficulty" required>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Description <span style="color:#ef4444">*</span></label>
+                    <textarea id="templateDescription" required placeholder="Describe what this template provides and its key features..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Tech Stack <span style="color:#ef4444">*</span></label>
+                    <div class="tech-input-wrapper">
+                        <input type="text" id="techInput" placeholder="e.g., React, Node.js, MongoDB">
+                        <button type="button" class="add-tech-btn" onclick="addTech()">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                    <div class="tech-list" id="techList"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Features (one per line)</label>
+                    <textarea id="templateFeatures" placeholder="User Authentication&#10;Real-time Updates&#10;Data Visualization&#10;RESTful API"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Learning Outcomes (one per line)</label>
+                    <textarea id="templateOutcomes" placeholder="Full-stack development&#10;API design&#10;Database management&#10;Authentication systems"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <i class="fas fa-rocket"></i> Create Template
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div class="modal" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="viewTitle"></h2>
+                <button class="close-modal" onclick="closeViewModal()">&times;</button>
+            </div>
+            <div id="viewContent"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        let currentTheme = 'light';
+
+// Theme toggle functionality
+function toggleTheme() {
+    const themeToggle = document.getElementById('themeToggle');
+    const icon = themeToggle.querySelector('i');
+    
+    if (currentTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        currentTheme = 'dark';
+        localStorage.setItem('theme', 'dark');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        currentTheme = 'light';
+        localStorage.setItem('theme', 'light');
+    }
+}
+
+// Initialize theme
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const themeToggle = document.getElementById('themeToggle');
+    const icon = themeToggle.querySelector('i');
+    
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+        currentTheme = 'dark';
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+        currentTheme = 'light';
+    }
+}
+
+// Add event listener in your DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    checkMentorAccess();
+    loadTemplates();
+});
+        let allTemplates = [];
+        let currentFilter = 'All';
+        let techStack = [];
+
+        // Check mentor access
+        async function checkMentorAccess() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) return;
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                if (payload.role === 'mentor' || payload.role === 'admin') {
+                    document.getElementById('addTemplateBtn').classList.add('visible');
+                }
+            } catch (error) {
+                console.error('Error checking access:', error);
+            }
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Load templates
+        async function loadTemplates() {
+            try {
+                console.log('🔄 Loading templates...');
+                const response = await fetch('http://localhost:5000/api/templates');
+                
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const data = await response.json();
+                console.log('📦 Response:', data);
+
+                if (data.success) {
+                    allTemplates = data.templates;
+                    document.getElementById('totalTemplates').textContent = allTemplates.length;
+                    renderTemplates(allTemplates);
+                    await loadStats();
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                console.error('❌ Error:', error);
+                showMessage('Failed to load templates: ' + error.message, 'error');
+                document.getElementById('templatesGrid').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Failed to load templates</h3>
+                        <p>${error.message}</p>
+                        <button onclick="loadTemplates()" class="submit-btn" style="max-width:200px;margin:20px auto 0;">
+                            <i class="fas fa-redo"></i> Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadStats() {
+            try {
+                const response = await fetch('http://localhost:5000/api/templates/stats/overview');
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('totalDownloads').textContent = data.stats.totalDownloads || '0';
+                }
+            } catch (error) {
+                console.error('Stats error:', error);
+            }
+        }
+
+        function renderTemplates(templates) {
+            const grid = document.getElementById('templatesGrid');
+            
+            if (templates.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No templates found</h3>
+                        <p>Try a different filter or add a new template</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = templates.map(t => {
+                const techStack = Array.isArray(t.tech_stack) ? t.tech_stack : [];
+                return `
+                    <div class="template-card">
+                        <div class="card-header">
+                            <span class="template-category">${t.category}</span>
+                            <h3 class="template-title">${t.name}</h3>
+                            <p class="template-description">${t.description}</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="tech-stack">
+                                ${techStack.slice(0, 6).map(tech => `<span class="tech-badge">${tech}</span>`).join('')}
+                                ${techStack.length > 6 ? `<span class="tech-badge">+${techStack.length - 6} more</span>` : ''}
+                            </div>
+                            <div class="template-actions">
+                                <button class="action-btn download-btn" onclick="downloadTemplate(${t.id}, '${t.name.replace(/'/g, "\\'")}')">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button class="action-btn view-btn" onclick="viewTemplate(${t.id})">
+                                    <i class="fas fa-eye"></i> Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Filters
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.category;
+                filterTemplates();
+            });
+        });
+
+        function filterTemplates() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            let filtered = currentFilter === 'All' ? allTemplates : allTemplates.filter(t => t.category === currentFilter);
+            
+            if (searchTerm) {
+                filtered = filtered.filter(t => 
+                    t.name.toLowerCase().includes(searchTerm) ||
+                    t.description.toLowerCase().includes(searchTerm) ||
+                    (Array.isArray(t.tech_stack) && t.tech_stack.some(tech => tech.toLowerCase().includes(searchTerm)))
+                );
+            }
+            
+            renderTemplates(filtered);
+        }
+
+        document.getElementById('searchBox').addEventListener('input', filterTemplates);
+
+        // Modal functions
+        document.getElementById('addTemplateBtn').addEventListener('click', () => {
+            document.getElementById('addTemplateModal').classList.add('active');
+        });
+
+        function closeAddModal() {
+            document.getElementById('addTemplateModal').classList.remove('active');
+        }
+
+        function closeViewModal() {
+            document.getElementById('viewModal').classList.remove('active');
+        }
+
+        // Tech stack
+        function addTech() {
+            const input = document.getElementById('techInput');
+            const tech = input.value.trim();
+            if (!tech) return;
+            if (techStack.includes(tech)) {
+                showMessage('Technology already added', 'error');
+                return;
+            }
+            techStack.push(tech);
+            renderTechStack();
+            input.value = '';
+        }
+
+        function removeTech(tech) {
+            techStack = techStack.filter(t => t !== tech);
+            renderTechStack();
+        }
+
+        function renderTechStack() {
+            document.getElementById('techList').innerHTML = techStack.map(tech => `
+                <div class="tech-tag">
+                    ${tech}
+                    <button onclick="removeTech('${tech}')">&times;</button>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('techInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addTech();
+            }
+        });
+
+        // Submit form
+        document.getElementById('addTemplateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('templateName').value.trim();
+            const category = document.getElementById('templateCategory').value;
+            const difficulty = document.getElementById('templateDifficulty').value;
+            const description = document.getElementById('templateDescription').value.trim();
+            const features = document.getElementById('templateFeatures').value.split('\n').filter(f => f.trim()).map(f => f.trim());
+            const outcomes = document.getElementById('templateOutcomes').value.split('\n').filter(o => o.trim()).map(o => o.trim());
+            
+            if (!name || !category || !description || techStack.length === 0) {
+                showMessage('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:5000/api/templates/admin/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token ? `Bearer ${token}` : ''
+                    },
+                    body: JSON.stringify({
+                        name, category, difficulty, description,
+                        tech_stack: JSON.stringify(techStack),
+                        features: JSON.stringify(features),
+                        learning_outcomes: JSON.stringify(outcomes)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('✅ Template created successfully!', 'success');
+                    closeAddModal();
+                    document.getElementById('addTemplateForm').reset();
+                    techStack = [];
+                    renderTechStack();
+                    await loadTemplates();
+                    document.querySelector('[data-tab="templates"]').click();
+                } else {
+                    showMessage(data.message || 'Failed to create template', 'error');
+                }
+            } catch (error) {
+                showMessage('Network error: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-rocket"></i> Create Template';
+            }
+        });
+
+        // View template
+        async function viewTemplate(id) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/templates/${id}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const t = data.template;
+                    const techStack = Array.isArray(t.tech_stack) ? t.tech_stack : [];
+                    const features = Array.isArray(t.features) ? t.features : [];
+                    const outcomes = Array.isArray(t.learning_outcomes) ? t.learning_outcomes : [];
+                    
+                    document.getElementById('viewTitle').innerHTML = `<i class="fas fa-info-circle"></i> ${t.name}`;
+                    document.getElementById('viewContent').innerHTML = `
+                        <div style="line-height: 2;">
+                            <p style="margin-bottom: 15px;"><strong>Category:</strong> ${t.category}</p>
+                            <p style="margin-bottom: 15px;"><strong>Difficulty:</strong> ${t.difficulty || 'Intermediate'}</p>
+                            <p style="margin-bottom: 20px;"><strong>Description:</strong> ${t.description}</p>
+                            
+                            <h3 style="margin: 25px 0 15px 0; font-size: 1.3rem;">🛠 Tech Stack</h3>
+                            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px;">
+                                ${techStack.map(tech => `<span class="tech-badge">${tech}</span>`).join('')}
+                            </div>
+                            
+                            ${features.length > 0 ? `
+                                <h3 style="margin: 25px 0 15px 0; font-size: 1.3rem;">✨ Features</h3>
+                                <ul style="margin-left: 25px; margin-bottom: 25px;">
+                                    ${features.map(f => `<li style="margin-bottom: 10px;">${f}</li>`).join('')}
+                                </ul>
+                            ` : ''}
+                            
+                            ${outcomes.length > 0 ? `
+                                <h3 style="margin: 25px 0 15px 0; font-size: 1.3rem;">📚 Learning Outcomes</h3>
+                                <ul style="margin-left: 25px; margin-bottom: 25px;">
+                                    ${outcomes.map(o => `<li style="margin-bottom: 10px;">${o}</li>`).join('')}
+                                </ul>
+                            ` : ''}
+                            
+                            <button class="submit-btn" onclick="downloadTemplate(${t.id}, '${t.name.replace(/'/g, "\\'")}'); closeViewModal();" style="margin-top: 30px;">
+                                <i class="fas fa-download"></i> Download Template
+                            </button>
+                        </div>
+                    `;
+                    document.getElementById('viewModal').classList.add('active');
+                }
+            } catch (error) {
+                showMessage('Failed to load template details', 'error');
+            }
+        }
+
+        // Download template
+        async function downloadTemplate(id, name) {
+            try {
+                showMessage('🔄 Generating project...', 'success');
+                
+                const projectName = name.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now();
+                
+                const response = await fetch('http://localhost:5000/api/templates/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        templateId: parseInt(id),
+                        projectName: projectName,
+                        customizations: { author: 'TechWeave Student', description: name }
+                    })
+                });
+                
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Download failed');
+                }
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    if (blob.size === 0) throw new Error('Received empty file');
+                    
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${projectName}.zip`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    
+                    showMessage('✅ Download started successfully!', 'success');
+                    setTimeout(() => loadTemplates(), 2000);
+                } else {
+                    const errorText = await response.text();
+                    throw new Error(`Server error: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('❌ Error:', error);
+                showMessage('❌ Download failed: ' + error.message, 'error');
+            }
+        }
+
+        // Show message
+        function showMessage(text, type) {
+            const existing = document.querySelector('.message');
+            if (existing) existing.remove();
+            
+            const msg = document.createElement('div');
+            msg.className = `message ${type}`;
+            msg.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${text}`;
+            document.body.appendChild(msg);
+            
+            setTimeout(() => {
+                msg.style.animation = 'slideInRight 0.4s reverse';
+                setTimeout(() => msg.remove(), 400);
+            }, 4000);
+        }
+
+        // Close modals on outside click
+        document.getElementById('addTemplateModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeAddModal();
+        });
+
+        document.getElementById('viewModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeViewModal();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkMentorAccess();
+            loadTemplates();
+        });
+    </script>
+</body>
+</html>

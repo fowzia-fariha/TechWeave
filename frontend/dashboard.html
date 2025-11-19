@@ -6,7 +6,7 @@
 <title>TechWeave Dashboard</title>
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <!-- Lottie Player -->
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
@@ -14,91 +14,241 @@
 <style>
   * {
     box-sizing: border-box;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
   }
 
   body {
-    background: #f0f4f8;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: #1e3c72;
     padding: 20px;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Animated Background Particles */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.2) 0%, transparent 50%);
+    animation: particleMove 20s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes particleMove {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.8; }
   }
 
   .header-section {
     text-align: center;
     margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 40px 20px;
+    border-radius: 25px;
+    box-shadow: 
+      0 20px 50px rgba(0, 0, 0, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    transform: perspective(1000px) rotateX(0deg);
+    transition: all 0.4s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-section:hover {
+    transform: perspective(1000px) rotateX(-2deg);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
   }
 
   h1 {
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 10px;
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -1px;
+    text-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    animation: titleFloat 3s ease-in-out infinite;
+  }
+
+  @keyframes titleFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
   }
 
   .user-welcome {
-    font-size: 18px;
-    color: #2a5298;
-    margin-bottom: 5px;
+    font-size: 20px;
+    color: #475569;
+    margin-bottom: 12px;
+    font-weight: 600;
   }
 
   .user-role {
     display: inline-block;
-    background: #4CAF50;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
     color: white;
-    padding: 5px 15px;
-    border-radius: 20px;
+    padding: 10px 25px;
+    border-radius: 25px;
     font-size: 14px;
-    font-weight: 600;
-    margin-top: 5px;
+    font-weight: 700;
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 
+      0 8px 20px rgba(76, 175, 80, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+    animation: badgePulse 2s ease-in-out infinite;
+  }
+
+  @keyframes badgePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
   }
 
   .role-mentor {
-    background: #ff6b00;
+    background: linear-gradient(135deg, #ff6b00, #ff8c00);
+    box-shadow: 
+      0 8px 20px rgba(255, 107, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.2) inset;
   }
 
   .role-student {
-    background: #2196F3;
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+    box-shadow: 
+      0 8px 20px rgba(33, 150, 243, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.2) inset;
   }
 
   .mentor-features {
-    background: #fff3cd;
-    border: 1px solid #ffeaa7;
-    border-radius: 10px;
-    padding: 15px;
+    background: rgba(255, 243, 205, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 234, 167, 0.8);
+    border-radius: 20px;
+    padding: 25px;
     margin: 20px auto;
     max-width: 800px;
     text-align: center;
+    box-shadow: 
+      0 15px 35px rgba(255, 140, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+    transform: perspective(1000px) rotateX(0deg);
+    transition: all 0.4s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .mentor-features:hover {
+    transform: perspective(1000px) rotateX(-2deg) translateY(-5px);
+    box-shadow: 0 20px 45px rgba(255, 140, 0, 0.35);
+  }
+
+  .mentor-features h3 {
+    color: #ff6b00;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  .mentor-features p {
+    color: #8b6914;
+    font-weight: 500;
   }
 
   .dashboard-list {
     max-width: 800px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    padding-bottom: 120px;
   }
 
   .dashboard-item {
     display: flex;
     align-items: center;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    margin-bottom: 15px;
-    padding: 10px 15px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.12),
+      0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    margin-bottom: 18px;
+    padding: 20px 25px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
   }
 
+  /* Gradient Border Animation */
+  .dashboard-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+    transform: scaleX(0);
+    transition: transform 0.5s;
+  }
+
+  .dashboard-item:hover::before {
+    transform: scaleX(1);
+  }
+
+  /* 3D Hover Effect */
   .dashboard-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transform: perspective(1000px) rotateX(-5deg) rotateY(5deg) translateY(-12px);
+    box-shadow: 
+      0 20px 50px rgba(0, 0, 0, 0.2),
+      0 0 40px rgba(102, 126, 234, 0.3);
+  }
+
+  /* Shine Effect */
+  .dashboard-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+
+  .dashboard-item:hover::after {
+    left: 100%;
   }
 
   .dashboard-animation {
-    flex: 0 0 60px;
+    flex: 0 0 80px;
+    height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-right: 15px;
+    margin-right: 20px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border-radius: 50%;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+    transition: all 0.4s;
+    position: relative;
+    z-index: 2;
+  }
+
+  .dashboard-item:hover .dashboard-animation {
+    transform: scale(1.15) rotate(10deg);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.3);
   }
 
   .dashboard-animation lottie-player {
@@ -106,38 +256,336 @@
     height: 60px;
   }
 
+  .dashboard-content {
+    position: relative;
+    z-index: 2;
+  }
+
   .dashboard-content h2 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 3px;
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #1e293b;
+    transition: color 0.3s;
+  }
+
+  .dashboard-item:hover .dashboard-content h2 {
+    color: #667eea;
   }
 
   .dashboard-content p {
-    font-size: 13px;
-    color: #555;
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.6;
+    font-weight: 400;
   }
 
   .mentor-only {
-    border-left: 4px solid #ff6b00;
+    border: 2px solid rgba(255, 107, 0, 0.3);
+  }
+
+  .mentor-only::before {
+    background: linear-gradient(90deg, #ff6b00, #ff8c00);
   }
 
   .mentor-badge {
-    background: #ff6b00;
+    background: linear-gradient(135deg, #ff6b00, #ff8c00);
     color: white;
-    padding: 2px 8px;
-    border-radius: 10px;
+    padding: 4px 12px;
+    border-radius: 12px;
     font-size: 10px;
-    margin-left: 8px;
+    font-weight: 700;
+    margin-left: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 
+      0 4px 12px rgba(255, 107, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+    animation: badgeFloat 2s ease-in-out infinite;
+  }
+
+  @keyframes badgeFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-3px); }
+  }
+
+  /* Floating Help Bot Button */
+  .help-bot-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    box-shadow: 
+      0 15px 40px rgba(102, 126, 234, 0.5),
+      0 0 0 4px rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: helpBotFloat 3s ease-in-out infinite;
+    overflow: visible;
+  }
+
+  @keyframes helpBotFloat {
+    0%, 100% { 
+      transform: translateY(0px) scale(1);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+    }
+    50% { 
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 20px 50px rgba(102, 126, 234, 0.7);
+    }
+  }
+
+  .help-bot-button:hover {
+    transform: translateY(-15px) scale(1.1);
+    box-shadow: 0 25px 60px rgba(102, 126, 234, 0.8);
+    animation: none;
+  }
+
+  .help-bot-button:active {
+    transform: translateY(-10px) scale(1.05);
+  }
+
+  .help-bot-button lottie-player {
+    width: 70px;
+    height: 70px;
+  }
+
+  /* Help Bot Tooltip */
+  .help-bot-tooltip {
+    position: absolute;
+    top: 50%;
+    right: 110px;
+    transform: translateY(-50%) translateX(10px);
+    background: white;
+    color: #1e293b;
+    padding: 12px 20px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+  }
+
+  .help-bot-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -8px;
+    transform: translateY(-50%);
+    border-left: 8px solid white;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+  }
+
+  .help-bot-button:hover .help-bot-tooltip {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0px);
+  }
+
+  /* Pulse Ring Animation */
+  .help-bot-button::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid #667eea;
+    animation: pulseRing 2s ease-out infinite;
+  }
+
+  @keyframes pulseRing {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+  }
+
+  /* Notification Badge */
+  .help-bot-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: linear-gradient(135deg, #ff6b00, #ff8c00);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow: 
+      0 4px 15px rgba(255, 107, 0, 0.6),
+      0 0 0 3px rgba(255, 255, 255, 0.3);
+    animation: badgeBounce 2s ease-in-out infinite;
+  }
+
+  @keyframes badgeBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  /* Chatbot Modal */
+  .chatbot-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: flex-end;
+    align-items: stretch;
+  }
+
+  .chatbot-modal.active {
+    display: flex;
+  }
+
+  .chatbot-iframe {
+    width: 450px;
+    height: 100%;
+    border: none;
+    box-shadow: -10px 0 50px rgba(0, 0, 0, 0.3);
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 20px;
+    right: 470px;
+    background: white;
+    border: none;
+    color: #1e293b;
+    font-size: 24px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Responsive */
+  @media(max-width: 768px) {
+    .chatbot-iframe {
+      width: 100%;
+    }
+    
+    .close-modal {
+      right: 20px;
+    }
   }
 
   @media(max-width: 600px) {
+    body {
+      padding: 15px;
+    }
+
+    h1 {
+      font-size: 32px;
+    }
+
     .dashboard-item {
-      flex-direction: column;
-      align-items: flex-start;
+      flex-direction: row;
+      padding: 18px 20px;
     }
+
     .dashboard-animation {
-      margin-bottom: 8px;
+      flex: 0 0 70px;
+      height: 70px;
+      margin-right: 15px;
+      margin-bottom: 0;
     }
+
+    .dashboard-animation lottie-player {
+      width: 50px;
+      height: 50px;
+    }
+
+    .dashboard-content h2 {
+      font-size: 16px;
+    }
+
+    .dashboard-content p {
+      font-size: 12px;
+    }
+
+    .help-bot-button {
+      width: 70px;
+      height: 70px;
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .help-bot-button lottie-player {
+      width: 55px;
+      height: 55px;
+    }
+
+    .help-bot-tooltip {
+      display: none;
+    }
+  }
+
+  /* Fade In Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .dashboard-item {
+    animation: fadeIn 0.6s ease forwards;
+  }
+
+  .dashboard-item:nth-child(1) { animation-delay: 0.1s; }
+  .dashboard-item:nth-child(2) { animation-delay: 0.2s; }
+  .dashboard-item:nth-child(3) { animation-delay: 0.3s; }
+  .dashboard-item:nth-child(4) { animation-delay: 0.4s; }
+  .dashboard-item:nth-child(5) { animation-delay: 0.5s; }
+  .dashboard-item:nth-child(6) { animation-delay: 0.6s; }
+  .dashboard-item:nth-child(7) { animation-delay: 0.7s; }
+
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5568d3, #6839a0);
   }
 </style>
 </head>
@@ -157,7 +605,6 @@
 
 <div class="dashboard-list">
 
-  <!-- Learning Path Card -->
   <div class="dashboard-item" onclick="goToLearningPath()">
     <div class="dashboard-animation">
       <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_w51pcehl.json" background="transparent" speed="1" loop autoplay></lottie-player>
@@ -168,7 +615,6 @@
     </div>
   </div>
 
-  <!-- Chat Card -->
   <div class="dashboard-item" onclick="goToChat()">
     <div class="dashboard-animation">
      <lottie-player src="https://assets6.lottiefiles.com/packages/lf20_xyadoh9h.json" background="transparent" speed="1" loop autoplay></lottie-player>
@@ -190,10 +636,9 @@
     </div>
   </div>
 
-  <!-- Community Forum -->
   <div class="dashboard-item">
     <div class="dashboard-animation">
-     <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_qpsnmykx.json" background="transparent" speed="1" loop autoplay></lottie-player>
+     <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_qpsnmykx.json" background="transparent" speed="1" loop autoplay></lottie-player>    
     </div>
     <div class="dashboard-content">
       <h2>Community Forum</h2>
@@ -201,7 +646,6 @@
     </div>
   </div>
 
-  <!-- FAQ -->
   <div class="dashboard-item" onclick="goToFAQ()">
     <div class="dashboard-animation">
       <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_p8bfn5to.json" background="transparent" speed="1" loop autoplay></lottie-player>
@@ -212,21 +656,49 @@
     </div>
   </div>
 
-  <!-- Docker & DevOps -->
-  <div class="dashboard-item">
+  <div class="dashboard-item" onclick="goToTemplates()">
     <div class="dashboard-animation">
       <lottie-player src="https://assets1.lottiefiles.com/packages/lf20_x62chJ.json" background="transparent" speed="1" loop autoplay></lottie-player>
     </div>
     <div class="dashboard-content">
-      <h2>Docker & DevOps</h2>
-      <p>Explore containerization and DevOps practices with Docker.</p>
+      <h2>Project Templates & Boilerplates</h2>
+      <p>Pre-made starter templates for Web, ML, Security projects with folder structure, readme, and sample code.</p>
     </div>
   </div>
 
+  <!-- Demo Projects as a normal dashboard item -->
+  <div class="dashboard-item" onclick="goToProjects()">
+    <div class="dashboard-animation">
+      <lottie-player src="https://assets1.lottiefiles.com/packages/lf20_gn0tojcq.json" background="transparent" speed="1" loop autoplay></lottie-player>
+    </div>
+    <div class="dashboard-content">
+      <h2>Demo Projects</h2>
+      <p>Explore real-world project examples and implementations.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Help Bot Button -->
+<div class="help-bot-button" onclick="openChatbot()">
+  <lottie-player 
+    src="https://assets9.lottiefiles.com/packages/lf20_9wpyhdzo.json" 
+    background="transparent" 
+    speed="1" 
+    loop 
+    autoplay>
+  </lottie-player>
+  <div class="help-bot-tooltip">💬 Need Help? Chat with AI!</div>
+  <div class="help-bot-badge">AI</div>
+</div>
+
+<!-- Chatbot Modal -->
+<div class="chatbot-modal" id="chatbotModal">
+  <button class="close-modal" onclick="closeChatbot()">×</button>
+  <iframe class="chatbot-iframe" src="chatbot.html" id="chatbotIframe"></iframe>
 </div>
 
 <script>
-// Load user info from token
+// Dashboard functionality
 async function loadUserInfo() {
   const token = localStorage.getItem('token');
   
@@ -244,6 +716,15 @@ async function loadUserInfo() {
     
     const user = await response.json();
     
+    localStorage.setItem('user', JSON.stringify({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role
+    }));
+    
+    console.log('✅ User stored in localStorage:', user);
+    
     document.getElementById('userWelcome').textContent = `Welcome, ${user.username}!`;
     
     const userRoleElement = document.getElementById('userRole');
@@ -253,6 +734,9 @@ async function loadUserInfo() {
     if (user.role === 'mentor') {
       document.getElementById('mentorFeatures').style.display = 'block';
       document.getElementById('mentorTools').style.display = 'flex';
+      console.log('🎯 Welcome Mentor! Special features unlocked.');
+    } else {
+      console.log('👨‍🎓 Welcome Student! Enjoy learning.');
     }
 
   } catch (error) {
@@ -262,7 +746,6 @@ async function loadUserInfo() {
   }
 }
 
-// Navigation functions
 function goToLearningPath() {
   window.location.href = 'learning-path.html';
 }
@@ -279,8 +762,69 @@ function goToFAQ() {
   window.location.href = 'faq.html';
 }
 
-// Load user info on page load
-document.addEventListener('DOMContentLoaded', loadUserInfo);
+function goToTemplates() {
+  window.location.href = 'templates.html';
+}
+
+function goToProjects() {
+  window.location.href = 'projects.html';
+}
+
+function checkAdminAccess() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    
+    if (user.role === 'mentor' || user.role === 'admin') {
+        const adminSection = document.getElementById('adminSection');
+        if (adminSection) {
+            adminSection.style.display = 'block';
+        }
+    }
+}
+
+// Chatbot functionality
+function openChatbot() {
+    const chatbotModal = document.getElementById("chatbotModal");
+    chatbotModal.classList.add("active");
+}
+
+function closeChatbot() {
+    const chatbotModal = document.getElementById("chatbotModal");
+    chatbotModal.classList.remove("active");
+}
+
+// Listen for messages from chatbot to close modal
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.action === 'closeChatbot') {
+        closeChatbot();
+    }
+});
+
+// Initialize everything when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadUserInfo();
+    checkAdminAccess();
+    
+    // Add 3D tilt effect on mouse move
+    document.querySelectorAll('.dashboard-item').forEach(item => {
+        item.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 15;
+            const rotateY = (centerX - x) / 15;
+            
+            this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-12px)`;
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+        });
+    });
+});
 </script>
 
 </body>

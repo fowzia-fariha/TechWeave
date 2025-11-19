@@ -22,6 +22,35 @@
     }
     body { background: linear-gradient(135deg, var(--primary), #1a1f36); color: var(--text); min-height: 100vh; }
     .container { max-width: 1200px; margin: auto; padding: 40px 20px; }
+    
+    /* Back Button */
+    .back-button {
+        position: fixed;
+        top: 30px;
+        left: 30px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--card-bg);
+        color: var(--text);
+        padding: 12px 20px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 500;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+        backdrop-filter: blur(20px);
+        z-index: 1000;
+        font-size: 14px;
+    }
+    .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        background: rgba(99, 102, 241, 0.15);
+        border-color: rgba(99, 102, 241, 0.4);
+    }
+    
     .header { text-align: center; margin-bottom: 50px; }
     .logo { font-size: 1.8rem; font-weight: 700; background: linear-gradient(90deg, var(--accent), var(--accent-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; }
     h1 { font-size: 3rem; font-weight: 700; background: linear-gradient(135deg, #e2e8f0, #f1f5f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -40,87 +69,97 @@
     .resource-btn:hover::before { left: 100%; }
 
     @media(max-width:768px){
+        .back-button {
+            top: 20px;
+            left: 20px;
+            padding: 10px 16px;
+            font-size: 13px;
+        }
         .topic-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+        .buttons { width: 100%; justify-content: space-between; }
+        .resource-btn { flex: 1; justify-content: center; }
     }
 </style>
 </head>
 
 <body>
-<div class="container">
+    <!-- Back Button -->
+    <a href="learning-path.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Learning Path
+    </a>
 
-    <div class="header">
-        <div class="logo">TechWeave</div>
-        <h1>Cloud Computing</h1>
-        <p class="subtitle">Learn AWS, Azure, Google Cloud, and Cloud Architecture with premium video tutorials and PDFs.</p>
+    <div class="container">
+        <div class="header">
+            <div class="logo">TechWeave</div>
+            <h1>Cloud Computing</h1>
+            <p class="subtitle">Learn AWS, Azure, Google Cloud, and Cloud Architecture with premium video tutorials and PDFs.</p>
+        </div>
+
+        <div class="topic-list" id="topic-container"></div>
     </div>
 
-    <div class="topic-list" id="topic-container"></div>
+    <script>
+    const topics = [
+        {
+            name: 'AWS',
+            description: 'Learn cloud deployment, EC2, S3, Lambda, IAM and more using Amazon Web Services.',
+            animation: 'https://assets10.lottiefiles.com/packages/lf20_puciaact.json',
+            link: 'https://youtu.be/k1RI5locZE4?si=oSONjasKCykB5UMm',
+            pdf: 'amazon_web_services_tutorial.pdf'
+        },
+        {
+            name: 'Azure',
+            description: 'Master Microsoft Azure cloud computing, virtual machines, storage, DevOps, and more.',
+            animation: 'https://assets7.lottiefiles.com/packages/lf20_4kx2q32n.json',
+            link: 'https://youtu.be/tDuruX7XSac?si=-bcRbbLDNuA5Syvx',
+            pdf: 'amazon_web_services_tutorial.pdf'
+        },
+        {
+            name: 'GCP',
+            description: 'Learn Google Cloud services including Compute Engine, Cloud Functions, and BigQuery.',
+            animation: 'https://assets10.lottiefiles.com/packages/lf20_kq5rGs.json',
+            link: 'https://youtu.be/22blAf8Esz4?si=JgZtFgRvrKwuaWMm',
+            pdf: 'cloud_computing_quick_guide.pdf'
+        },
+        {
+            name: 'Cloud Architecture',
+            description: 'Learn how to design scalable, fault-tolerant cloud systems and architectures.',
+            animation: 'https://assets9.lottiefiles.com/packages/lf20_x1p3k8vl.json',
+            link: 'https://www.youtube.com/live/ZfZ_ManKnlM?si=vxo1MG9gwOkuB71M',
+            pdf: 'cloud_computing_tutorial.pdf'
+        }
+    ];
 
-</div>
+    const container = document.getElementById('topic-container');
 
-<script>
-const topics = [
-    {
-        name: 'AWS',
-        description: 'Learn cloud deployment, EC2, S3, Lambda, IAM and more using Amazon Web Services.',
-        animation: 'https://assets10.lottiefiles.com/packages/lf20_puciaact.json',
-        link: 'https://youtu.be/k1RI5locZE4?si=oSONjasKCykB5UMm',
-        pdf: 'amazon_web_services_tutorial.pdf'
-    },
-    {
-        name: 'Azure',
-        description: 'Master Microsoft Azure cloud computing, virtual machines, storage, DevOps, and more.',
-        animation: 'https://assets7.lottiefiles.com/packages/lf20_4kx2q32n.json',
-        link: 'https://youtu.be/tDuruX7XSac?si=-bcRbbLDNuA5Syvx',
-        pdf: 'amazon_web_services_tutorial.pdf'
-    },
-    {
-        name: 'GCP',
-        description: 'Learn Google Cloud services including Compute Engine, Cloud Functions, and BigQuery.',
-        animation: 'https://assets10.lottiefiles.com/packages/lf20_kq5rGs.json',
-        link: 'https://youtu.be/22blAf8Esz4?si=JgZtFgRvrKwuaWMm',
-        pdf: 'cloud_computing_quick_guide.pdf'
-    },
-    {
-        name: 'Cloud Architecture',
-        description: 'Learn how to design scalable, fault-tolerant cloud systems and architectures.',
-        animation: 'https://assets9.lottiefiles.com/packages/lf20_x1p3k8vl.json',
-        link: 'https://www.youtube.com/live/ZfZ_ManKnlM?si=vxo1MG9gwOkuB71M',
-        pdf: 'cloud_computing_tutorial.pdf'
-    }
-];
-
-const container = document.getElementById('topic-container');
-
-topics.forEach(topic => {
-    const card = document.createElement('div');
-    card.classList.add('topic-card');
-    card.innerHTML = `
-        <div class="topic-left">
-            <div class="topic-animation">
-                <lottie-player src="${topic.animation}" background="transparent" speed="1" loop autoplay></lottie-player>
+    topics.forEach(topic => {
+        const card = document.createElement('div');
+        card.classList.add('topic-card');
+        card.innerHTML = `
+            <div class="topic-left">
+                <div class="topic-animation">
+                    <lottie-player src="${topic.animation}" background="transparent" speed="1" loop autoplay></lottie-player>
+                </div>
+                <div class="topic-content">
+                    <h2>${topic.name}</h2>
+                    <p>${topic.description}</p>
+                </div>
             </div>
-            <div class="topic-content">
-                <h2>${topic.name}</h2>
-                <p>${topic.description}</p>
+
+            <div class="buttons">
+                <a href="${topic.link}" target="_blank" class="resource-btn">
+                    <span>Watch Video</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+                <a href="${topic.pdf}" target="_blank" class="resource-btn">
+                    <span>View PDF</span>
+                    <i class="fas fa-file-pdf"></i>
+                </a>
             </div>
-        </div>
-
-        <div class="buttons">
-            <a href="${topic.link}" target="_blank" class="resource-btn">
-                <span>Watch Video</span>
-                <i class="fas fa-arrow-right"></i>
-            </a>
-
-            <a href="${topic.pdf}" target="_blank" class="resource-btn">
-                <span>View PDF</span>
-                <i class="fas fa-file-pdf"></i>
-            </a>
-        </div>
-    `;
-    container.appendChild(card);
-});
-</script>
-
+        `;
+        container.appendChild(card);
+    });
+    </script>
 </body>
 </html>

@@ -20,6 +20,35 @@
         --card-bg: rgba(30, 41, 59, 0.7);
         --border: rgba(255,255,255,0.1);
     }
+    
+    /* Back Button */
+    .back-button {
+        position: fixed;
+        top: 30px;
+        left: 30px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--card-bg);
+        color: var(--text);
+        padding: 12px 20px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 500;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+        backdrop-filter: blur(20px);
+        z-index: 1000;
+        font-size: 14px;
+    }
+    .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        background: rgba(99, 102, 241, 0.15);
+        border-color: rgba(99, 102, 241, 0.4);
+    }
+    
     body { background: linear-gradient(135deg, var(--primary), #1a1f36); color: var(--text); min-height: 100vh; }
     .container { max-width: 1200px; margin: auto; padding: 40px 20px; }
     .header { text-align: center; margin-bottom: 50px; }
@@ -30,7 +59,28 @@
     .topic-card { display: flex; align-items: center; justify-content: space-between; padding: 25px 30px; background: var(--card-bg); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid var(--border); transition: 0.3s ease; }
     .topic-card:hover { transform: translateY(-6px); box-shadow: 0 15px 40px rgba(0,0,0,0.5); border-color: rgba(99,102,241,0.3); }
     .topic-left { display: flex; align-items: center; gap: 20px; }
-    .topic-animation { width: 70px; height: 70px; border-radius: 15px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(15,23,42,0.5); }
+    .topic-animation { 
+        width: 70px; 
+        height: 70px; 
+        border-radius: 15px; 
+        overflow: hidden; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        background: rgba(15,23,42,0.5); 
+    }
+    .topic-animation lottie-player,
+    .topic-animation i {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .topic-animation i {
+        font-size: 32px;
+        color: var(--accent-light);
+    }
     .topic-content h2 { font-size: 1.4rem; font-weight: 600; }
     .topic-content p { font-size: 0.9rem; color: var(--text-light); }
     .buttons { display: flex; gap: 12px; }
@@ -38,86 +88,125 @@
     .resource-btn:hover { background: rgba(99,102,241,0.2); border-color: rgba(99,102,241,0.5); }
     .resource-btn::before { content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); transition: 0.5s; }
     .resource-btn:hover::before { left: 100%; }
-    @media(max-width:768px){ .topic-card { flex-direction: column; align-items: flex-start; gap: 15px; } }
+    
+    @media(max-width:768px){ 
+        .back-button {
+            top: 20px;
+            left: 20px;
+            padding: 10px 16px;
+            font-size: 13px;
+        }
+        .topic-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+        .buttons { width: 100%; justify-content: space-between; }
+        .resource-btn { flex: 1; justify-content: center; }
+    }
 </style>
 </head>
 
 <body>
-<div class="container">
+    <!-- Back Button -->
+    <a href="learning-path.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Learning Path
+    </a>
 
-    <div class="header">
-        <div class="logo">TechWeave</div>
-        <h1>DevOps</h1>
-        <p class="subtitle">Learn Docker, Kubernetes, CI/CD pipelines, and AWS with video tutorials and downloadable PDFs.</p>
+    <div class="container">
+        <div class="header">
+            <div class="logo">TechWeave</div>
+            <h1>DevOps</h1>
+            <p class="subtitle">Learn Docker, Kubernetes, CI/CD pipelines, and AWS with video tutorials and downloadable PDFs.</p>
+        </div>
+
+        <div class="topic-list" id="topic-container"></div>
     </div>
 
-    <div class="topic-list" id="topic-container"></div>
+    <script>
+    // DevOps topics with reliable animations and fallback icons
+    const topics = [
+        {
+            name: 'Docker',
+            description: 'Learn containerization and manage applications in isolated environments.',
+            animation: 'https://assets1.lottiefiles.com/packages/lf20_2cwDXD.json',
+            fallbackIcon: 'fab fa-docker',
+            link: 'https://www.youtube.com/watch?v=fqMOX6JJhGo',
+            pdf: 'docker_tutorial.pdf'
+        },
+        {
+            name: 'Kubernetes',
+            description: 'Orchestrate and manage containerized applications at scale.',
+            animation: 'https://assets1.lottiefiles.com/packages/lf20_2cwDXD.json',
+            fallbackIcon: 'fas fa-ship',
+            link: 'https://www.youtube.com/watch?v=X48VuDVv0do',
+            pdf: 'kubernetes_tutorial.pdf'
+        },
+        {
+            name: 'CI/CD',
+            description: 'Automate building, testing, and deploying applications using pipelines.',
+            animation: 'https://assets1.lottiefiles.com/packages/lf20_2cwDXD.json',
+            fallbackIcon: 'fas fa-sync-alt',
+            link: 'https://www.youtube.com/live/h9K1NnqwUvE?si=Ao_VmRzry2poApTh',
+            pdf: 'continuous_integration_tutorial.pdf'
+        },
+        {
+            name: 'AWS',
+            description: 'Get started with cloud computing and deploy scalable applications on AWS.',
+            animation: 'https://assets1.lottiefiles.com/packages/lf20_2cwDXD.json',
+            fallbackIcon: 'fab fa-aws',
+            link: 'https://youtu.be/k1RI5locZE4?si=22WYUSshq8QOj4F4',
+            pdf: 'amazon_web_services_tutorial.pdf'
+        }
+    ];
 
-</div>
+    const container = document.getElementById('topic-container');
 
-<script>
-const topics = [
-    {
-        name: 'Docker',
-        description: 'Learn containerization and manage applications in isolated environments.',
-        animation: 'https://assets3.lottiefiles.com/packages/lf20_tzjvxlmo.json',
-        link: 'https://www.youtube.com/watch?v=fqMOX6JJhGo',
-        pdf: 'docker_tutorial.pdf'
-    },
-    {
-        name: 'Kubernetes',
-        description: 'Orchestrate and manage containerized applications at scale.',
-        animation: 'https://assets4.lottiefiles.com/packages/lf20_ysas7u.json',
-        link: 'https://www.youtube.com/watch?v=X48VuDVv0do',
-        pdf: 'kubernetes_tutorial.pdf'
-    },
-    {
-        name: 'CI/CD',
-        description: 'Automate building, testing, and deploying applications using pipelines.',
-        animation: 'https://assets2.lottiefiles.com/packages/lf20_pucia3gd.json',
-        link: 'https://www.youtube.com/live/h9K1NnqwUvE?si=Ao_VmRzry2poApTh',
-        pdf: 'continuous_integration_tutorial.pdf'
-    },
-    {
-        name: 'AWS',
-        description: 'Get started with cloud computing and deploy scalable applications on AWS.',
-        animation: 'https://assets2.lottiefiles.com/packages/lf20_i0uwrk.json',
-        link: 'https://youtu.be/k1RI5locZE4?si=22WYUSshq8QOj4F4',
-        pdf: 'amazon_web_services_tutorial.pdf'
+    // Function to handle animation errors
+    function handleAnimationError(element, fallbackIcon) {
+        console.log('Animation failed to load, using fallback icon');
+        element.parentElement.innerHTML = `<i class="${fallbackIcon}"></i>`;
     }
-];
 
-const container = document.getElementById('topic-container');
-
-topics.forEach(topic => {
-    const card = document.createElement('div');
-    card.classList.add('topic-card');
-    card.innerHTML = `
-        <div class="topic-left">
-            <div class="topic-animation">
-                <lottie-player src="${topic.animation}" background="transparent" speed="1" loop autoplay></lottie-player>
+    // Create topic cards with error handling
+    topics.forEach(topic => {
+        const card = document.createElement('div');
+        card.classList.add('topic-card');
+        card.innerHTML = `
+            <div class="topic-left">
+                <div class="topic-animation">
+                    <lottie-player 
+                        src="${topic.animation}" 
+                        background="transparent" 
+                        speed="1" 
+                        loop 
+                        autoplay
+                        onerror="handleAnimationError(this, '${topic.fallbackIcon}')">
+                    </lottie-player>
+                </div>
+                <div class="topic-content">
+                    <h2>${topic.name}</h2>
+                    <p>${topic.description}</p>
+                </div>
             </div>
-            <div class="topic-content">
-                <h2>${topic.name}</h2>
-                <p>${topic.description}</p>
+
+            <div class="buttons">
+                <a href="${topic.link}" target="_blank" class="resource-btn">
+                    <span>Watch Video</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+                <a href="${topic.pdf}" target="_blank" class="resource-btn">
+                    <span>View PDF</span>
+                    <i class="fas fa-file-pdf"></i>
+                </a>
             </div>
-        </div>
+        `;
+        container.appendChild(card);
+    });
 
-        <div class="buttons">
-            <a href="${topic.link}" target="_blank" class="resource-btn">
-                <span>Watch Video</span>
-                <i class="fas fa-arrow-right"></i>
-            </a>
+    // Global error handler for animations
+    window.handleAnimationError = function(element, fallbackIcon) {
+        element.parentElement.innerHTML = `<i class="${fallbackIcon}"></i>`;
+    };
 
-            <a href="${topic.pdf}" target="_blank" class="resource-btn">
-                <span>View PDF</span>
-                <i class="fas fa-file-pdf"></i>
-            </a>
-        </div>
-    `;
-    container.appendChild(card);
-});
-</script>
-
+    
+    </script>
 </body>
 </html>

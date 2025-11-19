@@ -22,6 +22,35 @@
     }
     body { background: linear-gradient(135deg, var(--primary), #1a1f36); color: var(--text); min-height: 100vh; }
     .container { max-width: 1200px; margin: auto; padding: 40px 20px; }
+    
+    /* Back Button */
+    .back-button {
+        position: fixed;
+        top: 30px;
+        left: 30px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--card-bg);
+        color: var(--text);
+        padding: 12px 20px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 500;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+        backdrop-filter: blur(20px);
+        z-index: 1000;
+        font-size: 14px;
+    }
+    .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        background: rgba(99, 102, 241, 0.15);
+        border-color: rgba(99, 102, 241, 0.4);
+    }
+    
     .header { text-align: center; margin-bottom: 50px; }
     .logo {
         font-size: 1.8rem; font-weight: 700;
@@ -87,88 +116,109 @@
         transition: 0.5s;
     }
     .resource-btn:hover::before { left: 100%; }
+    
     @media(max-width:768px){
+        .back-button {
+            top: 20px;
+            left: 20px;
+            padding: 10px 16px;
+            font-size: 13px;
+        }
         .topic-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+        .buttons { width: 100%; justify-content: space-between; }
+        .resource-btn { flex: 1; justify-content: center; }
     }
 </style>
 </head>
 
 <body>
-<div class="container">
+    <!-- Back Button -->
+    <a href="learning-path.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Learning Path
+    </a>
 
-    <div class="header">
-        <div class="logo">TechWeave</div>
-        <h1>Blockchain Development</h1>
-        <p class="subtitle">Learn Solidity, Smart Contracts, Web3, and Ethereum with tutorials and downloadable PDFs.</p>
+    <div class="container">
+        <div class="header">
+            <div class="logo">TechWeave</div>
+            <h1>Blockchain Development</h1>
+            <p class="subtitle">Learn Solidity, Smart Contracts, Web3, and Ethereum with tutorials and downloadable PDFs.</p>
+        </div>
+
+        <div class="topic-list" id="topic-container"></div>
     </div>
 
-    <div class="topic-list" id="topic-container"></div>
+    <script>
+    const topics = [
+        {
+            name: 'Solidity',
+            description: 'Learn Solidity to write smart contracts on the Ethereum blockchain.',
+            animation: 'https://assets5.lottiefiles.com/packages/lf20_6efmvbdh.json',
+            link: 'https://www.youtube.com/watch?v=ipwxYa-F1uY',
+            pdf: 'solidity_tutorial.pdf'
+        },
+        {
+            name: 'Smart Contracts',
+            description: 'Understand how to build, deploy, and interact with smart contracts.',
+            animation: 'https://assets1.lottiefiles.com/packages/lf20_5tkbol1r.json',
+            link: 'https://www.youtube.com/watch?v=ZE2HxTmxfrI',
+            pdf: 'smart_contacts.pdf'
+        },
+        {
+            name: 'Web3',
+            description: 'Learn Web3 development and decentralized applications (DApps).',
+            animation: 'https://assets4.lottiefiles.com/packages/lf20_3rwjfspc.json',
+            link: 'https://www.youtube.com/watch?v=Wn_Kb3MR_cU',
+            pdf: 'web3_developers_guide.pdf'
+        },
+        {
+            name: 'Ethereum',
+            description: 'Master the Ethereum blockchain ecosystem and its tooling.',
+            animation: 'https://assets1.lottiefiles.com/packages/lf20_3rw1nm3z.json',
+            link: 'https://www.youtube.com/watch?v=3aJI1ABdjQk',
+            pdf: 'ethereum_tutorial.pdf'
+        }
+    ];
 
-</div>
+    const container = document.getElementById('topic-container');
 
-<script>
-const topics = [
-    {
-        name: 'Solidity',
-        description: 'Learn Solidity to write smart contracts on the Ethereum blockchain.',
-        animation: 'https://assets7.lottiefiles.com/packages/lf20_tno6cg2w.json',
-        link: 'https://www.youtube.com/watch?v=ipwxYa-F1uY',
-        pdf: 'ethereum_tutorial.pdf'
-    },
-    {
-        name: 'Smart Contracts',
-        description: 'Understand how to build, deploy, and interact with smart contracts.',
-        animation: 'https://assets10.lottiefiles.com/packages/lf20_jtbfg2nb.json',
-        link: 'https://www.youtube.com/watch?v=ZE2HxTmxfrI',
-        pdf: 'smart_contacts.pdf'
-    },
-    {
-        name: 'Web3',
-        description: 'Learn Web3 development and decentralized applications (DApps).',
-        animation: 'https://assets4.lottiefiles.com/private_files/lf30_tglv9wqf.json',
-        link: 'https://www.youtube.com/watch?v=Wn_Kb3MR_cU',
-        pdf: 'web_developers_guide_tutorial.pdf'
-    },
-    {
-        name: 'Ethereum',
-        description: 'Master the Ethereum blockchain ecosystem and its tooling.',
-        animation: 'https://assets4.lottiefiles.com/packages/lf20_cgjrns9t.json',
-        link: 'https://www.youtube.com/watch?v=3aJI1ABdjQk',
-        pdf: 'ethereum_tutorial.pdf'
-    }
-];
+    // Wait for DOM to be fully loaded before creating Lottie players
+    document.addEventListener('DOMContentLoaded', function() {
+        topics.forEach(topic => {
+            const card = document.createElement('div');
+            card.classList.add('topic-card');
+            card.innerHTML = `
+                <div class="topic-left">
+                    <div class="topic-animation">
+                        <lottie-player 
+                            src="${topic.animation}" 
+                            background="transparent" 
+                            speed="1" 
+                            loop 
+                            autoplay
+                            style="width: 100%; height: 100%;">
+                        </lottie-player>
+                    </div>
+                    <div class="topic-content">
+                        <h2>${topic.name}</h2>
+                        <p>${topic.description}</p>
+                    </div>
+                </div>
 
-const container = document.getElementById('topic-container');
+                <div class="buttons">
+                    <a href="${topic.link}" target="_blank" class="resource-btn">
+                        <span>Watch Video</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
 
-topics.forEach(topic => {
-    const card = document.createElement('div');
-    card.classList.add('topic-card');
-    card.innerHTML = `
-        <div class="topic-left">
-            <div class="topic-animation">
-                <lottie-player src="${topic.animation}" background="transparent" speed="1" loop autoplay></lottie-player>
-            </div>
-            <div class="topic-content">
-                <h2>${topic.name}</h2>
-                <p>${topic.description}</p>
-            </div>
-        </div>
-
-        <div class="buttons">
-            <a href="${topic.link}" target="_blank" class="resource-btn">
-                <span>Watch Video</span>
-                <i class="fas fa-arrow-right"></i>
-            </a>
-
-            <a href="${topic.pdf}" target="_blank" class="resource-btn">
-                <span>View PDF</span>
-                <i class="fas fa-file-pdf"></i>
-            </a>
-        </div>
-    `;
-    container.appendChild(card);
-});
-</script>
-
+                    <a href="${topic.pdf}" target="_blank" class="resource-btn">
+                        <span>View PDF</span>
+                        <i class="fas fa-file-pdf"></i>
+                    </a>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    });
+    </script>
 </body>
 </html>

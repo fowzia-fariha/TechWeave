@@ -28,6 +28,35 @@
         min-height: 100vh;
     }
 
+    /* Back Button */
+    .back-button {
+        position: fixed;
+        top: 30px;
+        left: 30px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--card-bg);
+        color: var(--text);
+        padding: 12px 20px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 500;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+        backdrop-filter: blur(20px);
+        z-index: 1000;
+        font-size: 14px;
+    }
+
+    .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        background: rgba(99, 102, 241, 0.15);
+        border-color: rgba(99, 102, 241, 0.4);
+    }
+
     .container {
         max-width: 1200px;
         margin: auto;
@@ -154,89 +183,98 @@
     }
 
     @media(max-width:768px){
+        .back-button {
+            top: 20px;
+            left: 20px;
+            padding: 10px 16px;
+            font-size: 13px;
+        }
         .topic-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+        .buttons { width: 100%; justify-content: space-between; }
+        .resource-btn { flex: 1; justify-content: center; }
     }
 </style>
 </head>
 
 <body>
+    <!-- Back Button -->
+    <a href="learning-path.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Learning Path
+    </a>
 
-<div class="container">
+    <div class="container">
+        <div class="header">
+            <div class="logo">TechWeave</div>
+            <h1>Data Structures & Algorithms</h1>
+            <p class="subtitle">Master problem solving, algorithms, data structures, and complexity analysis.</p>
+        </div>
 
-    <div class="header">
-        <div class="logo">TechWeave</div>
-        <h1>Data Structures & Algorithms</h1>
-        <p class="subtitle">Master problem solving, algorithms, data structures, and complexity analysis.</p>
+        <div class="topic-list" id="topic-container"></div>
     </div>
 
-    <div class="topic-list" id="topic-container"></div>
+    <script>
+    const topics = [
+        {
+            name: 'Problem Solving',
+            description: 'Learn structured problem solving used in coding interviews and competitions.',
+            animation: 'https://assets7.lottiefiles.com/packages/lf20_touohxv0.json',
+            link: 'https://www.youtube.com/watch?v=G1fRTGRxXU8',
+            pdf: 'DSA_Problem_Solving.pdf'
+        },
+        {
+            name: 'Algorithms',
+            description: 'Master sorting, searching, greedy, DP, graphs and more.',
+            animation: 'https://assets9.lottiefiles.com/private_files/lf30_obidsi0t.json',
+            link: 'https://www.youtube.com/watch?v=8hly31xKli0',
+            pdf: 'data_structures_algorithms_tutorial.pdf'
+        },
+        {
+            name: 'Data Structures',
+            description: 'Learn arrays, linked lists, stacks, queues, trees, graphs, heaps and more.',
+            animation: 'https://assets2.lottiefiles.com/packages/lf20_yr6zz3wv.json',
+            link: 'https://www.youtube.com/watch?v=RBSGKlAvoiM',
+            pdf: 'data_structures_algorithms_tutorial.pdf'
+        },
+        {
+            name: 'Big-O Analysis',
+            description: 'Understand time & space complexity for writing efficient code.',
+            animation: 'https://assets8.lottiefiles.com/packages/lf20_x1gjdldd.json',
+            link: 'https://www.youtube.com/watch?v=D6xkbGLQesk',
+            pdf: 'Big_O_Analysis_DSA.pdf'
+        }
+    ];
 
-</div>
+    const container = document.getElementById('topic-container');
 
-<script>
-const topics = [
-    {
-        name: 'Problem Solving',
-        description: 'Learn structured problem solving used in coding interviews and competitions.',
-        animation: 'https://assets7.lottiefiles.com/packages/lf20_touohxv0.json',
-        link: 'https://www.youtube.com/watch?v=G1fRTGRxXU8',
-        pdf: 'DSA_Problem_Solving.pdf'
-    },
-    {
-        name: 'Algorithms',
-        description: 'Master sorting, searching, greedy, DP, graphs and more.',
-        animation: 'https://assets9.lottiefiles.com/private_files/lf30_obidsi0t.json',
-        link: 'https://www.youtube.com/watch?v=8hly31xKli0',
-        pdf: 'data_structures_algorithms_tutorial.pdf'
-    },
-    {
-        name: 'Data Structures',
-        description: 'Learn arrays, linked lists, stacks, queues, trees, graphs, heaps and more.',
-        animation: 'https://assets2.lottiefiles.com/packages/lf20_yr6zz3wv.json',
-        link: 'https://www.youtube.com/watch?v=RBSGKlAvoiM',
-        pdf: 'data_structures_algorithms_tutorial.pdf'
-    },
-    {
-        name: 'Big-O Analysis',
-        description: 'Understand time & space complexity for writing efficient code.',
-        animation: 'https://assets8.lottiefiles.com/packages/lf20_x1gjdldd.json',
-        link: 'https://www.youtube.com/watch?v=D6xkbGLQesk',
-        pdf: 'Big_O_Analysis_DSA.pdf'
-    }
-];
+    topics.forEach(topic => {
+        const card = document.createElement('div');
+        card.classList.add('topic-card');
+        card.innerHTML = `
+            <div class="topic-left">
+                <div class="topic-animation">
+                    <lottie-player src="${topic.animation}" background="transparent" speed="1" loop autoplay></lottie-player>
+                </div>
 
-const container = document.getElementById('topic-container');
-
-topics.forEach(topic => {
-    const card = document.createElement('div');
-    card.classList.add('topic-card');
-    card.innerHTML = `
-        <div class="topic-left">
-            <div class="topic-animation">
-                <lottie-player src="${topic.animation}" background="transparent" speed="1" loop autoplay></lottie-player>
+                <div class="topic-content">
+                    <h2>${topic.name}</h2>
+                    <p>${topic.description}</p>
+                </div>
             </div>
 
-            <div class="topic-content">
-                <h2>${topic.name}</h2>
-                <p>${topic.description}</p>
+            <div class="buttons">
+                <a href="${topic.link}" target="_blank" class="resource-btn">
+                    <span>Watch Video</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+                <a href="${topic.pdf}" target="_blank" class="resource-btn">
+                    <span>View PDF</span>
+                    <i class="fas fa-file-pdf"></i>
+                </a>
             </div>
-        </div>
-
-        <div class="buttons">
-            <a href="${topic.link}" target="_blank" class="resource-btn">
-                <span>Watch Video</span>
-                <i class="fas fa-arrow-right"></i>
-            </a>
-
-            <a href="${topic.pdf}" target="_blank" class="resource-btn">
-                <span>View PDF</span>
-                <i class="fas fa-file-pdf"></i>
-            </a>
-        </div>
-    `;
-    container.appendChild(card);
-});
-</script>
-
+        `;
+        container.appendChild(card);
+    });
+    </script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
@@ -8,7 +9,6 @@ const mysql = require('mysql2/promise');
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const path = require('path');
-require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
@@ -30,8 +30,9 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '2021831026',
-  database: process.env.DB_NAME || 'techweave'
+  password: process.env.DB_PASSWORD || 'task1234',
+  database: process.env.DB_NAME || 'techweave',
+  Promise: Promise
 };
 
 // Create connection pool
@@ -39,6 +40,52 @@ const pool = mysql.createPool(dbConfig);
 
 // JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key_change_this';
+
+// ============================================
+// HELPER FUNCTIONS FOR TECH STACK PARSING
+// ============================================
+
+function parseTechStack(techStack) {
+  if (!techStack) return [];
+  
+  // If it's already an array, return it directly
+  if (Array.isArray(techStack)) {
+    return techStack;
+  }
+  
+  // If it's a string
+  if (typeof techStack === 'string') {
+    // First, try to parse as JSON if it starts with [
+    if (techStack.trim().startsWith('[')) {
+      try {
+        return JSON.parse(techStack);
+      } catch (error) {
+        console.log('⚠️ JSON parsing failed for:', techStack.substring(0, 50) + '...');
+        // If JSON parsing fails, fall back to comma separation
+      }
+    }
+    
+    // Handle comma-separated strings like "Python,TensorFlow,Flask"
+    if (techStack.includes(',')) {
+      return techStack.split(',').map(tech => tech.trim()).filter(tech => tech.length > 0);
+    }
+    
+    // If it's a single tech without commas
+    if (techStack.trim().length > 0) {
+      return [techStack.trim()];
+    }
+  }
+  
+  // If it's some other type, return empty array
+  return [];
+}
+
+function stringifyTechStack(techStack) {
+  if (Array.isArray(techStack)) {
+    return JSON.stringify(techStack);
+  }
+  return JSON.stringify([]);
+}
 
 // ============================================
 // GOOGLE OAUTH2 FOR EMAIL
@@ -469,6 +516,223 @@ app.get('/api/mentors', async (req, res) => {
 });
 
 // ============================================
+// DEMO PROJECTS ROUTES (FIXED - REMOVED SCREENSHOTS)
+// ============================================
+
+// Get all projects with filters
+app.get('/api/projects', async (req, res) => {
+    try {
+        console.log('📥 Received request for projects with filters:', req.query);
+        
+        const { category, difficulty, tech, sort, search } = req.query;
+        
+        let query = `
+            SELECT p.*, 
+                   (SELECT COUNT(*) FROM project_features WHERE project_id = p.id) as feature_count
+            FROM projects p
+            WHERE 1=1
+        `;
+        const params = [];
+
+        if (category && category !== 'all') {
+            query += ' AND p.category = ?';
+            params.push(category);
+        }
+
+        if (difficulty && difficulty !== 'all') {
+            query += ' AND p.difficulty = ?';
+            params.push(difficulty);
+        }
+
+        if (tech) {
+            // For both JSON arrays and comma-separated strings
+            query += ' AND (p.tech_stack LIKE ? OR p.tech_stack LIKE ? OR p.tech_stack LIKE ?)';
+            params.push(`%"${tech}"%`, `%${tech}%`, `%${tech},%`);
+        }
+
+        if (search) {
+            query += ' AND (p.title LIKE ? OR p.description LIKE ?)';
+            params.push(`%${search}%`, `%${search}%`);
+        }
+
+        // Sorting
+        switch (sort) {
+            case 'stars':
+                query += ' ORDER BY p.stars DESC';
+                break;
+            case 'views':
+                query += ' ORDER BY p.views DESC';
+                break;
+            case 'newest':
+                query += ' ORDER BY p.created_at DESC';
+                break;
+            default:
+                query += ' ORDER BY p.featured DESC, p.stars DESC';
+        }
+
+        console.log('🔍 Executing query:', query);
+        console.log('📋 With parameters:', params);
+
+        const [projects] = await pool.execute(query, params);
+        
+        console.log(`✅ Found ${projects.length} projects`);
+        
+        // Parse tech_stack using our helper function
+        const projectsWithParsedTech = projects.map(project => {
+            const parsedTechStack = parseTechStack(project.tech_stack);
+            console.log(`🔧 Project "${project.title}" - Original: ${typeof project.tech_stack}, Parsed:`, parsedTechStack);
+            return {
+                ...project,
+                tech_stack: parsedTechStack
+            };
+        });
+
+        res.json(projectsWithParsedTech);
+    } catch (error) {
+        console.error('❌ Error fetching projects:', error);
+        res.status(500).json({ 
+            error: 'Internal server error',
+            details: error.message 
+        });
+    }
+});
+
+// Get single project by ID
+app.get('/api/projects/:id', async (req, res) => {
+    try {
+        const projectId = req.params.id;
+        console.log(`📥 Fetching project ${projectId}`);
+
+        // Increment views
+        await pool.execute(
+            'UPDATE projects SET views = views + 1 WHERE id = ?',
+            [projectId]
+        );
+
+        // Get project details
+        const [projects] = await pool.execute(
+            'SELECT * FROM projects WHERE id = ?',
+            [projectId]
+        );
+
+        if (projects.length === 0) {
+            return res.status(404).json({ error: 'Project not found' });
+        }
+
+        const project = projects[0];
+        // Use helper function to parse tech_stack
+        project.tech_stack = parseTechStack(project.tech_stack);
+
+        // Get features
+        const [features] = await pool.execute(
+            'SELECT * FROM project_features WHERE project_id = ? ORDER BY id',
+            [projectId]
+        );
+
+        // Get setup steps
+        const [setupSteps] = await pool.execute(
+            'SELECT * FROM project_setup_steps WHERE project_id = ? ORDER BY step_number',
+            [projectId]
+        );
+
+        console.log(`✅ Project ${projectId} loaded successfully`);
+        res.json({
+            ...project,
+            features,
+            setupSteps
+        });
+
+    } catch (error) {
+        console.error('❌ Error fetching project:', error);
+        res.status(500).json({ 
+            error: 'Internal server error',
+            details: error.message 
+        });
+    }
+});
+
+// Get project categories
+app.get('/api/categories', async (req, res) => {
+    try {
+        const [categories] = await pool.execute(
+            'SELECT DISTINCT category FROM projects ORDER BY category'
+        );
+        res.json(categories.map(c => c.category));
+    } catch (error) {
+        console.error('❌ Error fetching categories:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Get tech stack options
+app.get('/api/tech-stack', async (req, res) => {
+    try {
+        const [projects] = await pool.execute(
+            'SELECT tech_stack FROM projects'
+        );
+        
+        const allTech = new Set();
+        projects.forEach(project => {
+            const techStack = parseTechStack(project.tech_stack);
+            techStack.forEach(tech => allTech.add(tech));
+        });
+
+        res.json(Array.from(allTech).sort());
+    } catch (error) {
+        console.error('❌ Error fetching tech stack:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Add star to project
+app.post('/api/projects/:id/star', async (req, res) => {
+    try {
+        const projectId = req.params.id;
+        
+        // Get current stars
+        const [rows] = await connection.execute(
+            'SELECT stars FROM projects WHERE id = ?', 
+            [projectId]
+        );
+        
+        let newStars = rows[0].stars + 1;
+        
+        // Cap at 5 stars
+        if (newStars > 5) {
+            newStars = 5;
+        }
+        
+        // Update in database
+        await connection.execute(
+            'UPDATE projects SET stars = ? WHERE id = ?',
+            [newStars, projectId]
+        );
+        
+        res.json({ stars: newStars });
+    } catch (error) {
+        console.error('Error starring project:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Health check endpoint for projects
+app.get('/api/projects-health', async (req, res) => {
+    try {
+        const [result] = await pool.execute('SELECT COUNT(*) as count FROM projects');
+        res.json({ 
+            status: 'OK', 
+            projects_count: result[0].count,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            status: 'Error', 
+            error: error.message 
+        });
+    }
+});
+
+// ============================================
 // PRIVATE CHAT ROUTES
 // ============================================
 
@@ -708,16 +972,85 @@ app.get('/api/admin/stats', async (req, res) => {
     const [mentorCount] = await pool.execute('SELECT COUNT(*) as count FROM users WHERE role = "mentor"');
     const [messageCount] = await pool.execute('SELECT COUNT(*) as count FROM messages');
     const [groupMessageCount] = await pool.execute('SELECT COUNT(*) as count FROM group_messages');
+    const [projectCount] = await pool.execute('SELECT COUNT(*) as count FROM projects');
     
     res.json({
       totalUsers: userCount[0].count,
       totalMentors: mentorCount[0].count,
       privateMessages: messageCount[0].count,
-      groupMessages: groupMessageCount[0].count
+      groupMessages: groupMessageCount[0].count,
+      totalProjects: projectCount[0].count
     });
   } catch (error) {
     console.error('Fetch stats error:', error);
     res.status(500).json({ message: 'Error fetching stats' });
+  }
+});
+
+// ============================================
+// TEMPLATES ROUTES
+// ============================================
+
+// Simple templates routes without external file
+app.get('/api/templates', async (req, res) => {
+  try {
+    const [templates] = await pool.execute(
+      'SELECT * FROM project_templates ORDER BY created_at DESC'
+    );
+    res.json(templates);
+  } catch (error) {
+    console.error('Fetch templates error:', error);
+    res.status(500).json({ message: 'Error fetching templates' });
+  }
+});
+
+app.get('/api/templates/:id', async (req, res) => {
+  try {
+    const [templates] = await pool.execute(
+      'SELECT * FROM templates WHERE id = ?',
+      [req.params.id]
+    );
+    
+    if (templates.length === 0) {
+      return res.status(404).json({ message: 'Template not found' });
+    }
+    
+    res.json(templates[0]);
+  } catch (error) {
+    console.error('Fetch template error:', error);
+    res.status(500).json({ message: 'Error fetching template' });
+  }
+});
+
+// ============================================
+// FAQ ROUTES
+// ============================================
+
+app.get('/api/faq', async (req, res) => {
+  try {
+    const [faqs] = await pool.execute(
+      'SELECT * FROM faqs ORDER BY category, order_index'
+    );
+    res.json(faqs);
+  } catch (error) {
+    console.error('Fetch FAQ error:', error);
+    res.status(500).json({ message: 'Error fetching FAQs' });
+  }
+});
+
+// ============================================
+// MENTOR TOOLS ROUTES
+// ============================================
+
+app.get('/api/mentor-tools/students', async (req, res) => {
+  try {
+    const [students] = await pool.execute(
+      'SELECT id, username, email, created_at FROM users WHERE role = "student" AND verified = 1 ORDER BY created_at DESC'
+    );
+    res.json(students);
+  } catch (error) {
+    console.error('Fetch students error:', error);
+    res.status(500).json({ message: 'Error fetching students' });
   }
 });
 
@@ -727,10 +1060,10 @@ app.get('/api/admin/stats', async (req, res) => {
 async function testDatabaseConnection() {
   try {
     const connection = await pool.getConnection();
-    console.log(' Database connected successfully!');
+    console.log('✅ Database connected successfully!');
     connection.release();
   } catch (error) {
-    console.error(' Database connection failed:', error.message);
+    console.error('❌ Database connection failed:', error.message);
     process.exit(1);
   }
 }
@@ -759,12 +1092,74 @@ async function ensureGeneralChatExists() {
         await pool.execute('SET FOREIGN_KEY_CHECKS = 1');
       }
 
-      console.log(' General Chat created successfully!');
+      console.log('✅ General Chat created successfully!');
     } else {
-      console.log('  General Chat already exists');
+      console.log('✓  General Chat already exists');
     }
   } catch (error) {
-    console.error(' Error ensuring General Chat exists:', error.message);
+    console.error('❌ Error ensuring General Chat exists:', error.message);
+  }
+}
+
+async function ensureProjectsTablesExist() {
+  try {
+    // Check if projects table exists
+    const [tables] = await pool.execute(
+      "SHOW TABLES LIKE 'projects'"
+    );
+    
+    if (tables.length === 0) {
+      console.log('⚠️  Projects tables not found, creating...');
+      
+      // Create projects table
+      await pool.execute(`
+        CREATE TABLE projects (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          title VARCHAR(255) NOT NULL,
+          description TEXT,
+          full_description LONGTEXT,
+          difficulty ENUM('beginner', 'intermediate', 'advanced') NOT NULL,
+          category ENUM('web', 'ai', 'app', 'security', 'game', 'iot') NOT NULL,
+          tech_stack JSON,
+          github_url VARCHAR(500),
+          demo_url VARCHAR(500),
+          stars INT DEFAULT 0,
+          views INT DEFAULT 0,
+          featured BOOLEAN DEFAULT FALSE,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )
+      `);
+      
+      // Create project_features table
+      await pool.execute(`
+        CREATE TABLE project_features (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          project_id INT,
+          feature TEXT NOT NULL,
+          FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+        )
+      `);
+      
+      // Create project_setup_steps table (REMOVED SCREENSHOTS)
+      await pool.execute(`
+        CREATE TABLE project_setup_steps (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          project_id INT,
+          step_number INT,
+          title VARCHAR(255) NOT NULL,
+          description TEXT NOT NULL,
+          code_snippet TEXT,
+          FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+        )
+      `);
+      
+      console.log('✅ Projects tables created successfully!');
+    } else {
+      console.log('✓  Projects tables already exist');
+    }
+  } catch (error) {
+    console.error('❌ Error ensuring projects tables exist:', error.message);
   }
 }
 
@@ -783,7 +1178,7 @@ async function initializeEmailService() {
     // Test OAuth2 connection
     try {
       await oauth2Client.getAccessToken();
-      console.log(' Email service initialized successfully!');
+      console.log('✅ Email service initialized successfully!');
       return true;
     } catch (error) {
       console.log('⚠️  Email service connection failed. Check your OAuth2 credentials.');
@@ -791,10 +1186,65 @@ async function initializeEmailService() {
       return false;
     }
   } catch (error) {
-    console.error(' Error initializing email service:', error.message);
+    console.error('❌ Error initializing email service:', error.message);
     return false;
   }
 }
+
+// ============================================
+// HEALTH CHECK ENDPOINTS
+// ============================================
+
+// Overall health check
+app.get('/api/health', async (req, res) => {
+  try {
+    const [dbResult] = await pool.execute('SELECT 1');
+    const [userCount] = await pool.execute('SELECT COUNT(*) as count FROM users');
+    const [projectCount] = await pool.execute('SELECT COUNT(*) as count FROM projects');
+    
+    res.json({ 
+      status: 'OK', 
+      database: 'Connected',
+      users: userCount[0].count,
+      projects: projectCount[0].count,
+      timestamp: new Date().toISOString(),
+      version: '1.0.0'
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'Error', 
+      database: 'Disconnected',
+      error: error.message 
+    });
+  }
+});
+
+// ============================================
+// TEMPLATES ROUTES INITIALIZATION
+// ============================================
+const templatesRoutes = require('./templates');
+
+async function initializeTemplatesRouter() {
+    try {
+        const connection = await pool.getConnection();
+        connection.release();
+        console.log('✅ Database pool verified for templates router');
+        
+        templatesRoutes.initializeRouter(pool);
+        app.use('/api/templates', templatesRoutes);
+        console.log('✅ Templates routes mounted successfully');
+    } catch (error) {
+        console.error('❌ Failed to initialize templates router:', error.message);
+    }
+}
+
+
+// ============================================
+// CATCH-ALL ROUTE FOR FRONTEND ROUTING
+// ============================================
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
 
 // ============================================
 // START SERVER
@@ -802,15 +1252,27 @@ async function initializeEmailService() {
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, async () => {
-  console.log(' TechWeave Server Started');
-  console.log(` Server running on: http://localhost:${PORT}`);
-  console.log(` Socket.io ready for real-time connections`);
-
+  console.log('🚀 TechWeave Server Started');
+  console.log(`🌐 Server running on: http://localhost:${PORT}`);
   
   await testDatabaseConnection();
   await ensureGeneralChatExists();
+  await ensureProjectsTablesExist();
   await initializeEmailService();
+   await initializeTemplatesRouter();
   
-  console.log(' All systems ready!');
-
+  console.log('✅ All systems ready!');
+  console.log('📊 Available API Endpoints:');
+  console.log('   GET  /api/health              - Health check');
+  console.log('   GET  /api/projects            - Get all projects');
+  console.log('   GET  /api/projects/:id        - Get project details');
+  console.log('   GET  /api/categories          - Get project categories');
+  console.log('   GET  /api/tech-stack          - Get tech stack options');
+  console.log('   POST /api/projects/:id/star   - Star a project');
+  console.log('   POST /signup                  - User signup');
+  console.log('   POST /mentor-signup           - Mentor signup');
+  console.log('   POST /login                   - User login');
+  console.log('   GET  /api/mentors             - Get all mentors');
+  console.log('   GET  /api/all-users           - Get all users');
+  console.log('   GET  /api/group-chats         - Get group chats');
 });
