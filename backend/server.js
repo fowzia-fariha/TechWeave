@@ -817,12 +817,13 @@ server.listen(PORT, async () => {
 });
 
 
-/// ================= FORUM ROUTES =================
+// ================= FORUM ROUTES =================
+// Add these to your existing server.js
+
 // Get all forum posts
 app.get('/api/forum/posts', async (req, res) => {
   try {
     const userId = req.query.userId;
-    
     const [posts] = await pool.execute(`
       SELECT fp.*, u.username, u.role, u.email,
       (SELECT COUNT(*) FROM post_likes WHERE post_id = fp.id) as like_count,
@@ -833,6 +834,7 @@ app.get('/api/forum/posts', async (req, res) => {
       ORDER BY fp.created_at DESC
     `, [userId]);
     
+    // Format the response to match your frontend structure
     const formattedPosts = posts.map(post => ({
       id: post.id,
       user: {
@@ -844,7 +846,7 @@ app.get('/api/forum/posts', async (req, res) => {
       video: post.video_url,
       timestamp: formatTimeAgo(post.created_at),
       likes: post.like_count,
-      comments: [],
+      comments: [], // Will be loaded separately
       userLiked: post.user_liked === 1,
       type: post.video_url ? 'video' : 'text'
     }));
@@ -857,50 +859,45 @@ app.get('/api/forum/posts', async (req, res) => {
 });
 
 // Create post
-// Create post
 app.post('/api/forum/posts', async (req, res) => {
-    const { userId, content, postType = 'text', videoUrl, imageUrl } = req.body;
+  const { userId, content, postType = 'text', videoUrl } = req.body;
+  
+  try {
+    const [result] = await pool.execute(
+      'INSERT INTO forum_posts (user_id, content, post_type, video_url) VALUES (?, ?, ?, ?)',
+      [userId, content, postType, videoUrl]
+    );
     
-    if (!userId || !content) {
-        return res.status(400).json({ message: 'User ID and content are required' });
-    }
+    // Get the created post with user info
+    const [posts] = await pool.execute(`
+      SELECT fp.*, u.username, u.role, u.email
+      FROM forum_posts fp 
+      JOIN users u ON fp.user_id = u.id 
+      WHERE fp.id = ?
+    `, [result.insertId]);
     
-    try {
-        const [result] = await pool.execute(
-            'INSERT INTO forum_posts (user_id, content, post_type, video_url, image_url) VALUES (?, ?, ?, ?, ?)',
-            [userId, content, postType, videoUrl, imageUrl]
-        );
-        
-        const [posts] = await pool.execute(`
-            SELECT fp.*, u.username, u.role, u.email
-            FROM forum_posts fp 
-            JOIN users u ON fp.user_id = u.id 
-            WHERE fp.id = ?
-        `, [result.insertId]);
-        
-        const post = posts[0];
-        const response = {
-            id: post.id,
-            user: {
-                name: post.username,
-                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(post.username)}&background=1e3c72&color=fff`,
-                role: post.role
-            },
-            content: post.content,
-            video: post.video_url,
-            image_url: post.image_url,
-            timestamp: 'Just now',
-            likes: 0,
-            comments: [],
-            userLiked: false,
-            type: post.video_url ? 'video' : post.image_url ? 'image' : 'text'
-        };
-        
-        res.status(201).json(response);
-    } catch (error) {
-        console.error('Error creating post:', error);
-        res.status(500).json({ message: 'Error creating post' });
-    }
+    const post = posts[0];
+    const response = {
+      id: post.id,
+      user: {
+        name: post.username,
+        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(post.username)}&background=1e3c72&color=fff`,
+        role: post.role
+      },
+      content: post.content,
+      video: post.video_url,
+      timestamp: 'Just now',
+      likes: 0,
+      comments: [],
+      userLiked: false,
+      type: post.video_url ? 'video' : 'text'
+    };
+    
+    res.status(201).json(response);
+  } catch (error) {
+    console.error('Error creating post:', error);
+    res.status(500).json({ message: 'Error creating post' });
+  }
 });
 
 // Like/unlike post
@@ -908,23 +905,22 @@ app.post('/api/forum/posts/:postId/like', async (req, res) => {
   const { userId } = req.body;
   const { postId } = req.params;
   
-  if (!userId) {
-    return res.status(400).json({ message: 'User ID is required' });
-  }
-  
   try {
+    // Check if already liked
     const [existingLikes] = await pool.execute(
       'SELECT * FROM post_likes WHERE post_id = ? AND user_id = ?',
       [postId, userId]
     );
     
     if (existingLikes.length > 0) {
+      // Unlike
       await pool.execute(
         'DELETE FROM post_likes WHERE post_id = ? AND user_id = ?',
         [postId, userId]
       );
       res.json({ liked: false });
     } else {
+      // Like
       await pool.execute(
         'INSERT INTO post_likes (post_id, user_id) VALUES (?, ?)',
         [postId, userId]
@@ -942,16 +938,13 @@ app.post('/api/forum/posts/:postId/comments', async (req, res) => {
   const { userId, content } = req.body;
   const { postId } = req.params;
   
-  if (!userId || !content) {
-    return res.status(400).json({ message: 'User ID and content are required' });
-  }
-  
   try {
     const [result] = await pool.execute(
       'INSERT INTO post_comments (post_id, user_id, content) VALUES (?, ?, ?)',
       [postId, userId, content]
     );
     
+    // Get the created comment with user info
     const [comments] = await pool.execute(`
       SELECT pc.*, u.username, u.role, u.email
       FROM post_comments pc 
@@ -1024,3 +1017,89 @@ function formatTimeAgo(dateString) {
   
   return date.toLocaleDateString();
 }
+
+
+// ================= SOLVED PROBLEMS ROUTES =================
+
+// Get all solved problems for current user
+app.get('/api/solved-problems', async (req, res) => {
+  try {
+    const userId = req.query.userId;
+    
+    const [problems] = await pool.execute(
+      'SELECT * FROM solved_problems WHERE user_id = ? ORDER BY created_at DESC',
+      [userId]
+    );
+    
+    const formattedProblems = problems.map(problem => ({
+      id: problem.id,
+      title: problem.title,
+      problemDescription: problem.description,  // CHANGED: problem.description
+      solution: problem.solution,
+      category: problem.category,
+      timestamp: formatTimeAgo(problem.created_at)
+    }));
+    
+    res.json(formattedProblems);
+  } catch (error) {
+    console.error('Error fetching solved problems:', error);
+    res.status(500).json({ message: 'Error fetching solved problems' });
+  }
+});
+
+// Create solved problem
+app.post('/api/solved-problems', async (req, res) => {
+  const { userId, title, problemDescription, solution, category } = req.body;
+  
+  try {
+    const [result] = await pool.execute(
+      'INSERT INTO solved_problems (user_id, title, description, solution, category) VALUES (?, ?, ?, ?, ?)',  // CHANGED: description
+      [userId, title, problemDescription, solution, category]
+    );
+    
+    res.json({ 
+      success: true,
+      message: 'Problem created successfully',
+      problemId: result.insertId 
+    });
+    
+  } catch (error) {
+    console.error('Database error:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Database error: ' + error.message 
+    });
+  }
+});
+
+// Update solved problem
+app.put('/api/solved-problems/:problemId', async (req, res) => {
+  const { problemId } = req.params;
+  const { userId, title, problemDescription, solution, category } = req.body;
+  
+  try {
+    await pool.execute(
+      'UPDATE solved_problems SET title = ?, description = ?, solution = ?, category = ? WHERE id = ? AND user_id = ?',  // CHANGED: description
+      [title, problemDescription, solution, category, problemId, userId]
+    );
+    
+    res.json({ message: 'Problem updated successfully' });
+  } catch (error) {
+    console.error('Error updating solved problem:', error);
+    res.status(500).json({ message: 'Error updating solved problem' });
+  }
+});
+
+// Delete solved problem
+app.delete('/api/solved-problems/:problemId', async (req, res) => {
+  const { problemId } = req.params;
+  const { userId } = req.query;
+  
+  try {
+    await pool.execute('DELETE FROM solved_problems WHERE id = ? AND user_id = ?', [problemId, userId]);
+    res.json({ message: 'Problem deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting solved problem:', error);
+    res.status(500).json({ message: 'Error deleting solved problem' });
+  }
+});
