@@ -527,6 +527,71 @@
         font-weight: 700;
     }
 
+    /* Add this to your existing CSS for better modal handling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: var(--white);
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+#profileModal .modal-content {
+    max-width: 600px;
+    max-height: 85vh;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px 0 25px;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+}
+
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 25px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 25px;
+    border-top: 1px solid var(--light-gray);
+    position: sticky;
+    bottom: 0;
+    background: white;
+}
+
+/* Ensure the profile modal is scrollable */
+#profileModal .modal-body {
+    max-height: calc(85vh - 140px);
+    overflow-y: auto;
+}
+
     .close-modal {
         background: none;
         border: none;
@@ -616,6 +681,85 @@
             display: none;
         }
     }
+
+    /* Improved Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: var(--white);
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+#profileModal .modal-content {
+    max-width: 600px;
+    max-height: 85vh;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px 0 25px;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+}
+
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 25px;
+    max-height: calc(85vh - 140px);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 25px;
+    border-top: 1px solid var(--light-gray);
+    position: sticky;
+    bottom: 0;
+    background: white;
+}
+
+/* Make scrollbar look nice */
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
 </style>
 </head>
 
@@ -845,43 +989,81 @@
 </div>
 
 <!-- PROFILE MODAL -->
+<!-- PROFILE MODAL -->
+<!-- PROFILE MODAL -->
+<!-- PROFILE MODAL - FIXED VERSION -->
+<!-- PROFILE MODAL - FIXED VERSION -->
+<!-- PROFILE MODAL - FIXED VERSION (NO DEMO DATA) -->
 <div class="modal" id="profileModal">
-    <div class="modal-content">
-        <div class="modal-header">
+    <div class="modal-content" style="max-width: 600px; max-height: 85vh; overflow-y: auto;">
+        <div class="modal-header" style="position: sticky; top: 0; background: white; z-index: 10; padding: 20px 25px 0 25px;">
             <h3 class="modal-title">Your Profile</h3>
             <button class="close-modal" onclick="closeModal('profileModal')">&times;</button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="padding: 20px 25px;">
             <div style="text-align: center; margin-bottom: 20px;">
                 <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-pic" style="width: 120px; height: 120px;">
+                <div style="margin-top: 10px;">
+                    <button class="btn btn-secondary" style="padding: 8px 15px; font-size: 14px;" onclick="changeProfilePicture()">
+                        <i class="fas fa-camera"></i> Change Photo
+                    </button>
+                </div>
             </div>
-            <div class="form-group">
-                <label class="form-label">Full Name</label>
-                <input type="text" class="form-control" id="profileNameInput" value="Alex Johnson">
+
+            <!-- Two-column layout -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="profileNameInput" placeholder="Your name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date of Birth</label>
+                    <input type="date" class="form-control" id="profileDob">
+                </div>
             </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div class="form-group">
+                    <label class="form-label">University</label>
+                    <input type="text" class="form-control" id="profileUniversity" placeholder="Enter your university">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Department</label>
+                    <input type="text" class="form-control" id="profileDepartment" placeholder="Enter your department">
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="form-label">Email</label>
-                <input type="email" class="form-control" id="profileEmailInput" value="alex.johnson@example.com">
+                <input type="email" class="form-control" id="profileEmailInput" readonly>
             </div>
+            
             <div class="form-group">
                 <label class="form-label">Role</label>
-                <input type="text" class="form-control" id="profileRoleInput" value="Mentor" readonly>
+                <input type="text" class="form-control" id="profileRoleInput" readonly>
             </div>
+            
             <div class="form-group">
                 <label class="form-label">Bio</label>
-                <textarea class="form-control" id="profileBio" rows="3">Senior DevOps Engineer with 8+ years of experience. Passionate about containerization and cloud technologies.</textarea>
+                <textarea class="form-control" id="profileBio" rows="3" placeholder="Tell us about yourself..." style="resize: vertical;"></textarea>
             </div>
+            
             <div class="form-group">
                 <label class="form-label">Skills</label>
-                <input type="text" class="form-control" id="profileSkills" value="Docker, Kubernetes, AWS, CI/CD, Terraform">
+                <input type="text" class="form-control" id="profileSkills" placeholder="Enter your skills separated by commas">
             </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" style="position: sticky; bottom: 0; background: white; padding: 15px 25px; border-top: 1px solid var(--light-gray);">
+            <button class="btn btn-danger" onclick="deleteProfile()">
+                <i class="fas fa-trash"></i> Clear Data
+            </button>
             <button class="btn btn-logout" onclick="logout()">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </button>
             <button class="btn btn-secondary" onclick="closeModal('profileModal')">Cancel</button>
-            <button class="btn btn-primary" onclick="updateProfile()">Save Changes</button>
+            <button class="btn btn-primary" onclick="updateProfile()">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
         </div>
     </div>
 </div>
@@ -919,6 +1101,8 @@ async function checkAuthentication() {
 }
 
 // Load REAL user data from your backend
+// Load REAL user data from your backend with profile fields
+// Load REAL user data from your backend with profile fields
 async function loadRealUserData(userId) {
     try {
         const response = await fetch(`${API_BASE}/user/${userId}`, {
@@ -943,6 +1127,9 @@ async function loadRealUserData(userId) {
         document.getElementById('profileEmailInput').value = user.email;
         document.getElementById('profileRoleInput').value = user.role;
         
+        // Load additional profile data
+        await loadUserProfileData(userId);
+        
         // Generate avatar based on REAL username
         const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=1e3c72&color=fff`;
         document.querySelectorAll('.profile-pic').forEach(img => img.src = avatarUrl);
@@ -953,7 +1140,6 @@ async function loadRealUserData(userId) {
         alert('Failed to load user data');
     }
 }
-
 // Load REAL posts from your backend API
 async function loadRealPosts() {
     try {
@@ -1351,6 +1537,85 @@ async function loadRealRecentActivities() {
     }
 }
 
+// Change profile picture
+function changeProfilePicture() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            await uploadProfilePicture(file);
+        }
+    };
+    input.click();
+}
+
+// Upload profile picture
+async function uploadProfilePicture(file) {
+    try {
+        const formData = new FormData();
+        formData.append('profile_picture', file);
+
+        const response = await fetch(`${API_BASE}/user/${currentUser.id}/profile-picture`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: formData
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            // Update all profile pictures on the page
+            document.querySelectorAll('.profile-pic').forEach(img => img.src = result.profile_picture);
+            document.querySelectorAll('.status-avatar').forEach(img => img.src = result.profile_picture);
+            alert('Profile picture updated successfully!');
+        } else {
+            throw new Error('Failed to upload profile picture');
+        }
+    } catch (error) {
+        console.error('Error uploading profile picture:', error);
+        alert('Failed to upload profile picture');
+    }
+}
+
+// Delete profile (with confirmation)
+async function deleteProfile() {
+    if (!confirm('Are you sure you want to delete your profile? This action cannot be undone and all your data will be permanently lost!')) {
+        return;
+    }
+
+    if (!confirm('This is your final warning! All your posts, comments, and profile data will be permanently deleted. Type "DELETE" to confirm.')) {
+        return;
+    }
+
+    const confirmation = prompt('Please type "DELETE" to confirm permanent deletion:');
+    if (confirmation !== 'DELETE') {
+        alert('Profile deletion cancelled.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/user/${currentUser.id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        if (response.ok) {
+            alert('Your profile has been permanently deleted.');
+            logout();
+        } else {
+            throw new Error('Failed to delete profile');
+        }
+    } catch (error) {
+        console.error('Error deleting profile:', error);
+        alert('Failed to delete profile: ' + error.message);
+    }
+}
+
 // LOGOUT FUNCTION - NOW VISIBLE AND WORKING
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
@@ -1392,20 +1657,142 @@ function closeModal(modalId) {
 }
 
 // Update REAL user profile
+// Update REAL user profile with ALL fields
+// Update user profile - SIMPLIFIED WORKING VERSION
+// Update user profile - CLIENT-SIDE ONLY (uses real backend user data)
+// Update profile - WORKING VERSION
 async function updateProfile() {
-    const name = document.getElementById('profileNameInput').value;
-    const email = document.getElementById('profileEmailInput').value;
-    const bio = document.getElementById('profileBio').value;
-    const skills = document.getElementById('profileSkills').value;
+    const name = document.getElementById('profileNameInput').value.trim();
+    const email = document.getElementById('profileEmailInput').value.trim();
+    const dob = document.getElementById('profileDob').value;
+    const university = document.getElementById('profileUniversity').value.trim();
+    const department = document.getElementById('profileDepartment').value.trim();
+    const bio = document.getElementById('profileBio').value.trim();
+    const skills = document.getElementById('profileSkills').value.trim();
     
-    // Update the sidebar profile
-    document.getElementById('profileName').textContent = name;
-    document.getElementById('profileEmail').textContent = email;
-    
-    closeModal('profileModal');
-    alert('Profile updated successfully!');
+    if (!name) {
+        alert('Please enter your name');
+        return;
+    }
+
+    try {
+        // Update username and email
+        const userResponse = await fetch(`${API_BASE}/user/${currentUser.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                username: name,
+                email: email
+            })
+        });
+
+        if (!userResponse.ok) {
+            throw new Error('Failed to update user info');
+        }
+
+        // Update profile data
+        const profileResponse = await fetch(`${API_BASE}/user/${currentUser.id}/profile`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                date_of_birth: dob,
+                university: university,
+                department: department,
+                bio: bio,
+                skills: skills
+            })
+        });
+
+        const profileResult = await profileResponse.json();
+        
+        if (!profileResponse.ok) {
+            throw new Error(profileResult.message || 'Failed to update profile');
+        }
+
+        // Update UI immediately
+        document.getElementById('profileName').textContent = name;
+        document.getElementById('profileEmail').textContent = email;
+        
+        // Update currentUser object
+        if (currentUser) {
+            currentUser.username = name;
+            currentUser.email = email;
+        }
+        
+        // Close modal and show success
+        closeModal('profileModal');
+        alert('✅ Profile updated successfully!');
+        
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        alert('❌ Error saving profile: ' + error.message);
+    }
 }
 
+// Load user profile data
+async function loadUserProfileData(userId) {
+    try {
+        const response = await fetch(`${API_BASE}/user/${userId}/profile`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to load profile data');
+        }
+        
+        const profileData = await response.json();
+        
+        // Fill the form fields
+        document.getElementById('profileDob').value = profileData.date_of_birth || '';
+        document.getElementById('profileUniversity').value = profileData.university || '';
+        document.getElementById('profileDepartment').value = profileData.department || '';
+        document.getElementById('profileBio').value = profileData.bio || '';
+        document.getElementById('profileSkills').value = profileData.skills || '';
+        
+    } catch (error) {
+        console.error('Error loading profile data:', error);
+        // Silently fail - user can still edit the form
+    }
+}
+
+// Change profile picture - SIMPLE VERSION
+function changeProfilePicture() {
+    alert('Profile picture upload would be implemented here. For now, you can update other profile information.');
+}
+
+// Delete profile - SIMPLE VERSION
+async function deleteProfile() {
+    if (!confirm('⚠️ Are you sure you want to delete your profile? This will remove all your data!')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/user/${currentUser.id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        if (response.ok) {
+            alert('✅ Profile deleted successfully!');
+            logout();
+        } else {
+            throw new Error('Failed to delete profile');
+        }
+    } catch (error) {
+        console.error('Error deleting profile:', error);
+        alert('❌ Error deleting profile: ' + error.message);
+    }
+}
 // Navigation functions
 function openSolvedProblems() {
     alert("Solved problems feature coming soon!");
@@ -1430,6 +1817,6 @@ window.onclick = function(event) {
     }
 }
 </script>
-
+// <script src="profile.js"></script>
 </body>
 </html>

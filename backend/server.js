@@ -1103,3 +1103,114 @@ app.delete('/api/solved-problems/:problemId', async (req, res) => {
     res.status(500).json({ message: 'Error deleting solved problem' });
   }
 });
+
+
+
+
+// ================= PROFILE ROUTES =================
+// Get user profile data
+app.get('/api/user/:id/profile', async (req, res) => {
+    try {
+        const [profiles] = await pool.execute(
+            'SELECT * FROM user_profiles WHERE user_id = ?',
+            [req.params.id]
+        );
+        
+        if (profiles.length === 0) {
+            // Return empty profile if not found
+            return res.json({
+                date_of_birth: '',
+                university: '',
+                department: '',
+                bio: '',
+                skills: '',
+                profile_picture: ''
+            });
+        }
+        
+        res.json(profiles[0]);
+    } catch (error) {
+        console.error('Fetch profile error:', error);
+        res.status(500).json({ message: 'Error fetching profile' });
+    }
+});
+
+// Update user profile data - SIMPLIFIED VERSION
+app.post('/api/user/:id/profile', async (req, res) => {
+    const { date_of_birth, university, department, bio, skills } = req.body;
+    
+    try {
+        // Check if profile exists
+        const [existingProfiles] = await pool.execute(
+            'SELECT * FROM user_profiles WHERE user_id = ?',
+            [req.params.id]
+        );
+        
+        if (existingProfiles.length > 0) {
+            // Update existing profile
+            await pool.execute(
+                `UPDATE user_profiles 
+                 SET date_of_birth = ?, university = ?, department = ?, bio = ?, skills = ?, updated_at = NOW() 
+                 WHERE user_id = ?`,
+                [date_of_birth || null, university || '', department || '', bio || '', skills || '', req.params.id]
+            );
+        } else {
+            // Create new profile
+            await pool.execute(
+                `INSERT INTO user_profiles (user_id, date_of_birth, university, department, bio, skills) 
+                 VALUES (?, ?, ?, ?, ?, ?)`,
+                [req.params.id, date_of_birth || null, university || '', department || '', bio || '', skills || '']
+            );
+        }
+        
+        res.json({ 
+            success: true,
+            message: 'Profile updated successfully' 
+        });
+    } catch (error) {
+        console.error('Update profile error:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Error updating profile: ' + error.message 
+        });
+    }
+});
+
+// Update username and email
+app.put('/api/user/:id', async (req, res) => {
+    const { username, email } = req.body;
+    
+    try {
+        await pool.execute(
+            'UPDATE users SET username = ?, email = ? WHERE id = ?',
+            [username, email, req.params.id]
+        );
+        
+        res.json({ 
+            success: true,
+            message: 'User updated successfully' 
+        });
+    } catch (error) {
+        console.error('Update user error:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Error updating user' 
+        });
+    }
+});
+
+// Delete user account
+app.delete('/api/user/:id', async (req, res) => {
+    try {
+        const [result] = await pool.execute('DELETE FROM users WHERE id = ?', [req.params.id]);
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        res.json({ message: 'User account deleted successfully' });
+    } catch (error) {
+        console.error('Delete user error:', error);
+        res.status(500).json({ message: 'Error deleting user account' });
+    }
+});
