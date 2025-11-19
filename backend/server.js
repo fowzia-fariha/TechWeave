@@ -1017,3 +1017,89 @@ function formatTimeAgo(dateString) {
   
   return date.toLocaleDateString();
 }
+
+
+// ================= SOLVED PROBLEMS ROUTES =================
+
+// Get all solved problems for current user
+app.get('/api/solved-problems', async (req, res) => {
+  try {
+    const userId = req.query.userId;
+    
+    const [problems] = await pool.execute(
+      'SELECT * FROM solved_problems WHERE user_id = ? ORDER BY created_at DESC',
+      [userId]
+    );
+    
+    const formattedProblems = problems.map(problem => ({
+      id: problem.id,
+      title: problem.title,
+      problemDescription: problem.description,  // CHANGED: problem.description
+      solution: problem.solution,
+      category: problem.category,
+      timestamp: formatTimeAgo(problem.created_at)
+    }));
+    
+    res.json(formattedProblems);
+  } catch (error) {
+    console.error('Error fetching solved problems:', error);
+    res.status(500).json({ message: 'Error fetching solved problems' });
+  }
+});
+
+// Create solved problem
+app.post('/api/solved-problems', async (req, res) => {
+  const { userId, title, problemDescription, solution, category } = req.body;
+  
+  try {
+    const [result] = await pool.execute(
+      'INSERT INTO solved_problems (user_id, title, description, solution, category) VALUES (?, ?, ?, ?, ?)',  // CHANGED: description
+      [userId, title, problemDescription, solution, category]
+    );
+    
+    res.json({ 
+      success: true,
+      message: 'Problem created successfully',
+      problemId: result.insertId 
+    });
+    
+  } catch (error) {
+    console.error('Database error:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Database error: ' + error.message 
+    });
+  }
+});
+
+// Update solved problem
+app.put('/api/solved-problems/:problemId', async (req, res) => {
+  const { problemId } = req.params;
+  const { userId, title, problemDescription, solution, category } = req.body;
+  
+  try {
+    await pool.execute(
+      'UPDATE solved_problems SET title = ?, description = ?, solution = ?, category = ? WHERE id = ? AND user_id = ?',  // CHANGED: description
+      [title, problemDescription, solution, category, problemId, userId]
+    );
+    
+    res.json({ message: 'Problem updated successfully' });
+  } catch (error) {
+    console.error('Error updating solved problem:', error);
+    res.status(500).json({ message: 'Error updating solved problem' });
+  }
+});
+
+// Delete solved problem
+app.delete('/api/solved-problems/:problemId', async (req, res) => {
+  const { problemId } = req.params;
+  const { userId } = req.query;
+  
+  try {
+    await pool.execute('DELETE FROM solved_problems WHERE id = ? AND user_id = ?', [problemId, userId]);
+    res.json({ message: 'Problem deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting solved problem:', error);
+    res.status(500).json({ message: 'Error deleting solved problem' });
+  }
+});

@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solved Problems - TechWeave</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    :root {
+        --primary: #1e3c72;
+        --primary-light: #2a5298;
+        --secondary: #ff6b00;
+        --accent: #4CAF50;
+        --light: #f8f9fa;
+        --dark: #343a40;
+        --gray: #6c757d;
+        --light-gray: #e9ecef;
+        --white: #ffffff;
+        --shadow: 0 4px 12px rgba(0,0,0,0.1);
+        --radius: 12px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+        background: #f0f4f8;
+        color: var(--dark);
+        line-height: 1.6;
+    }
+
+    .top-nav {
+        background: var(--white);
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo h2 {
+        color: var(--primary);
+        font-weight: 700;
+    }
+
+    .nav-icons {
+        display: flex;
+        gap: 20px;
+        font-size: 20px;
+    }
+
+    .nav-icon {
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+    .nav-icon:hover {
+        background: var(--light-gray);
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .header h1 {
+        color: var(--primary);
+        font-size: 2.5rem;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-light);
+    }
+
+    .btn-edit {
+        background: #3498db;
+        color: white;
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .btn-delete {
+        background: #e74c3c;
+        color: white;
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .problems-grid {
+        display: grid;
+        gap: 20px;
+    }
+
+    .problem-card {
+        background: white;
+        border-radius: var(--radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+        border-left: 4px solid var(--accent);
+    }
+
+    .problem-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+    }
+
+    .problem-title {
+        font-size: 1.5rem;
+        color: var(--primary);
+        margin-bottom: 10px;
+    }
+
+    .problem-category {
+        background: var(--light-gray);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .problem-section {
+        margin: 20px 0;
+    }
+
+    .section-title {
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .problem-content {
+        background: var(--light);
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 3px solid var(--primary);
+        white-space: pre-line;
+    }
+
+    .problem-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--light-gray);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: var(--gray);
+        margin-bottom: 20px;
+    }
+
+    .empty-state h3 {
+        color: var(--dark);
+        margin-bottom: 10px;
+    }
+
+    .empty-state p {
+        color: var(--gray);
+        margin-bottom: 30px;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: var(--radius);
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 30px;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        color: var(--primary);
+    }
+
+    .close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--gray);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--light-gray);
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    textarea.form-control {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn-secondary {
+        background: var(--light-gray);
+        color: var(--dark);
+    }
+</style>
+</head>
+
+<body>
+
+<div class="top-nav">
+    <div class="logo">
+        <i class="fas fa-check-circle" style="color: var(--accent);"></i>
+        <h2>TechWeave - Solved Problems</h2>
+    </div>
+    <div class="nav-icons">
+        <div class="nav-icon" onclick="goToForum()" title="Back to Forum">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+        <div class="nav-icon" onclick="logout()" title="Logout">
+            <i class="fas fa-sign-out-alt"></i>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header">
+        <h1>My Solved Problems</h1>
+        <button class="btn btn-primary" onclick="openAddModal()">
+            <i class="fas fa-plus"></i> Add New Solution
+        </button>
+    </div>
+
+    <div class="problems-grid" id="problemsContainer">
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h3>No Solved Problems Yet</h3>
+            <p>Start documenting your solutions to help others in the community!</p>
+            <button class="btn btn-primary" onclick="openAddModal()">
+                <i class="fas fa-plus"></i> Add Your First Solution
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="problemModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalTitle">Add Solved Problem</h2>
+            <button class="close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="problemForm">
+                <div class="form-group">
+                    <label class="form-label">Problem Title *</label>
+                    <input type="text" class="form-control" id="problemTitle" required 
+                           placeholder="e.g., Docker Container Networking Issue">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Category *</label>
+                    <select class="form-control" id="problemCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="docker">Docker</option>
+                        <option value="kubernetes">Kubernetes</option>
+                        <option value="devops">DevOps</option>
+                        <option value="cloud">Cloud</option>
+                        <option value="programming">Programming</option>
+                        <option value="database">Database</option>
+                        <option value="networking">Networking</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Problem Description *</label>
+                    <textarea class="form-control" id="problemDescription" required 
+                              placeholder="Describe the problem you faced..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Solution *</label>
+                    <textarea class="form-control" id="problemSolution" required 
+                              placeholder="Explain how you solved it..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Image URL (optional)</label>
+                    <input type="text" class="form-control" id="problemImage" 
+                           placeholder="Paste image URL">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Video URL (optional)</label>
+                    <input type="text" class="form-control" id="problemVideo" 
+                           placeholder="Paste video URL">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tags (optional)</label>
+                    <input type="text" class="form-control" id="problemTags" 
+                           placeholder="e.g., docker, networking, containers">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveProblem()">Save Solution</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const API_BASE = 'http://localhost:5000/api';
+let currentUser = null;
+let problems = [];
+let editingProblemId = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    checkAuth();
+});
+
+async function checkAuth() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        currentUser = { id: payload.id, username: payload.email };
+        await loadProblems();
+    } catch (error) {
+        console.error('Auth error:', error);
+        logout();
+    }
+}
+
+async function loadProblems() {
+    try {
+        const response = await fetch(`${API_BASE}/solved-problems?userId=${currentUser.id}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to load problems');
+        
+        problems = await response.json();
+        renderProblems();
+        
+    } catch (error) {
+        console.error('Error loading problems:', error);
+        alert('Failed to load problems');
+    }
+}
+
+function renderProblems() {
+    const container = document.getElementById('problemsContainer');
+    
+    if (problems.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h3>No Solved Problems Yet</h3>
+                <p>Start documenting your solutions to help others in the community!</p>
+                <button class="btn btn-primary" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Add Your First Solution
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = problems.map(problem => `
+        <div class="problem-card">
+            <div class="problem-header">
+                <div>
+                    <h3 class="problem-title">${problem.title}</h3>
+                    <span class="problem-category">${problem.category}</span>
+                </div>
+                <div style="color: var(--gray); font-size: 0.9rem;">
+                    ${problem.timestamp}
+                </div>
+            </div>
+            
+            <div class="problem-section">
+                <div class="section-title">
+                    <i class="fas fa-question-circle"></i>
+                    Problem Description
+                </div>
+                <div class="problem-content">${problem.problemDescription}</div>
+            </div>
+            
+            <div class="problem-section">
+                <div class="section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Solution
+                </div>
+                <div class="problem-content">${problem.solution}</div>
+            </div>
+            
+            ${problem.imageUrl ? `
+            <div class="problem-section">
+                <div class="section-title">
+                    <i class="fas fa-image"></i>
+                    Reference Image
+                </div>
+                <img src="${problem.imageUrl}" alt="Solution reference" style="max-width: 100%; border-radius: 8px;">
+            </div>
+            ` : ''}
+            
+            ${problem.tags && problem.tags.length > 0 ? `
+            <div class="problem-section">
+                <div class="section-title">
+                    <i class="fas fa-tags"></i>
+                    Tags
+                </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    ${problem.tags.map(tag => `<span style="background: var(--light-gray); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem;">${tag}</span>`).join('')}
+                </div>
+            </div>
+            ` : ''}
+            
+            <div class="problem-actions">
+                <button class="btn btn-edit" onclick="editProblem(${problem.id})">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn btn-delete" onclick="deleteProblem(${problem.id})">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function openAddModal() {
+    editingProblemId = null;
+    document.getElementById('modalTitle').textContent = 'Add Solved Problem';
+    document.getElementById('problemForm').reset();
+    document.getElementById('problemModal').style.display = 'flex';
+}
+
+function editProblem(problemId) {
+    const problem = problems.find(p => p.id === problemId);
+    if (!problem) return;
+
+    editingProblemId = problemId;
+    document.getElementById('modalTitle').textContent = 'Edit Solved Problem';
+    
+    document.getElementById('problemTitle').value = problem.title;
+    document.getElementById('problemCategory').value = problem.category;
+    document.getElementById('problemDescription').value = problem.problemDescription;
+    document.getElementById('problemSolution').value = problem.solution;
+    document.getElementById('problemImage').value = problem.imageUrl || '';
+    document.getElementById('problemVideo').value = problem.videoUrl || '';
+    document.getElementById('problemTags').value = problem.tags ? problem.tags.join(', ') : '';
+    
+    document.getElementById('problemModal').style.display = 'flex';
+}
+
+async function saveProblem() {
+    const title = document.getElementById('problemTitle').value.trim();
+    const category = document.getElementById('problemCategory').value;
+    const description = document.getElementById('problemDescription').value.trim();
+    const solution = document.getElementById('problemSolution').value.trim();
+
+    if (!title || !category || !description || !solution) {
+        alert('Please fill in all required fields');
+        return;
+    }
+
+    try {
+        const url = editingProblemId ? 
+            `${API_BASE}/solved-problems/${editingProblemId}` : 
+            `${API_BASE}/solved-problems`;
+        
+        const method = editingProblemId ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                userId: currentUser.id,
+                title,
+                problemDescription: description,  // This gets mapped to 'description' in database
+                solution,
+                category
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to save problem');
+        }
+
+        closeModal();
+        await loadProblems();
+        alert('Problem saved successfully!');
+        
+    } catch (error) {
+        console.error('Error saving problem:', error);
+        alert('Failed to save problem: ' + error.message);
+    }
+}
+
+async function deleteProblem(problemId) {
+    if (!confirm('Are you sure you want to delete this solved problem?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/solved-problems/${problemId}?userId=${currentUser.id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete problem');
+        }
+
+        await loadProblems();
+        alert('Problem deleted successfully!');
+        
+    } catch (error) {
+        console.error('Error deleting problem:', error);
+        alert('Failed to delete problem');
+    }
+}
+
+function closeModal() {
+    document.getElementById('problemModal').style.display = 'none';
+    editingProblemId = null;
+}
+
+function goToForum() {
+    window.location.href = 'forum.html';
+}
+
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+    }
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('problemModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+</script>
+
+</body>
+</html>
