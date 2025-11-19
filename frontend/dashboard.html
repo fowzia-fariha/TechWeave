@@ -568,6 +568,7 @@
   .dashboard-item:nth-child(4) { animation-delay: 0.4s; }
   .dashboard-item:nth-child(5) { animation-delay: 0.5s; }
   .dashboard-item:nth-child(6) { animation-delay: 0.6s; }
+  .dashboard-item:nth-child(7) { animation-delay: 0.7s; }
 
   /* Scrollbar Styling */
   ::-webkit-scrollbar {
@@ -604,7 +605,7 @@
 
 <div class="dashboard-list">
 
-  <div class="dashboard-item">
+  <div class="dashboard-item" onclick="goToLearningPath()">
     <div class="dashboard-animation">
       <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_w51pcehl.json" background="transparent" speed="1" loop autoplay></lottie-player>
     </div>
@@ -662,6 +663,17 @@
     <div class="dashboard-content">
       <h2>Project Templates & Boilerplates</h2>
       <p>Pre-made starter templates for Web, ML, Security projects with folder structure, readme, and sample code.</p>
+    </div>
+  </div>
+
+  <!-- Demo Projects as a normal dashboard item -->
+  <div class="dashboard-item" onclick="goToProjects()">
+    <div class="dashboard-animation">
+      <lottie-player src="https://assets1.lottiefiles.com/packages/lf20_gn0tojcq.json" background="transparent" speed="1" loop autoplay></lottie-player>
+    </div>
+    <div class="dashboard-content">
+      <h2>Demo Projects</h2>
+      <p>Explore real-world project examples and implementations.</p>
     </div>
   </div>
 </div>
@@ -734,6 +746,10 @@ async function loadUserInfo() {
   }
 }
 
+function goToLearningPath() {
+  window.location.href = 'learning-path.html';
+}
+
 function goToChat() {
   window.location.href = 'chat.html';
 }
@@ -750,8 +766,8 @@ function goToTemplates() {
   window.location.href = 'templates.html';
 }
 
-function goToAdminTemplates() {
-    window.location.href = 'admin-templates.html';
+function goToProjects() {
+  window.location.href = 'projects.html';
 }
 
 function checkAdminAccess() {

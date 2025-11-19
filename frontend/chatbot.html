@@ -9,24 +9,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-  * {
+* {
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-  }
+}
 
-  body {
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
     background: #f8fafc;
     color: #1e293b;
-    height: 100vh;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-  }
+}
 
-  /* Header */
-  #chatbot-header {
+/* Header */
+#chatbot-header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     padding: 25px 20px;
@@ -34,15 +37,16 @@
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  }
+    flex-shrink: 0;
+}
 
-  .header-content {
+.header-content {
     display: flex;
     align-items: center;
     gap: 15px;
-  }
+}
 
-  .bot-avatar {
+.bot-avatar {
     width: 50px;
     height: 50px;
     background: rgba(255, 255, 255, 0.2);
@@ -52,41 +56,41 @@
     justify-content: center;
     font-size: 24px;
     animation: avatarPulse 2s ease-in-out infinite;
-  }
+}
 
-  @keyframes avatarPulse {
+@keyframes avatarPulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.05); }
-  }
+}
 
-  .header-text h3 {
+.header-text h3 {
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 3px;
-  }
+}
 
-  .header-text p {
+.header-text p {
     font-size: 12px;
     opacity: 0.9;
     display: flex;
     align-items: center;
     gap: 5px;
-  }
+}
 
-  .status-dot {
+.status-dot {
     width: 8px;
     height: 8px;
     background: #4ade80;
     border-radius: 50%;
     animation: blink 2s infinite;
-  }
+}
 
-  @keyframes blink {
+@keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.3; }
-  }
+}
 
-  #close-btn {
+#close-btn {
     background: rgba(255, 255, 255, 0.2);
     border: none;
     color: white;
@@ -100,33 +104,34 @@
     justify-content: center;
     transition: all 0.3s ease;
     line-height: 1;
-  }
+}
 
-  #close-btn:hover {
+#close-btn:hover {
     background: rgba(255, 255, 255, 0.3);
     transform: rotate(90deg);
-  }
+}
 
-  /* Quick Actions Bar */
-  .quick-actions {
+/* Quick Actions */
+.quick-actions {
     padding: 15px 20px;
     background: #f8fafc;
     border-bottom: 1px solid #e2e8f0;
     display: flex;
     gap: 10px;
     overflow-x: auto;
-  }
+    flex-shrink: 0;
+}
 
-  .quick-actions::-webkit-scrollbar {
+.quick-actions::-webkit-scrollbar {
     height: 4px;
-  }
+}
 
-  .quick-actions::-webkit-scrollbar-thumb {
+.quick-actions::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 10px;
-  }
+}
 
-  .quick-action-btn {
+.quick-action-btn {
     background: white;
     border: 1px solid #e2e8f0;
     padding: 8px 16px;
@@ -136,45 +141,56 @@
     white-space: nowrap;
     transition: all 0.3s ease;
     color: #475569;
-  }
+    flex-shrink: 0;
+}
 
-  .quick-action-btn:hover {
+.quick-action-btn:hover {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border-color: transparent;
     transform: translateY(-2px);
-  }
+}
 
-  /* Chatbot Body */
-  #chatbot-body {
+/* MAIN FIX: Chatbot Body with guaranteed scrolling */
+#chatbot-body {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
     background: #f8fafc;
-  }
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 0; /* Force flex child to respect container bounds */
+}
 
-  #chatbot-body::-webkit-scrollbar {
-    width: 6px;
-  }
+#chatbot-body::-webkit-scrollbar {
+    width: 8px;
+}
 
-  #chatbot-body::-webkit-scrollbar-track {
+#chatbot-body::-webkit-scrollbar-track {
     background: transparent;
-  }
+}
 
-  #chatbot-body::-webkit-scrollbar-thumb {
+#chatbot-body::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 10px;
-  }
+}
 
-  /* Messages */
-  #chatbot-messages {
+#chatbot-body::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Messages Container */
+#chatbot-messages {
     display: flex;
     flex-direction: column;
     gap: 15px;
-  }
+    flex: 1;
+    min-height: min-content;
+}
 
-  .message {
-    max-width: 80%;
+.message {
+    max-width: 85%;
     padding: 14px 18px;
     border-radius: 18px;
     font-size: 14px;
@@ -182,48 +198,59 @@
     word-wrap: break-word;
     animation: messageSlideIn 0.3s ease;
     position: relative;
-  }
+    flex-shrink: 0;
+}
 
-  @keyframes messageSlideIn {
+@keyframes messageSlideIn {
     from { 
-      opacity: 0; 
-      transform: translateY(10px);
+        opacity: 0; 
+        transform: translateY(10px);
     }
     to { 
-      opacity: 1; 
-      transform: translateY(0);
+        opacity: 1; 
+        transform: translateY(0);
     }
-  }
+}
 
-  .message.user {
+.message.user {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     align-self: flex-end;
     border-bottom-right-radius: 4px;
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-  }
+}
 
-  .message.bot {
+.message.bot {
     background: white;
     color: #1e293b;
     align-self: flex-start;
     border-bottom-left-radius: 4px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  }
+}
 
-  .message img {
+#chatbot-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Use full viewport height */
+}
+
+#chatbot-body {
+    flex: 1; /* This will make it take all available space */
+    min-height: 0; /* Important for flex children */
+}
+.message img {
     max-width: 100%;
     border-radius: 12px;
     margin-top: 8px;
     cursor: pointer;
     transition: transform 0.3s ease;
-  }
+}
 
-  .message img:hover {
+.message img:hover {
     transform: scale(1.02);
-  }
+}
 
-  .message .file-info {
+.message .file-info {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -231,29 +258,29 @@
     padding: 10px;
     background: rgba(0, 0, 0, 0.05);
     border-radius: 8px;
-  }
+}
 
-  .file-icon {
+.file-icon {
     font-size: 24px;
-  }
+}
 
-  .file-details {
+.file-details {
     flex: 1;
-  }
+}
 
-  .file-name {
+.file-name {
     font-size: 13px;
     font-weight: 600;
     color: #1e293b;
-  }
+}
 
-  .file-size {
+.file-size {
     font-size: 11px;
     color: #64748b;
-  }
+}
 
-  /* Typing Indicator */
-  .typing-indicator {
+/* Typing Indicator */
+.typing-indicator {
     display: flex;
     gap: 5px;
     padding: 14px 18px;
@@ -262,72 +289,72 @@
     width: fit-content;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     align-self: flex-start;
-  }
+}
 
-  .typing-indicator span {
+.typing-indicator span {
     width: 8px;
     height: 8px;
     background: #94a3b8;
     border-radius: 50%;
     animation: typing 1.4s infinite;
-  }
+}
 
-  .typing-indicator span:nth-child(2) {
+.typing-indicator span:nth-child(2) {
     animation-delay: 0.2s;
-  }
+}
 
-  .typing-indicator span:nth-child(3) {
+.typing-indicator span:nth-child(3) {
     animation-delay: 0.4s;
-  }
+}
 
-  @keyframes typing {
+@keyframes typing {
     0%, 60%, 100% { transform: translateY(0); opacity: 0.7; }
     30% { transform: translateY(-10px); opacity: 1; }
-  }
+}
 
-  /* Welcome Screen */
-  .welcome-screen {
+/* Welcome Screen */
+.welcome-screen {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: 40px 20px;
-    height: 100%;
-  }
+    flex: 1;
+}
 
-  .welcome-icon {
+.welcome-icon {
     font-size: 64px;
     margin-bottom: 20px;
     animation: welcomeBounce 2s ease-in-out infinite;
-  }
+}
 
-  @keyframes welcomeBounce {
+@keyframes welcomeBounce {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
-  }
+}
 
-  .welcome-screen h2 {
+.welcome-screen h2 {
     color: #1e293b;
     font-size: 24px;
     margin-bottom: 10px;
-  }
+}
 
-  .welcome-screen p {
+.welcome-screen p {
     color: #64748b;
     font-size: 14px;
     margin-bottom: 30px;
-  }
+}
 
-  .suggestion-chips {
+.suggestion-chips {
     display: flex;
     flex-direction: column;
     gap: 10px;
     width: 100%;
     max-width: 350px;
-  }
+}
 
-  .suggestion-chip {
+.suggestion-chip {
     background: white;
     border: 1px solid #e2e8f0;
     padding: 14px 20px;
@@ -337,43 +364,36 @@
     text-align: left;
     color: #475569;
     font-size: 14px;
-  }
+}
 
-  .suggestion-chip:hover {
+.suggestion-chip:hover {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border-color: transparent;
     transform: translateX(5px);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-  }
+}
 
-  /* Input Section */
-  #chatbot-input-container {
-    padding: 20px;
-    background: white;
-    border-top: 1px solid #e2e8f0;
-  }
-
-  /* File Preview */
-  #file-preview-container {
+/* File Preview */
+#file-preview-container {
     margin-bottom: 10px;
-  }
+}
 
-  .file-preview {
+.file-preview {
     position: relative;
     display: inline-block;
     margin-right: 10px;
     margin-bottom: 10px;
-  }
+}
 
-  .file-preview img {
+.file-preview img {
     max-width: 100px;
     max-height: 100px;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
+}
 
-  .file-preview .doc-preview {
+.file-preview .doc-preview {
     width: 100px;
     height: 100px;
     background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
@@ -383,23 +403,23 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
+}
 
-  .doc-preview .file-icon {
+.doc-preview .file-icon {
     font-size: 32px;
     margin-bottom: 5px;
-  }
+}
 
-  .doc-preview .file-name {
+.doc-preview .file-name {
     font-size: 10px;
     color: #64748b;
     max-width: 90px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
+}
 
-  .remove-file {
+.remove-file {
     position: absolute;
     top: -8px;
     right: -8px;
@@ -416,15 +436,15 @@
     justify-content: center;
     box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
     transition: all 0.3s ease;
-  }
+}
 
-  .remove-file:hover {
+.remove-file:hover {
     background: #dc2626;
     transform: scale(1.1);
-  }
+}
 
-  /* Input Wrapper */
-  .input-wrapper {
+/* Input Wrapper */
+.input-wrapper {
     display: flex;
     align-items: flex-end;
     gap: 10px;
@@ -432,14 +452,14 @@
     border-radius: 25px;
     padding: 10px 15px;
     transition: all 0.3s ease;
-  }
+}
 
-  .input-wrapper:focus-within {
+.input-wrapper:focus-within {
     background: #e2e8f0;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-  }
+}
 
-  #chatbot-input {
+#chatbot-input {
     flex: 1;
     border: none;
     background: transparent;
@@ -451,28 +471,28 @@
     overflow-y: auto;
     resize: none;
     font-family: inherit;
-  }
+}
 
-  #chatbot-input::placeholder {
+#chatbot-input::placeholder {
     color: #94a3b8;
-  }
+}
 
-  #chatbot-input::-webkit-scrollbar {
+#chatbot-input::-webkit-scrollbar {
     width: 4px;
-  }
+}
 
-  #chatbot-input::-webkit-scrollbar-thumb {
+#chatbot-input::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 10px;
-  }
+}
 
-  .input-actions {
+.input-actions {
     display: flex;
     gap: 5px;
     align-items: center;
-  }
+}
 
-  .icon-btn {
+.icon-btn {
     background: transparent;
     border: none;
     color: #64748b;
@@ -486,14 +506,14 @@
     justify-content: center;
     width: 36px;
     height: 36px;
-  }
+}
 
-  .icon-btn:hover {
+.icon-btn:hover {
     background: #e2e8f0;
     color: #667eea;
-  }
+}
 
-  #send-btn {
+#send-btn {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: none;
     color: white;
@@ -508,28 +528,28 @@
     justify-content: center;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-  }
+}
 
-  #send-btn:hover:not(:disabled) {
+#send-btn:hover:not(:disabled) {
     transform: scale(1.1);
     box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
-  }
+}
 
-  #send-btn:active {
+#send-btn:active {
     transform: scale(0.95);
-  }
+}
 
-  #send-btn:disabled {
+#send-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-  }
+}
 
-  #file-input {
+#file-input {
     display: none;
-  }
+}
 
-  /* Image Lightbox */
-  .lightbox {
+/* Image Lightbox */
+.lightbox {
     display: none;
     position: fixed;
     z-index: 1001;
@@ -540,19 +560,19 @@
     background: rgba(0, 0, 0, 0.9);
     justify-content: center;
     align-items: center;
-  }
+}
 
-  .lightbox.active {
+.lightbox.active {
     display: flex;
-  }
+}
 
-  .lightbox img {
+.lightbox img {
     max-width: 90%;
     max-height: 90%;
     border-radius: 8px;
-  }
+}
 
-  .lightbox-close {
+.lightbox-close {
     position: absolute;
     top: 20px;
     right: 20px;
@@ -567,10 +587,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+}
 
-  /* Responsive */
-  @media(max-width: 600px) {
+/* Responsive */
+@media(max-width: 600px) {
     #chatbot-header {
       padding: 20px 15px;
     }
@@ -627,7 +647,7 @@
     #chatbot-input-container {
       padding: 15px;
     }
-  }
+}
 </style>
 </head>
 <body>
@@ -639,7 +659,7 @@
         <div class="header-content">
             <div class="bot-avatar">🤖</div>
             <div class="header-text">
-                <h3>AI Assistant</h3>
+                <h3>TechWeave AI☠️</h3>
                 <p>
                     <span class="status-dot"></span>
                     Online & Ready to Help
@@ -707,6 +727,54 @@
 // Chatbot functionality
 let selectedFiles = [];
 let conversationHistory = [];
+
+// Enhanced scrolling functionality
+function initializeScrolling() {
+    const chatBody = document.getElementById("chatbot-body");
+    const chatMessages = document.getElementById("chatbot-messages");
+    
+    if (chatBody && chatMessages) {
+        // Force initial scroll to bottom
+        setTimeout(scrollToBottom, 100);
+        
+        // Auto-scroll to bottom when new messages are added
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList') {
+                    setTimeout(scrollToBottom, 50);
+                }
+            });
+        });
+        
+        observer.observe(chatMessages, { childList: true });
+    }
+}
+
+function scrollToBottom() {
+    const chatBody = document.getElementById("chatbot-body");
+    if (chatBody) {
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+}
+
+function appendMessage(sender, message) {
+    const messageContainer = document.getElementById("chatbot-messages");
+    if (!messageContainer) return;
+    
+    const messageElement = document.createElement("div");
+    messageElement.classList.add("message", sender);
+    messageElement.textContent = message;
+    messageContainer.appendChild(messageElement);
+    
+    // Remove welcome screen if it's the first user message
+    const welcomeScreen = document.querySelector(".welcome-screen");
+    if (welcomeScreen && sender === "user") {
+        welcomeScreen.remove();
+    }
+    
+    // Scroll to bottom after adding message
+    setTimeout(scrollToBottom, 50);
+}
 
 function closeChatbot() {
     // Notify parent window to close the modal
@@ -885,24 +953,13 @@ function displayUserFiles() {
         
         container.appendChild(fileMsg);
     });
-    container.scrollTop = container.scrollHeight;
+    scrollToBottom();
 }
 
 function formatFileSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-}
-
-function appendMessage(sender, message) {
-    const messageContainer = document.getElementById("chatbot-messages");
-    if (!messageContainer) return;
-    
-    const messageElement = document.createElement("div");
-    messageElement.classList.add("message", sender);
-    messageElement.textContent = message;
-    messageContainer.appendChild(messageElement);
-    messageContainer.scrollTop = messageContainer.scrollHeight;
 }
 
 function showTypingIndicator() {
@@ -914,7 +971,7 @@ function showTypingIndicator() {
     typingDiv.className = "typing-indicator";
     typingDiv.innerHTML = "<span></span><span></span><span></span>";
     messageContainer.appendChild(typingDiv);
-    messageContainer.scrollTop = messageContainer.scrollHeight;
+    scrollToBottom();
 }
 
 function removeTypingIndicator() {
@@ -1035,8 +1092,8 @@ function closeLightbox() {
 // Initialize chatbot when page loads
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(initializeChatbot, 500);
+    setTimeout(initializeScrolling, 600);
 });
 </script>
-
 </body>
 </html>

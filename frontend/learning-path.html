@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Path | TechWeave</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --text: #f8fafc;
+            --text-light: #cbd5e1;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary), #1a1f36);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--card-bg);
+            color: var(--text);
+            padding: 12px 20px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            font-size: 14px;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: inline-block;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.5s ease;
+        }
+
+        .logo:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #e2e8f0, #f1f5f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            padding: 35px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            height: 100%;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        .category-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(129, 140, 248, 0.05));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .category-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .category-card:hover::after {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        .category-animation {
+            width: 80px;
+            height: 80px;
+            margin-right: 20px;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(15, 23, 42, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .category-animation lottie-player {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+        }
+
+        .category-content h2 {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .category-content p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .tech-tag {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--accent-light);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .card-footer {
+            margin-top: auto;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .duration {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .explore-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            color: var(--accent-light);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .explore-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .category-card:hover .explore-btn {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateX(5px);
+        }
+
+        .category-card:hover .explore-btn::before {
+            left: 100%;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(129, 140, 248, 0.05));
+            animation: float 15s infinite linear;
+        }
+
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            left: 80%;
+            animation-delay: -5s;
+        }
+
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 80%;
+            left: 10%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+            100% {
+                transform: translateY(0) rotate(360deg);
+            }
+        }
+
+        /* Animation for page load */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .category-card {
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .category-card:nth-child(1) { animation-delay: 0.1s; }
+        .category-card:nth-child(2) { animation-delay: 0.2s; }
+        .category-card:nth-child(3) { animation-delay: 0.3s; }
+        .category-card:nth-child(4) { animation-delay: 0.4s; }
+        .category-card:nth-child(5) { animation-delay: 0.5s; }
+        .category-card:nth-child(6) { animation-delay: 0.6s; }
+        .category-card:nth-child(7) { animation-delay: 0.7s; }
+        .category-card:nth-child(8) { animation-delay: 0.8s; }
+        .category-card:nth-child(9) { animation-delay: 0.9s; }
+
+        @media(max-width: 768px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .category-card {
+                padding: 25px 20px;
+            }
+            
+            .back-button {
+                top: 20px;
+                left: 20px;
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Back to Dashboard Button -->
+    <a href="dashboard.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">TechWeave</div>
+            <h1>Learning Path</h1>
+            <p class="subtitle">Master cutting-edge technologies with our expertly curated learning paths. Select a category to begin your journey toward expertise.</p>
+        </div>
+
+        <div class="category-grid" id="category-container">
+            <!-- Cards will be injected here -->
+        </div>
+    </div>
+
+    <script>
+        const categories = [
+            { 
+                name: 'Web Development', 
+                slug: 'web-development', 
+                description: 'Build modern, responsive websites and applications using the latest web technologies and frameworks.', 
+                animation: 'https://assets2.lottiefiles.com/packages/lf20_w51pcehl.json',
+                tech: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Next.js'],
+                duration: '6-8 months'
+            },
+            { 
+                name: 'Mobile Development', 
+                slug: 'mobile-development', 
+                description: 'Create cross-platform mobile applications with industry-standard tools and frameworks.', 
+                animation: 'https://assets6.lottiefiles.com/packages/lf20_xyadoh9h.json',
+                tech: ['Flutter', 'React Native', 'iOS', 'Android'],
+                duration: '5-7 months'
+            },
+            { 
+                name: 'AI/ML', 
+                slug: 'ai-ml', 
+                description: 'Dive into the world of artificial intelligence with practical machine learning and deep learning projects.', 
+                animation: 'https://assets1.lottiefiles.com/packages/lf20_x62chJ.json',
+                tech: ['Python', 'TensorFlow', 'PyTorch', 'Scikit-learn'],
+                duration: '8-10 months'
+            },
+            { 
+                name: 'Cybersecurity', 
+                slug: 'cybersecurity', 
+                description: 'Protect systems and networks with advanced security techniques and ethical hacking methodologies.', 
+                animation: 'https://assets10.lottiefiles.com/packages/lf20_p8bfn5to.json',
+                tech: ['Network Security', 'Ethical Hacking', 'Penetration Testing'],
+                duration: '7-9 months'
+            },
+            { 
+                name: 'DevOps', 
+                slug: 'devops', 
+                description: 'Master continuous integration, deployment, and automation with industry-leading tools and practices.', 
+                animation: 'https://assets3.lottiefiles.com/packages/lf20_3rqwsqnj.json',
+                tech: ['Docker', 'Kubernetes', 'CI/CD', 'AWS'],
+                duration: '5-7 months'
+            },
+            { 
+                name: 'Database', 
+                slug: 'database', 
+                description: 'Learn to design, implement, and manage databases for modern applications and data systems.', 
+                animation: 'https://assets2.lottiefiles.com/packages/lf20_qpsnmykx.json',
+                tech: ['MySQL', 'PostgreSQL', 'MongoDB', 'Redis'],
+                duration: '4-6 months'
+            },
+            { 
+                name: 'Cloud Computing', 
+                slug: 'cloud-computing', 
+                description: 'Deploy and manage applications on leading cloud platforms with scalable infrastructure solutions.', 
+                animation: 'https://assets1.lottiefiles.com/packages/lf20_4ed9qxlx.json',
+                tech: ['AWS', 'Azure', 'GCP', 'Cloud Architecture'],
+                duration: '6-8 months'
+            },
+            { 
+                name: 'Blockchain', 
+                slug: 'blockchain', 
+                description: 'Explore decentralized applications, smart contracts, and cryptocurrencies with cutting-edge blockchain technology.', 
+                animation: 'https://assets1.lottiefiles.com/packages/lf20_jbrw3hcz.json',
+                tech: ['Solidity', 'Smart Contracts', 'Web3', 'Ethereum'],
+                duration: '5-7 months'
+            },
+            { 
+                name: 'Data Structures & Algorithms', 
+                slug: 'dsa', 
+                description: 'Strengthen your problem-solving skills with comprehensive data structures and algorithm training.', 
+                animation: 'https://assets7.lottiefiles.com/packages/lf20_jmgekfqg.json',
+                tech: ['Problem Solving', 'Algorithms', 'Data Structures', 'Big O'],
+                duration: '4-6 months'
+            }
+        ];
+
+        const container = document.getElementById('category-container');
+
+        categories.forEach(cat => {
+            const card = document.createElement('div');
+            card.classList.add('category-card');
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="category-animation">
+                        <lottie-player src="${cat.animation}" background="transparent" speed="1" loop autoplay></lottie-player>
+                    </div>
+                    <div class="category-content">
+                        <h2>${cat.name}</h2>
+                        <div class="tech-stack">
+                            ${cat.tech.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+                <p>${cat.description}</p>
+                <div class="card-footer">
+                    <div class="duration">
+                        <i class="far fa-clock"></i>
+                        <span>${cat.duration}</span>
+                    </div>
+                    <div class="explore-btn">
+                        <span>Explore Path</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            `;
+            card.onclick = () => window.location.href = `${cat.slug}.html`;
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>
